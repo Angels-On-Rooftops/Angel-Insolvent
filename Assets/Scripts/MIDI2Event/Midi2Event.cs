@@ -26,6 +26,7 @@ namespace midi2event
         private bool _isPlaying = false;
         private readonly int TET = 12;
         private readonly double US_TO_S = 1e-6;
+        int lowestOctave;
 
         public Midi2Event(string filePath, int lowestOctave = -1)
         {
@@ -33,38 +34,45 @@ namespace midi2event
             _stopEvents = new Dictionary<int, Action>();
             _endEvent = () => { };
             _reader = new MidiReader();
-            (_ticksPerQuarter, _messages) = _reader.Read(filePath);
             _bin = new();
-
+            this.lowestOctave = lowestOctave;
+            //load chart
+            (_ticksPerQuarter, _messages) = _reader.Read(filePath);
             if (_messages.Count <= 0)
             {
                 Debug.WriteLine("Provided midi generated no events, was this intended?");
             }
         }
 
+        //call this every update frame in whatever engine/tool you're using
         public void Update(double deltaTime)
         {
-            if (_isPlaying && _messages.Count > 0)
+            //do nothing if the system isn't playing or there are no more events
+            if (!(_isPlaying && _messages.Count > 0))
             {
-                _deltaTimeSinceLastUpdate += deltaTime;
-                while (_deltaTimeToNextUpdate <= _deltaTimeSinceLastUpdate)
-                {
-                    double makeup = _deltaTimeSinceLastUpdate - _deltaTimeToNextUpdate;
-                    MTrkEvent toProcess = _messages.Dequeue();
-                    GetEvent(toProcess).Invoke();
-                    _bin.Enqueue(toProcess);
+                return;
+            }
 
-                    _deltaTimeSinceLastUpdate = 0;
-                    if (_messages.Count <= 0)
-                    {
-                        _isPlaying = false;
-                        return;
-                    }
-                    _deltaTimeToNextUpdate = DeltaToDeltaTime(_messages.Peek().Delta) - makeup;
+            //trigger every event that is relevant at this deltaTime
+            _deltaTimeSinceLastUpdate += deltaTime;
+            while (_deltaTimeToNextUpdate <= _deltaTimeSinceLastUpdate)
+            {
+                double makeup = _deltaTimeSinceLastUpdate - _deltaTimeToNextUpdate;
+                MTrkEvent toProcess = _messages.Dequeue();
+                GetEvent(toProcess).Invoke();
+                _bin.Enqueue(toProcess);
+
+                _deltaTimeSinceLastUpdate = 0;
+                if (_messages.Count <= 0)
+                {
+                    _isPlaying = false;
+                    return;
                 }
+                _deltaTimeToNextUpdate = DeltaToDeltaTime(_messages.Peek().Delta) - makeup;
             }
         }
 
+        //return the event in the system related to MTrkEvent e
         private Action GetEvent(MTrkEvent e)
         {
             return e switch
@@ -90,11 +98,13 @@ namespace midi2event
             return () => { };
         }
 
+        //convert MIDI format 0 delta-time to a delta-time in seconds
         private double DeltaToDeltaTime(uint delta)
         {
             return delta * (_usPerQuarter / _ticksPerQuarter) * US_TO_S;
         }
 
+        //rewind the system to the beginning of the track
         public void Back()
         {
             _deltaTimeSinceLastUpdate = 0;
@@ -109,12 +119,14 @@ namespace midi2event
             _bin = new();
         }
 
-        public void Reset()
+        //rewind the system and stop it from playing
+        public void Stop()
         {
             Back();
             _isPlaying = false;
         }
 
+        //start playing the event system chart
         public void Play()
         {
             if (_messages.Count <= 0)
@@ -125,16 +137,28 @@ namespace midi2event
             _deltaTimeToNextUpdate = DeltaToDeltaTime(_messages.Peek().Delta);
         }
 
+        //pause the event system chart
         public void Pause()
         {
             _isPlaying = false;
         }
 
+        //convert a note to its MIDI byte ID
         private int ToNoteId(Notes note, int octave)
         {
-            return TET * (octave + 2) + (int)note;
+            return TET * (octave + -1 * lowestOctave) + (int)note;
         }
 
+        /*
+         *  subscribes an action to trigger when the specific event occurs in the midi file
+         *  returns a function which unsubscribes the action from the event
+         *
+         *  params:
+         *  action - the action to subscribe to the event system
+         *  note - the midi note of the event to subscribe to
+         *  octave - the octave of the note in the midi chart
+         *  type - the type of subscription to use (start of note, end of note, end of chart)
+         */
         public Action Subscribe(
             Action action,
             Notes note = 0,
@@ -163,6 +187,7 @@ namespace midi2event
             };
         }
 
+        //get the event map for the specified subscription type
         private Dictionary<int, Action> ToNoteMap(SubType type) =>
             type switch
             {

@@ -15,6 +15,7 @@ namespace midi2event
         private readonly uint MTHD_LENGTH = 6;
         private byte lastStatusByte;
 
+        //read the midi file into a queue of MTrkEvents
         public (ushort, Queue<MTrkEvent>) Read(string fileName)
         {
             Stream fileStream = File.Open(fileName, FileMode.Open, FileAccess.Read);
@@ -24,6 +25,7 @@ namespace midi2event
             return (result1, result2);
         }
 
+        //read the header of the midi file to ensure it is a supported format
         private ushort ReadHeader(Stream fileStream)
         {
             byte[] buffer = new byte[4];
@@ -113,6 +115,7 @@ namespace midi2event
                 fileStream.Seek(fileStream.Position - 1, SeekOrigin.Begin);
             }
 
+            //create the correct MTrkEvent type and advance the file
             switch (status)
             {
                 case (byte)StatusTypes.NoteOn:
@@ -176,6 +179,7 @@ namespace midi2event
                             + (fileStream.Position - 1).ToString("X")
                             + "! skipping..."
                     );
+                    //skip over metadata
                     byte length = (byte)fileStream.ReadByte();
                     for (int i = 0; i < length; i++)
                     {
