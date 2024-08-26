@@ -13,6 +13,7 @@ namespace midi2event
     internal class MidiReader
     {
         private readonly uint MTHD_LENGTH = 6;
+        private byte lastStatusByte;
 
         public (ushort, Queue<MTrkEvent>) Read(string fileName)
         {
@@ -68,7 +69,6 @@ namespace midi2event
             return ticksPerQuarter;
         }
 
-#nullable enable
         private Queue<MTrkEvent> ReadTrack(Stream fileStream)
         {
             Queue<MTrkEvent> result = new();
@@ -87,11 +87,8 @@ namespace midi2event
             bool trackOver = false;
             while (!trackOver)
             {
-                MTrkEvent? nextEvent = ReadNextMTrkEvent(fileStream);
-                if (nextEvent is not null)
-                {
-                    result.Enqueue(nextEvent);
-                }
+                MTrkEvent nextEvent = ReadNextMTrkEvent(fileStream);
+                result.Enqueue(nextEvent);
                 if (nextEvent is EndTrackMeta)
                 {
                     trackOver = true;
@@ -100,11 +97,22 @@ namespace midi2event
             return result;
         }
 
-        private MTrkEvent? ReadNextMTrkEvent(Stream fileStream)
+        private MTrkEvent ReadNextMTrkEvent(Stream fileStream)
         {
             uint delta = ParseVarLen(fileStream);
-
             byte status = (byte)fileStream.ReadByte();
+
+            //account for running status
+            if ((status & 0x80) > 0)
+            {
+                lastStatusByte = status;
+            }
+            else
+            {
+                status = lastStatusByte;
+                fileStream.Seek(fileStream.Position - 1, SeekOrigin.Begin);
+            }
+
             switch (status)
             {
                 case (byte)StatusTypes.NoteOn:
@@ -119,19 +127,35 @@ namespace midi2event
                     byte vel = (byte)fileStream.ReadByte();
                     return new NoteOffEvent(delta, noteNum, vel);
                 }
+                case (byte)StatusTypes.PolyKeyPres:
+                case (byte)StatusTypes.CtrlChange:
+                case (byte)StatusTypes.PitchWheel:
+                    fileStream.ReadByte();
+                    fileStream.ReadByte();
+                    return new MTrkEvent(delta);
+                case (byte)StatusTypes.ProgChange:
+                case (byte)StatusTypes.ChannelPres:
+                    fileStream.ReadByte();
+                    return new MTrkEvent(delta);
                 case (byte)StatusTypes.MetaEvent:
                 {
                     return ReadMetaEvent(fileStream, delta);
                 }
                 default:
-                    Debug.WriteLine("Unsupported chunk detected!");
-                    return null;
+                    throw new Exception(
+                        "Unsupported chunk "
+                            + status.ToString("X")
+                            + " detected at byte "
+                            + (fileStream.Position - 1).ToString("X")
+                            + "!"
+                    );
             }
         }
 
-        private MTrkEvent? ReadMetaEvent(Stream fileStream, uint delta)
+        private MTrkEvent ReadMetaEvent(Stream fileStream, uint delta)
         {
             byte status = (byte)fileStream.ReadByte();
+
             switch (status)
             {
                 case (byte)MetaTypes.SetTempo:
@@ -147,7 +171,11 @@ namespace midi2event
                     return new EndTrackMeta(delta);
                 }
                 default:
-                    Debug.WriteLine("Unsupported chunk detected!");
+                    Debug.WriteLine(
+                        "Unsupported meta chunk detected at "
+                            + (fileStream.Position - 1).ToString("X")
+                            + "! skipping..."
+                    );
                     byte length = (byte)fileStream.ReadByte();
                     for (int i = 0; i < length; i++)
                     {
@@ -156,8 +184,6 @@ namespace midi2event
                     return new MTrkEvent(delta);
             }
         }
-
-#nullable disable
 
         private uint ParseVarLen(Stream fileStream)
         {
@@ -182,6 +208,11 @@ namespace midi2event
         {
             NoteOn = 0x90,
             NoteOff = 0x80,
+            PolyKeyPres = 0xA0,
+            CtrlChange = 0xB0,
+            ProgChange = 0xC0,
+            ChannelPres = 0xD0,
+            PitchWheel = 0xE0,
             MetaEvent = 0xFF,
         }
 

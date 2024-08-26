@@ -16,9 +16,6 @@ public class MIDI2EventUnity : MonoBehaviour
     [SerializeField]
     bool playOnStart = true;
 
-    [SerializeField]
-    float soundDelay = 0.5f;
-
     Midi2Event eventPlayer;
     bool startPlayed = false;
 
@@ -45,7 +42,7 @@ public class MIDI2EventUnity : MonoBehaviour
     public void Play()
     {
         eventPlayer.Play();
-        audioSource.PlayDelayed(soundDelay);
+        audioSource.Play();
     }
 
     public Action Subscribe(
@@ -55,7 +52,6 @@ public class MIDI2EventUnity : MonoBehaviour
         SubType type = SubType.Start
     )
     {
-        Debug.Log("player: " + (eventPlayer is null));
         return eventPlayer.Subscribe(action, note, octave, type);
     }
 }

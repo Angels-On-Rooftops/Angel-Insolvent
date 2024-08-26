@@ -34,7 +34,6 @@ public class Bopper : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("enabling bopper");
         unsub = handler.Subscribe(Max, note, octave);
     }
 

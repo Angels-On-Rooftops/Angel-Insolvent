@@ -36,11 +36,6 @@ namespace midi2event
             (_ticksPerQuarter, _messages) = _reader.Read(filePath);
             _bin = new();
 
-            foreach (MTrkEvent m in _messages)
-            {
-                UnityEngine.Debug.Log(m.Delta);
-            }
-
             if (_messages.Count <= 0)
             {
                 Debug.WriteLine("Provided midi generated no events, was this intended?");
@@ -81,7 +76,6 @@ namespace midi2event
                     => () =>
                     {
                         _usPerQuarter = st.USPerQuarter;
-                        UnityEngine.Debug.Log(_usPerQuarter);
                     },
                 _ => () => { }
             };
