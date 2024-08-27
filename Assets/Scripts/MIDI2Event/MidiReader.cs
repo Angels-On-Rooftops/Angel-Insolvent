@@ -12,6 +12,8 @@ namespace midi2event
 {
     internal class MidiReader
     {
+        //midi format documentation: http://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
+
         private readonly uint MTHD_LENGTH = 6;
         private byte lastStatusByte;
 

@@ -146,7 +146,7 @@ namespace midi2event
         //convert a note to its MIDI byte ID
         private int ToNoteId(Notes note, int octave)
         {
-            return TET * (octave + -1 * lowestOctave) + (int)note;
+            return TET * (octave - lowestOctave) + (int)note;
         }
 
         /*
