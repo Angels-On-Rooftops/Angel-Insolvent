@@ -12,6 +12,7 @@ public class EscMenuController : MonoBehaviour
     void Start()
     {
         pauseMenuPanel.SetActive(false);
+        settingsMenuPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -41,12 +42,24 @@ public class EscMenuController : MonoBehaviour
         Time.timeScale = 0f;
     }
 
+    public void OpenSettings()
+    {
+        settingsMenuPanel.SetActive(true);
+        pauseMenuPanel.SetActive(false);
+    }
+
+    public void CloseSettings()
+    {
+        settingsMenuPanel.SetActive(false);
+        pauseMenuPanel.SetActive(true);
+    }
+
     public void Quit()
     {
-        if(Application.isEditor)
+/*        if(Application.isEditor)
         {
             EditorApplication.ExitPlaymode();
-        }
+        }*/
         Application.Quit();
     }
 }
