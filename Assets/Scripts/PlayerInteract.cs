@@ -15,8 +15,8 @@ public class PlayerInteract : MonoBehaviour
             // NPCs should all have colliders that can be referenced
             Collider[] colliderArray = Physics.OverlapSphere(transform.position, radius);
             foreach (Collider collider in colliderArray) {
-                if (collider.TryGetComponent(out NPCInteractable npcInteractable))
-                    npcInteractable.Interact(); // if the NPC is interactable, interact (crazy, right?)
+                if (collider.TryGetComponent(out NPCInteractable npc))
+                    npc.Interact(); // if the NPC is interactable, interact (crazy, right?)
             }
         }
     }
