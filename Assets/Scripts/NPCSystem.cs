@@ -7,6 +7,7 @@ public class NPCSystem : MonoBehaviour
 {
 
     bool playerDetection = false;
+    public GameObject popup;
     public GameObject canvas;
 
 
@@ -24,13 +25,15 @@ public class NPCSystem : MonoBehaviour
         if(other.name == "Player")
         {
             playerDetection = true;
-            canvas.SetActive(true);
+            canvas.SetActive(playerDetection);
+            canvas.transform.position = transform.position;
+            popup.transform.position = transform.position + Vector3.up * 30;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         playerDetection = false;
-        canvas.SetActive(false);
+        canvas.SetActive(playerDetection);
     }
 }
