@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -82,7 +83,7 @@ public class SettingsController : MonoBehaviour
         [System.Serializable]
         public struct UIElementConfig
         {
-            public UIElementType elementType;
+            public UIElementType type;
             public string label;
 
             public Action<TMPro.TMP_Dropdown> dropdownSetup;
@@ -91,28 +92,23 @@ public class SettingsController : MonoBehaviour
         }
 
         public UIElementConfig config;
-
-        public TMPro.TMP_Dropdown dropdownPrefab;
-        public Slider sliderPrefab;
-        public Toggle togglePrefab;
-        public Button buttonPrefab;
+        public GameObject prefab;
 
         public void CreateUIElement(GameObject parent, int listIndex)
         {
             GameObject uiElement = null;
 
-            switch (config.elementType)
+            uiElement = Instantiate(prefab, parent.gameObject.transform);
+
+            switch (config.type)
             {
                 case UIElementType.Dropdown:
-                    uiElement = Instantiate(dropdownPrefab.gameObject, parent.gameObject.transform);
                     SetupDropdown(uiElement.GetComponent<TMPro.TMP_Dropdown>());
                     break;
                 case UIElementType.Slider:
-                    uiElement = Instantiate(sliderPrefab.gameObject, parent.gameObject.transform);
                     SetupSlider(uiElement.GetComponent<Slider>());
                     break;
                 case UIElementType.Toggle:
-                    uiElement = Instantiate(togglePrefab.gameObject, parent.gameObject.transform);
                     SetupToggle(uiElement.GetComponent<Toggle>());
                     break;
             }
@@ -120,8 +116,8 @@ public class SettingsController : MonoBehaviour
             if(uiElement != null)
             {
                 RectTransform newRectTransform = uiElement.GetComponent<RectTransform>();
-                Vector2 newPosition = uiElement.GetComponent<RectTransform>().anchoredPosition;
-                newPosition.y -= (50 * listIndex);
+                Vector2 newPosition = newRectTransform.anchoredPosition;
+                newPosition.y -= 50 * listIndex;
                 newRectTransform.anchoredPosition = newPosition;
             }
         }
@@ -142,7 +138,7 @@ public class SettingsController : MonoBehaviour
 
         private void SetupToggle(Toggle toggle)
         {
-            toggle.isOn = false;
+            toggle.isOn = true;
             config.toggleSetup?.Invoke(toggle);
         }
     }
