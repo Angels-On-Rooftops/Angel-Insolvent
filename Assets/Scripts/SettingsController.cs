@@ -2,34 +2,50 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Unity.VisualScripting.FullSerializer;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class SettingsController : MonoBehaviour
 {
-    public SettingsObject[] settingsObjects;
+    [SerializeField]
+    public SettingsCategory[] settingsCategories;
     float currVolume;
     Resolution[] resolutions;
     int currentResolutionIndex;
-    public GameObject settingsTitle;
+    [SerializeField] GameObject categoryButtonPrefab;
+
+    [SerializeField] GameObject categoriesPanel;
+    [SerializeField] GameObject settingsPanel;
 
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < settingsObjects.Length; i++)
+        for (int j = 0; j < settingsCategories.Length; j++)
         {
-            settingsObjects[i].CreateUIElement(settingsTitle, i);
+            string categoryName = settingsCategories[j].name;
+            GameObject categoryButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
+            var categoryLabel = categoryButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            categoryLabel.text = categoryName;
+
+            var settingsObjects = settingsCategories[j].settings;
+            for (int i = 0; i < settingsObjects.Length; i++)
+            {
+                settingsObjects[i].CreateUIElement(this.gameObject, i);
+            }
         }
         LoadSettings(currentResolutionIndex);
     }
 
-    public void SetupResolutionDropdown(MonoBehaviour resolutionDropdown)
+    public void SetupResolutionDropdown(MonoBehaviour resolutionUIElement)
     {
-        (resolutionDropdown as TMPro.TMP_Dropdown).ClearOptions();
+        var resolutionDropdown = resolutionUIElement as TMPro.TMP_Dropdown;
+        resolutionDropdown.ClearOptions();
         List<string> resolutionOptions = new List<string>();
         resolutions = Screen.resolutions;
         int currentResolutionIndex = 0;
@@ -42,10 +58,10 @@ public class SettingsController : MonoBehaviour
                 currentResolutionIndex = i;
             }
         }
-        (resolutionDropdown as TMPro.TMP_Dropdown).AddOptions(resolutionOptions);
-        (resolutionDropdown as TMPro.TMP_Dropdown).RefreshShownValue();
+        resolutionDropdown.AddOptions(resolutionOptions);
+        resolutionDropdown.RefreshShownValue();
 
-        (resolutionDropdown as TMPro.TMP_Dropdown).onValueChanged.AddListener(delegate { SetResolution((resolutionDropdown as TMPro.TMP_Dropdown).value); });
+        resolutionDropdown.onValueChanged.AddListener(delegate { SetResolution(resolutionDropdown.value); });
     }
 
     public void SetFullscreen(bool isFullscreen)
@@ -97,14 +113,13 @@ public class SettingsController : MonoBehaviour
             public string label;
 
             public UnityEvent<MonoBehaviour> customSetup;
-
-            public UnityEvent<int> onDropdownValueChanged;
-            public UnityEvent<float> onSliderValueChanged;
-            public UnityEvent<bool> onToggleValueChanged;
         }
 
         public UIElementConfig config;
         public GameObject prefab;
+
+        [NonSerialized]
+        public object value;
 
         public void CreateUIElement(GameObject parent, int listIndex)
         {
@@ -146,16 +161,15 @@ public class SettingsController : MonoBehaviour
             slider.maxValue = 100;
             slider.value = 50;
             config.customSetup?.Invoke(slider);
-
-            slider.onValueChanged.AddListener(config.onSliderValueChanged.Invoke);
         }
 
         private void SetupToggle(Toggle toggle)
         {
             toggle.isOn = true;
             config.customSetup?.Invoke(toggle);
-
-            toggle.onValueChanged.AddListener(config.onToggleValueChanged.Invoke);
         }
     }
+
+    [System.Serializable]
+    public class SettingsCategory { [SerializeField] public string name; [SerializeField] public SettingsObject[] settings; }
 }

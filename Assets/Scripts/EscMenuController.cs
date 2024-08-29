@@ -20,7 +20,7 @@ public class EscMenuController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if(pauseMenuPanel.activeSelf)
+            if(pauseMenuPanel.activeSelf || settingsMenuPanel.activeSelf)
             {
                 Resume();
             } else
@@ -60,10 +60,6 @@ public class EscMenuController : MonoBehaviour
 
     public void Quit()
     {
-/*        if(Application.isEditor)
-        {
-            EditorApplication.ExitPlaymode();
-        }*/
         Application.Quit();
     }
 }
