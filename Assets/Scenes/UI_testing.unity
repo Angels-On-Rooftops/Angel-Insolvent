@@ -868,15 +868,31 @@ MonoBehaviour:
   - config:
       type: 0
       label: newdropdown
+      customSetup:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 567691417}
+            m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+            m_MethodName: SetupResolutionDropdown
+            m_Mode: 0
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      onDropdownValueChanged:
+        m_PersistentCalls:
+          m_Calls: []
+      onSliderValueChanged:
+        m_PersistentCalls:
+          m_Calls: []
+      onToggleValueChanged:
+        m_PersistentCalls:
+          m_Calls: []
     prefab: {fileID: 4717680233200485397, guid: 5b8b835033839fe448ae80353eabb04b, type: 3}
-  - config:
-      type: 1
-      label: newdropdown
-    prefab: {fileID: 7467130130709595849, guid: 6945fc1f50a89514b9f11ba1e2fd07d7, type: 3}
-  - config:
-      type: 2
-      label: newdropdown
-    prefab: {fileID: 7957674355045272187, guid: 0794277df0a849c4e97900fe58ed0932, type: 3}
   settingsTitle: {fileID: 487881631}
 --- !u!1 &956546312
 GameObject:

@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using Unity.VisualScripting.FullSerializer;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class SettingsController : MonoBehaviour
@@ -12,6 +14,7 @@ public class SettingsController : MonoBehaviour
     public SettingsObject[] settingsObjects;
     float currVolume;
     Resolution[] resolutions;
+    int currentResolutionIndex;
     public GameObject settingsTitle;
 
     // Start is called before the first frame update
@@ -21,23 +24,30 @@ public class SettingsController : MonoBehaviour
         {
             settingsObjects[i].CreateUIElement(settingsTitle, i);
         }
-        //resolutionDropdown.ClearOptions();
-        //List<string> resolutionOptions = new List<string>();
-        //resolutions = Screen.resolutions;
-        //int currentResolutionIndex = 0;
-        //for(int i = 0; i < resolutions.Length; i++)
-        //{
-        //    string resolutionOption = resolutions[i].width + " x " + resolutions[i].height;
-        //    resolutionOptions.Add(resolutionOption);
-        //    if(resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
-        //    {
-        //        currentResolutionIndex = i;
-        //    }
-        //}
-        //resolutionDropdown.AddOptions(resolutionOptions);
-        //resolutionDropdown.RefreshShownValue();
-        //LoadSettings(currentResolutionIndex);
+        LoadSettings(currentResolutionIndex);
     }
+
+    public void SetupResolutionDropdown(MonoBehaviour resolutionDropdown)
+    {
+        (resolutionDropdown as TMPro.TMP_Dropdown).ClearOptions();
+        List<string> resolutionOptions = new List<string>();
+        resolutions = Screen.resolutions;
+        int currentResolutionIndex = 0;
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            string resolutionOption = resolutions[i].width + " x " + resolutions[i].height;
+            resolutionOptions.Add(resolutionOption);
+            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentResolutionIndex = i;
+            }
+        }
+        (resolutionDropdown as TMPro.TMP_Dropdown).AddOptions(resolutionOptions);
+        (resolutionDropdown as TMPro.TMP_Dropdown).RefreshShownValue();
+
+        (resolutionDropdown as TMPro.TMP_Dropdown).onValueChanged.AddListener(delegate { SetResolution((resolutionDropdown as TMPro.TMP_Dropdown).value); });
+    }
+
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
@@ -86,9 +96,11 @@ public class SettingsController : MonoBehaviour
             public UIElementType type;
             public string label;
 
-            public Action<TMPro.TMP_Dropdown> dropdownSetup;
-            public Action<Slider> sliderSetup;
-            public Action<Toggle> toggleSetup;
+            public UnityEvent<MonoBehaviour> customSetup;
+
+            public UnityEvent<int> onDropdownValueChanged;
+            public UnityEvent<float> onSliderValueChanged;
+            public UnityEvent<bool> onToggleValueChanged;
         }
 
         public UIElementConfig config;
@@ -125,7 +137,7 @@ public class SettingsController : MonoBehaviour
         private void SetupDropdown(TMPro.TMP_Dropdown dropdown)
         {
             dropdown.options.Clear();
-            config.dropdownSetup?.Invoke(dropdown);
+            config.customSetup?.Invoke(dropdown);
         }
 
         private void SetupSlider(Slider slider)
@@ -133,13 +145,17 @@ public class SettingsController : MonoBehaviour
             slider.minValue = 0;
             slider.maxValue = 100;
             slider.value = 50;
-            config.sliderSetup?.Invoke(slider);
+            config.customSetup?.Invoke(slider);
+
+            slider.onValueChanged.AddListener(config.onSliderValueChanged.Invoke);
         }
 
         private void SetupToggle(Toggle toggle)
         {
             toggle.isOn = true;
-            config.toggleSetup?.Invoke(toggle);
+            config.customSetup?.Invoke(toggle);
+
+            toggle.onValueChanged.AddListener(config.onToggleValueChanged.Invoke);
         }
     }
 }

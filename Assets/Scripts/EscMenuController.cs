@@ -32,6 +32,10 @@ public class EscMenuController : MonoBehaviour
 
     public void Resume()
     {
+        if(settingsMenuPanel.activeSelf)
+        {
+            CloseSettings();
+        }
         pauseMenuPanel.SetActive(false);
         Time.timeScale = 1f;
     }
