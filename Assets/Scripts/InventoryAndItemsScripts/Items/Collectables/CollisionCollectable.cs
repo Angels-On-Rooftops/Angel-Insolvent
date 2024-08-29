@@ -13,7 +13,7 @@ namespace Items.Collectables
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!this.hasBeenCollected && (other.gameObject.GetComponent<InventorySystem>() != null))
+            if (!this.hasBeenCollected && (other.gameObject.GetComponent<AttachInventoryToCharacter>() != null))
             {
                 this.hasBeenCollected = true; //Do not allow the Player to collect the Collectable multiple times
                 StartCoroutine(CollectionRoutine(other.gameObject));

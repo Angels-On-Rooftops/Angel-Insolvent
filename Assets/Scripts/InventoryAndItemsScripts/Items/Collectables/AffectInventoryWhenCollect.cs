@@ -32,7 +32,7 @@ namespace Items.Collectables
 
         void AddToInventory(GameObject character)
         {
-            character.GetComponent<InventorySystem>().Add(this.item, this.stackSize);
+            character.GetComponent<AttachInventoryToCharacter>().InventorySystem.Add(this.item, this.stackSize);
         }
     }
 }

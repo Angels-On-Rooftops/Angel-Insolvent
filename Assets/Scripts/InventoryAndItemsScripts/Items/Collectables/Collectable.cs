@@ -24,7 +24,10 @@ namespace Items.Collectables
 
         protected IEnumerator CollectionRoutine(GameObject character)
         {
-            OnCollection(character);
+            if (OnCollection != null)
+            {
+                OnCollection(character);
+            }
 
             if (this.destroyOnCollect)
             {

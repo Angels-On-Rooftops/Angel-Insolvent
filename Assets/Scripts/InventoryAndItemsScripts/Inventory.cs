@@ -3,22 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using Items;
 using Items.Collectables;
+using System;
 
 namespace Inventory
 {
-    public class InventorySystem : MonoBehaviour
+    [Serializable]
+    public class InventorySystem
     {
         private Dictionary<ItemData, InventoryItem> itemDictionary; //to search by ItemData faster
-        //private List<InventoryItem> inventoryItems;
 
-        private void Awake()
+        /// <summary>
+        /// Public property to make accessing Inventory info easier,
+        /// but DO NOT modify Dictionary entries outside of the InventorySystem class
+        /// </summary>
+        public Dictionary<ItemData, InventoryItem> ItemDictionary { get { return itemDictionary; } }
+
+        public InventorySystem()
         {
-            this.itemDictionary = new Dictionary<ItemData, InventoryItem>();
-            //this.inventoryItems = new List<InventoryItem>();
-            Debug.Log("Start: " + PrintInventory());
+            InitializeInventory();
         }
 
-        private string PrintInventory()
+        protected void InitializeInventory()
+        {
+            this.itemDictionary = new Dictionary<ItemData, InventoryItem>();
+        }
+
+        public string PrintInventory()
         {
             string inventoryStr = "Inventory:\n";
 
@@ -31,7 +41,7 @@ namespace Inventory
             return inventoryStr;
         }
 
-        public void Add(ItemData itemData, int amount = 1)
+        public virtual void Add(ItemData itemData, int amount = 1)
         {
             if (this.itemDictionary.TryGetValue(itemData, out InventoryItem item))
             {
@@ -42,11 +52,9 @@ namespace Inventory
                 InventoryItem newItem = new InventoryItem(itemData, amount);
                 this.itemDictionary.Add(itemData, newItem);  
             }
-
-            Debug.Log(PrintInventory());
         }
 
-        public void Add(InventoryItem item)
+        public virtual void Add(InventoryItem item)
         {
             if (this.itemDictionary.TryGetValue(item.Data, out InventoryItem itemFromDict))
             {
@@ -58,7 +66,7 @@ namespace Inventory
             }
         }
 
-        public void Remove(ItemData itemData, int amount = 1)
+        public virtual void Remove(ItemData itemData, int amount = 1)
         {
             if (this.itemDictionary.TryGetValue(itemData, out InventoryItem item))
             {
@@ -75,7 +83,7 @@ namespace Inventory
             }
         }
 
-        public void Remove(InventoryItem item)
+        public virtual void Remove(InventoryItem item)
         {
             if (this.itemDictionary.TryGetValue(item.Data, out InventoryItem itemFromDict))
             {
