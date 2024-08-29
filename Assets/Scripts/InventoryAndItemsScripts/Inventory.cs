@@ -7,7 +7,6 @@ using System;
 
 namespace Inventory
 {
-    [Serializable]
     public class InventorySystem
     {
         private Dictionary<ItemData, InventoryItem> itemDictionary; //to search by ItemData faster
@@ -23,19 +22,18 @@ namespace Inventory
             InitializeInventory();
         }
 
-        protected void InitializeInventory()
+        protected virtual void InitializeInventory()
         {
             this.itemDictionary = new Dictionary<ItemData, InventoryItem>();
         }
 
-        public string PrintInventory()
+        public virtual string PrintInventory()
         {
             string inventoryStr = "Inventory:\n";
 
             foreach (var itemPair in this.itemDictionary)
             {
-                string itemPairStr = itemPair.Key.itemName + ": " + itemPair.Value.StackSize + "\n";
-                inventoryStr += itemPairStr;
+                inventoryStr += itemPair.Key.itemName + ": " + itemPair.Value.StackSize + "\n";
             }
 
             return inventoryStr;

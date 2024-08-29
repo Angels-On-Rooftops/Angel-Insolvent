@@ -9,7 +9,7 @@ namespace Inventory
     /// <summary>
     /// Singleton Inventory to make working with the UI easier
     /// </summary>
-    public class PlayerInventory : InventorySystem
+    public class PlayerInventory : InventoryWithEquipment
     {
         private static PlayerInventory instance = null;
         private static readonly object instanceLock = new object(); //thread-safe for co-routines
@@ -35,6 +35,7 @@ namespace Inventory
         }
 
         public event Action OnInventoryUpdate;
+        public event Action OnEquippedChange;
 
         public override void Add(ItemData itemData, int amount = 1)
         {
@@ -73,6 +74,53 @@ namespace Inventory
             if (OnInventoryUpdate != null)
             {
                 OnInventoryUpdate();
+            }
+        }
+
+        //InventoryWithEquipment Methods:
+
+        public override void UnEquipItem()
+        {
+            base.UnEquipItem();
+
+            if (OnInventoryUpdate != null)
+            {
+                OnInventoryUpdate();
+            }
+
+            if (OnEquippedChange != null)
+            {
+                OnEquippedChange();
+            }
+        }
+
+        public override void EquipItem(int equipmentListItemIndex)
+        {
+            base.EquipItem(equipmentListItemIndex);
+
+            if (OnInventoryUpdate != null)
+            {
+                OnInventoryUpdate();
+            }
+
+            if (OnEquippedChange != null)
+            {
+                OnEquippedChange();
+            }
+        }
+
+        public override void EquipItem(ItemData equipmentListItem)
+        {
+            base.EquipItem(equipmentListItem);
+
+            if (OnInventoryUpdate != null)
+            {
+                OnInventoryUpdate();
+            }
+
+            if (OnEquippedChange != null)
+            {
+                OnEquippedChange();
             }
         }
     }

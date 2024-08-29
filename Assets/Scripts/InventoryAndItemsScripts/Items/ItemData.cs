@@ -10,6 +10,7 @@ namespace Items
         public string itemName;
         public Sprite sprite; //can be used for UI graphic
         public GameObject itemPrefab;
+        public bool isEquippable;
     }
 }
 
