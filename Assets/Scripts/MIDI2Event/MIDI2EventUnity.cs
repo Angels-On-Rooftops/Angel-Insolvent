@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using midi2event;
-using static midi2event.Midi2Event;
+using MIDI2EventSystem;
+using static MIDI2EventSystem.Midi2Event;
 using System;
 
 //a wrapper class to make interfacing with the midi2event easier in the unity editor

@@ -1,4 +1,4 @@
-namespace midi2event
+namespace MIDI2EventSystem
 {
     internal class SetTempoMeta : MTrkEvent
     {

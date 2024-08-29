@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using midi2event;
+using MIDI2EventSystem;
 using System;
 
 public class Bopper : MonoBehaviour
@@ -16,7 +16,7 @@ public class Bopper : MonoBehaviour
     MIDI2EventUnity handler;
 
     [SerializeField]
-    Midi2Event.Notes note;
+    Notes note;
 
     [SerializeField]
     int octave;
