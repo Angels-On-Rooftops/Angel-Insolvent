@@ -20,5 +20,15 @@ namespace Utility
             result.triangles = new int[] { 0, 1, 2 };
             return result;
         }
+
+        public static Mesh MakeTriangle(Vector3[] vertecies)
+        {
+            if(vertecies.Length < 3)
+            {
+                Debug.Log("triangle missing vertecies!");
+                return new Mesh();
+            }
+            return MakeTriangle(vertecies[0], vertecies[1], vertecies[2]);
+        }
     }
 }

@@ -39,13 +39,13 @@ public class TimerPlatform : MonoBehaviour
     void Start()
     {
         onParams = new RenderParams(OnMaterial);
-        triangles = GenerateTriangleRing(3);
+        triangles = GenerateTriangleRing(5);
     }
 
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < triangles.Length; i++)
         {
             Graphics.RenderMesh(onParams, triangles[i], 0, transform.localToWorldMatrix);
         }
@@ -55,15 +55,41 @@ public class TimerPlatform : MonoBehaviour
         Mesh[] result = new Mesh[numTriangles];
         float radAngle = 2 * Mathf.PI / numTriangles;
 
-        Vector3 point1 = Vector3.zero + TriangleOffset;
+        for (int i = 0; i<numTriangles; i++)
+        {
+            Vector3[] points = new Vector3[3];
 
-        float halfFarSideLen = Mathf.Sin(radAngle / 2) * TriangleRadius;
-        float height = Mathf.Cos(radAngle / 2) * TriangleRadius;
+            //generate triangle points
+            points[0] = Vector3.zero + TriangleOffset;
 
-        Vector3 point2 = point1 + new Vector3(-halfFarSideLen, 0, height);
-        Vector3 point3 = point1 + new Vector3(halfFarSideLen, 0, height);
-        Mesh newMesh = TriangleMaker.MakeTriangle(point1, point2, point3);
-        result[0] = newMesh;
+            float halfFarSideLen = Mathf.Sin(radAngle / 2) * TriangleRadius;
+            float height = Mathf.Cos(radAngle / 2) * TriangleRadius;
+
+            points[1] = points[0] + new Vector3(-halfFarSideLen, 0, height);
+            points[2] = points[0] + new Vector3(halfFarSideLen, 0, height);
+
+            //rotate triangle points
+            
+            for(int j = 0; j< 3; j++)
+            {
+                float rotAngle = radAngle * i;
+                float oldX = points[j].x;
+                points[j].x = points[j].x * Mathf.Cos(rotAngle) - points[j].z * Mathf.Sin(rotAngle);
+                points[j].z = oldX * Mathf.Sin(rotAngle) + points[j].z * Mathf.Cos(rotAngle);
+            }
+            
+            
+            foreach (Vector3 point in points)
+            {
+                Debug.Log(point);
+            }
+
+            //make triangle mesh
+            Mesh newMesh = TriangleMaker.MakeTriangle(points);
+            result[i] = newMesh;
+        }
+
+        
         return result;
 
     }
