@@ -7,9 +7,14 @@ public class NPCSystem : MonoBehaviour
 {
 
     bool playerDetection = false;
+    private Transform npc;
     public GameObject popup;
     public GameObject canvas;
 
+    private void Start()
+    {
+        npc = transform.parent;
+    }
 
     // Update is called once per frame
     void Update()
@@ -26,8 +31,6 @@ public class NPCSystem : MonoBehaviour
         {
             playerDetection = true;
             canvas.SetActive(playerDetection);
-            canvas.transform.position = transform.position;
-            popup.transform.position = transform.position + Vector3.up * 30;
         }
     }
 
