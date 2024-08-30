@@ -46,12 +46,7 @@ namespace Inventory
 
         public override void Add(InventoryItem item)
         {
-            base.Add(item);
-
-            if (OnInventoryUpdate != null)
-            {
-                OnInventoryUpdate();
-            }
+            this.Add(item.Data, item.StackSize);
         }
             
         public override void Remove(ItemData itemData, int amount = 1)
@@ -66,12 +61,7 @@ namespace Inventory
 
         public override void Remove(InventoryItem item)
         {
-            base.Remove(item);
-
-            if (OnInventoryUpdate != null)
-            {
-                OnInventoryUpdate();
-            }
+            this.Remove(item.Data, item.StackSize);
         }
 
         //InventoryWithEquipment Methods:

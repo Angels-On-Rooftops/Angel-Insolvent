@@ -64,19 +64,19 @@ namespace Inventory
             {
                 return;
             }
-
+            
             if (this.currentlyEquippedItemIndex == -1
                     || this.currentlyEquippedItemIndex == (this.equipmentList.Count - 1))
             {
-                /* there is nothing currently equipped,
-                    or the currently equipped item is the last one in the equipmentList,
-                    so equip the first item in the list */
+                // there is nothing currently equipped,
+                //  or the currently equipped item is the last one in the equipmentList,
+                //  so equip the first item in the list
                 EquipItem(0);
             }
             else
             {
                 EquipItem(this.currentlyEquippedItemIndex + 1);
-            }
+            } 
         }
 
         public override string PrintInventory()
@@ -115,13 +115,7 @@ namespace Inventory
 
         public override void Add(InventoryItem item)
         {
-            //check whether the item is a new equippable item
-            if (item.Data.isEquippable && !this.ItemDictionary.ContainsKey(item.Data))
-            {
-                this.equipmentList.Add(item.Data);
-            }
-
-            base.Add(item);
+            this.Add(item.Data, item.StackSize);
         }
 
         public override void Remove(ItemData itemData, int amount = 1)
@@ -137,13 +131,7 @@ namespace Inventory
 
         public override void Remove(InventoryItem item)
         {
-            //check whether the item is an equippable item currently in the inventory
-            if (item.Data.isEquippable && this.ItemDictionary.ContainsKey(item.Data))
-            {
-                this.equipmentList.Remove(item.Data);
-            }
-
-            base.Remove(item);
+            this.Remove(item.Data, item.StackSize);
         }
     }
 }
