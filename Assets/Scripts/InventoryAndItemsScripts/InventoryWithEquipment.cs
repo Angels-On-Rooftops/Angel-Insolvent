@@ -30,15 +30,8 @@ namespace Inventory
         /// </summary>
         public int CurrentlyEquippedItemIndex { get { return currentlyEquippedItemIndex; } }
 
-        public InventoryWithEquipment()
+        public InventoryWithEquipment() : base()
         {
-            InitializeInventory();
-        }
-
-        protected override void InitializeInventory()
-        {
-            base.InitializeInventory();
-
             this.equipmentList = new List<ItemData>();
         }
 

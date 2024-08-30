@@ -19,11 +19,6 @@ namespace Inventory
 
         public InventorySystem()
         {
-            InitializeInventory();
-        }
-
-        protected virtual void InitializeInventory()
-        {
             this.itemDictionary = new Dictionary<ItemData, InventoryItem>();
         }
 

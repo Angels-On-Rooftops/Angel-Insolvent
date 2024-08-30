@@ -14,10 +14,7 @@ namespace Inventory
         private static PlayerInventory instance = null;
         private static readonly object instanceLock = new object(); //thread-safe for co-routines
 
-        PlayerInventory()
-        {
-            InitializeInventory();
-        }
+        PlayerInventory() : base() { }
 
         public static PlayerInventory Instance
         {
