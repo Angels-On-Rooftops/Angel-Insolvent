@@ -201,13 +201,40 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnMaterial: {fileID: 2100000, guid: 5be1227d4c2c05b4394035bcdfd568c8, type: 2}
-  TriangleRadius: 5
-  TriangleCenterOffset: 0
-  TriangleOffset: {x: 0, y: 1.001, z: 0}
+  TriangleCalculationRadius: 4
+  TrianglePushout: 1
+  TriangleCenterOffset: {x: 0, y: 1.001, z: 0}
   MaxInternalTriangleAngle: 120
   BeatNote: 0
   BeatOctave: 0
-  Debounces: []
+  Debounces:
+  - note: 0
+    octave: 0
+    numTicks: 1
+  - note: 0
+    octave: 0
+    numTicks: 2
+  - note: 0
+    octave: 0
+    numTicks: 3
+  - note: 0
+    octave: 0
+    numTicks: 4
+  - note: 0
+    octave: 0
+    numTicks: 5
+  - note: 0
+    octave: 0
+    numTicks: 6
+  - note: 0
+    octave: 0
+    numTicks: 7
+  - note: 0
+    octave: 0
+    numTicks: 8
+  - note: 0
+    octave: 0
+    numTicks: 9
 --- !u!1 &724895595
 GameObject:
   m_ObjectHideFlags: 0
