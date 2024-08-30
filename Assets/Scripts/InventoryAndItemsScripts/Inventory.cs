@@ -65,7 +65,7 @@ namespace Inventory
             {
                 item.RemoveFromStack(amount);
 
-                if (item.StackSize == 0)
+                if (item.StackSize <= 0)
                 {
                     this.itemDictionary.Remove(item.Data);
                 }
@@ -78,19 +78,7 @@ namespace Inventory
 
         public virtual void Remove(InventoryItem item)
         {
-            if (this.itemDictionary.TryGetValue(item.Data, out InventoryItem itemFromDict))
-            {
-                itemFromDict.RemoveFromStack(item.StackSize);
-
-                if (itemFromDict.StackSize == 0)
-                {
-                    this.itemDictionary.Remove(item.Data);
-                }
-            }
-            else
-            {
-                Debug.LogError("Attempt to Remove item from Inventory that does not exist.");  
-            }
+            this.Remove(item.Data, item.StackSize);
         }
     }
 }

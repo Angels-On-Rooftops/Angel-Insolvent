@@ -29,7 +29,14 @@ namespace Items
 
         public void RemoveFromStack(int amount = 1)
         {
-            this.StackSize -= amount;
+            if (this.StackSize > 0)
+            {
+                this.StackSize -= amount;
+            }
+            else
+            {
+                Debug.LogError("Attempt to Remove from Stack of " + this.Data.itemName + "with Size of " + this.StackSize);
+            }
         }
     }
 }
