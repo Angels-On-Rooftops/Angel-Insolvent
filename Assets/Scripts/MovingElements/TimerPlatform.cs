@@ -46,7 +46,7 @@ public class TimerPlatform : MonoBehaviour
     private RenderParams onParams;
     private RenderParams offParams;
     private int activeRing = 0;
-    private int countdown = 0;
+    private int countdown;
     private int locationIndex = 0;
     private Action[] UnsubActions;
 
@@ -60,6 +60,7 @@ public class TimerPlatform : MonoBehaviour
             TriangleRings[i] = GenerateTriangleRing(Debounces[i].numTicks - 1);
         }
         UnsubActions = new Action[Debounces.Length + 1];
+        countdown = TriangleRings[activeRing].Length;
     }
 
     private void OnEnable()
@@ -70,7 +71,6 @@ public class TimerPlatform : MonoBehaviour
             Action switchAction = () =>
             {
                 SetActiveRing(ringIndex);
-                Debug.Log(i);
             };
             UnsubActions[i] = EventSys.Subscribe(
                 switchAction,
@@ -109,17 +109,37 @@ public class TimerPlatform : MonoBehaviour
     public void DecrementCounter()
     {
         countdown--;
-        if (countdown < 0)
+        if (countdown == 0)
         {
-            Debug.Log("hiii");
+            locationIndex = (locationIndex + 1) % PositionLoop.Length;
+            StartCoroutine(MoveToPosInBeat(PositionLoop[locationIndex]));
         }
     }
 
     public void SetActiveRing(int i)
     {
-        Debug.Log("ring " + i + " set");
         activeRing = i;
         countdown = TriangleRings[i].Length;
+    }
+
+    IEnumerator MoveToPosInBeat(Vector3 target)
+    {
+        float timer = 0;
+        float moveDuration = EventSys.SecPerBeat();
+        float speed = Vector3.Distance(this.transform.position, target) / moveDuration;
+
+        while (timer <= moveDuration)
+        {
+            this.transform.position = Vector3.MoveTowards(
+                this.transform.position,
+                target,
+                speed * Time.deltaTime
+            );
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        this.transform.position = target;
     }
 
     public Mesh[] GenerateTriangleRing(int numTriangles)
@@ -135,8 +155,6 @@ public class TimerPlatform : MonoBehaviour
 
             //generate triangle points
             points[0] = Vector3.zero + TriangleCenterOffset;
-
-            //
 
             float halfFarSideLen = Mathf.Sin(angleForTris / 2) * TriangleCalculationRadius;
             float height = Mathf.Cos(angleForTris / 2) * TriangleCalculationRadius;

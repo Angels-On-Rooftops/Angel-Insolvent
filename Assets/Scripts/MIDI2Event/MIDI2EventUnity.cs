@@ -68,4 +68,10 @@ public class MIDI2EventUnity : MonoBehaviour
     {
         return eventPlayer.Subscribe(action, note, octave, type);
     }
+
+    //returns the current number of seconds per beat
+    public float SecPerBeat()
+    {
+        return (float)eventPlayer.SecPerBeat();
+    }
 }

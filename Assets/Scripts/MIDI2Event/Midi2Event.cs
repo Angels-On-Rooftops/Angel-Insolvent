@@ -72,6 +72,12 @@ namespace MIDI2EventSystem
             }
         }
 
+        //returns the current number of seconds per beat
+        public double SecPerBeat()
+        {
+            return _usPerQuarter * US_TO_S;
+        }
+
         //return the event in the system related to MTrkEvent e
         private Action GetEvent(MTrkEvent e)
         {
