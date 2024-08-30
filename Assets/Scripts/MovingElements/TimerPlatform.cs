@@ -9,7 +9,25 @@ using System.Drawing;
 public class TimerPlatform : MonoBehaviour
 {
     [SerializeField]
+    public MIDI2EventUnity EventSys;
+
+    [SerializeField]
+    public Vector3[] PositionLoop;
+
+    [SerializeField]
+    public Notes BeatNote;
+
+    [SerializeField]
+    public int BeatOctave;
+
+    [SerializeField]
+    internal NoteDebounceTriplet[] Debounces;
+
+    [SerializeField]
     public Material OnMaterial;
+
+    [SerializeField]
+    public Material OffMaterial;
 
     [SerializeField]
     public float TriangleCalculationRadius;
@@ -24,51 +42,94 @@ public class TimerPlatform : MonoBehaviour
     [Range(1, 179)]
     public float MaxInternalTriangleAngle = 120;
 
-    [SerializeField]
-    public Notes BeatNote;
-
-    [SerializeField]
-    public int BeatOctave;
-
-    [SerializeField]
-    internal NoteDebounceTriplet[] Debounces;
-
-    private Mesh[][] triangleRings;
+    private Mesh[][] TriangleRings;
     private RenderParams onParams;
+    private RenderParams offParams;
     private int activeRing = 0;
+    private int countdown = 0;
+    private int locationIndex = 0;
+    private Action[] UnsubActions;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         onParams = new RenderParams(OnMaterial);
-        triangleRings = new Mesh[Debounces.Length][];
-        for(int i = 0; i<triangleRings.Length; i++)
+        offParams = new RenderParams(OffMaterial);
+        TriangleRings = new Mesh[Debounces.Length][];
+        for (int i = 0; i < TriangleRings.Length; i++)
         {
-            triangleRings[i] = GenerateTriangleRing(Debounces[i].numTicks);
+            TriangleRings[i] = GenerateTriangleRing(Debounces[i].numTicks - 1);
+        }
+        UnsubActions = new Action[Debounces.Length + 1];
+    }
+
+    private void OnEnable()
+    {
+        for (int i = 0; i < Debounces.Length; i++)
+        {
+            int ringIndex = i;
+            Action switchAction = () =>
+            {
+                SetActiveRing(ringIndex);
+                Debug.Log(i);
+            };
+            UnsubActions[i] = EventSys.Subscribe(
+                switchAction,
+                Debounces[i].note,
+                Debounces[i].octave
+            );
+        }
+
+        UnsubActions[Debounces.Length] = EventSys.Subscribe(DecrementCounter, BeatNote, BeatOctave);
+    }
+
+    private void OnDisable()
+    {
+        for (int i = 0; i < UnsubActions.Length; i++)
+        {
+            UnsubActions[i]();
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        Debug.Log(activeRing);
+        for (int i = 0; i < TriangleRings[activeRing].Length; i++)
         {
-            activeRing = (activeRing + 1) % triangleRings.Length;
-        }
-        
-        for (int i = 0; i < triangleRings[activeRing].Length; i++)
-        {
-            Graphics.RenderMesh(onParams, triangleRings[activeRing][i], 0, transform.localToWorldMatrix);
+            RenderParams toUse = i < countdown ? onParams : offParams;
+            Graphics.RenderMesh(
+                toUse,
+                TriangleRings[activeRing][i],
+                0,
+                transform.localToWorldMatrix
+            );
         }
     }
 
-    public Mesh[] GenerateTriangleRing(int numTriangles) {
+    public void DecrementCounter()
+    {
+        countdown--;
+        if (countdown < 0)
+        {
+            Debug.Log("hiii");
+        }
+    }
+
+    public void SetActiveRing(int i)
+    {
+        Debug.Log("ring " + i + " set");
+        activeRing = i;
+        countdown = TriangleRings[i].Length;
+    }
+
+    public Mesh[] GenerateTriangleRing(int numTriangles)
+    {
         Mesh[] result = new Mesh[numTriangles];
         float radAngle = 2 * Mathf.PI / numTriangles;
         float maxRadAngle = MaxInternalTriangleAngle * Mathf.Deg2Rad;
         float angleForTris = Mathf.Min(radAngle, maxRadAngle);
 
-        for (int i = 0; i<numTriangles; i++)
+        for (int i = 0; i < numTriangles; i++)
         {
             Vector3[] points = new Vector3[3];
 
@@ -84,7 +145,7 @@ public class TimerPlatform : MonoBehaviour
             points[2] = points[0] + new Vector3(halfFarSideLen, 0, height);
 
             //rotate triangle points
-            for (int j = 0; j< 3; j++)
+            for (int j = 0; j < 3; j++)
             {
                 float rotAngle = radAngle * i;
                 float oldX = points[j].x;
@@ -92,14 +153,12 @@ public class TimerPlatform : MonoBehaviour
                 points[j].z = oldX * Mathf.Sin(rotAngle) + points[j].z * Mathf.Cos(rotAngle);
             }
 
-            
             //pushout triangle points
             Vector3 unitPush = (points[1] + points[2]).normalized;
             for (int j = 0; j < 3; j++)
             {
                 points[j] += unitPush * TrianglePushout;
             }
-            
 
             //make triangle mesh
             Mesh newMesh = TriangleMaker.MakeTriangle(points);
@@ -108,8 +167,6 @@ public class TimerPlatform : MonoBehaviour
 
         return result;
     }
-
-
 }
 
 [Serializable]
@@ -119,5 +176,3 @@ internal struct NoteDebounceTriplet
     public int octave;
     public int numTicks;
 }
-
-
