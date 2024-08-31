@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Emit;
+using TMPro;
 using Unity.VisualScripting.FullSerializer;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -18,28 +20,55 @@ public class SettingsController : MonoBehaviour
     float currVolume;
     Resolution[] resolutions;
     int currentResolutionIndex;
-    [SerializeField] GameObject categoryButtonPrefab;
+    //too many serializefields, remember to refactor
+    [SerializeField] Button categoryButtonPrefab;
+    [SerializeField] GameObject settingsPanelPrefab;
+    [SerializeField] GameObject singleSettingPrefab;
 
     [SerializeField] GameObject categoriesPanel;
     [SerializeField] GameObject settingsPanel;
+
+    GameObject[] categoryButtons;
+    GameObject[] settingsCategoryPanels;
+    Dictionary<Button, GameObject> categoryButtonsDictionary = new Dictionary<Button, GameObject>();
+
+    GameObject activeCategory;
 
     // Start is called before the first frame update
     void Start()
     {
         for (int j = 0; j < settingsCategories.Length; j++)
         {
+            //Setup category button
+            Button categoryButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
+            categoryButton.onClick.AddListener(delegate { SwitchSettingsCategory(categoryButton); });
+
+            //Setup button text
             string categoryName = settingsCategories[j].name;
-            GameObject categoryButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
             var categoryLabel = categoryButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             categoryLabel.text = categoryName;
 
             var settingsObjects = settingsCategories[j].settings;
+
+            GameObject newSettingsPanel = Instantiate(settingsPanelPrefab, settingsPanel.gameObject.transform);
             for (int i = 0; i < settingsObjects.Length; i++)
             {
-                settingsObjects[i].CreateUIElement(this.gameObject, i);
+                GameObject newSetting = Instantiate(singleSettingPrefab, newSettingsPanel.gameObject.transform);
+                settingsObjects[i].CreateUIElement(newSetting, i);
             }
+            newSettingsPanel.SetActive(false);
+
+            categoryButtonsDictionary.Add(categoryButton, newSettingsPanel);
         }
+
+        activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
         LoadSettings(currentResolutionIndex);
+    }
+
+    private void SwitchSettingsCategory(Button categoryButton)
+    {
+        activeCategory.SetActive(false);
+        categoryButtonsDictionary[categoryButton].SetActive(true);
     }
 
     public void SetupResolutionDropdown(MonoBehaviour resolutionUIElement)
@@ -123,9 +152,17 @@ public class SettingsController : MonoBehaviour
 
         public void CreateUIElement(GameObject parent, int listIndex)
         {
-            GameObject uiElement = null;
+            //Create setting label
+            GameObject settingLabel = new GameObject("Label");
+            settingLabel.transform.SetParent(parent.gameObject.transform, false);
+            settingLabel.AddComponent<RectTransform>();
+            var labelText = settingLabel.AddComponent<TextMeshProUGUI>();
+            labelText.text = config.label;
 
+            //Create setting UI element
+            GameObject uiElement = null;
             uiElement = Instantiate(prefab, parent.gameObject.transform);
+
 
             switch (config.type)
             {
