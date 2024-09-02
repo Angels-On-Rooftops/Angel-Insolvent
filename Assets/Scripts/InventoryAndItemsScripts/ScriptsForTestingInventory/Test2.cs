@@ -24,12 +24,14 @@ public class Test2 : MonoBehaviour
     {
         PlayerInteractor.Instance.OnInInteractionRadius += ActivateInteractButton;
         PlayerInteractor.Instance.OnLeaveInteractionRadius += DeActivateInteractButton;
+        PlayerInteractor.Instance.CanInteractUpdate += UpdateInteractButton;
     }
 
     void OnDisable()
     {
         PlayerInteractor.Instance.OnInInteractionRadius -= ActivateInteractButton;
         PlayerInteractor.Instance.OnLeaveInteractionRadius -= DeActivateInteractButton;
+        PlayerInteractor.Instance.CanInteractUpdate -= UpdateInteractButton;
     }
 
     void ActivateInteractButton(bool mayInteract)
@@ -42,6 +44,11 @@ public class Test2 : MonoBehaviour
     void DeActivateInteractButton()
     {
         this.interactButton.gameObject.SetActive(false);
+    }
+
+    void UpdateInteractButton(bool mayInteract)
+    {
+        this.interactButton.interactable = mayInteract;
     }
 
     public void Interact()

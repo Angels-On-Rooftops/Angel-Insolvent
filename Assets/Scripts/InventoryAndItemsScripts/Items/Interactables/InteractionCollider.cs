@@ -52,5 +52,14 @@ namespace Items.Interactables
                 PlayerInteractor.Instance.LeaveInteractionRadius();
             }
         }
+
+        //May remove this if it causes performance issues
+        private void OnTriggerStay(Collider other)
+        {
+            if (other.gameObject.tag == "Player")
+            {
+                PlayerInteractor.Instance.CheckWhetherCanStillInteract(other);
+            }
+        }
     }
 }

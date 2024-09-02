@@ -1284,6 +1284,7 @@ GameObject:
   - component: {fileID: 725102547}
   - component: {fileID: 725102551}
   - component: {fileID: 725102550}
+  - component: {fileID: 725102552}
   m_Layer: 0
   m_Name: InteractableCube
   m_TagString: Untagged
@@ -1409,6 +1410,23 @@ MonoBehaviour:
   speedFloatUpBeforeDestroy: 5
   numberOfTimesCanInteract: 3
   player: {fileID: 829138733}
+--- !u!114 &725102552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725102545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e158b0d1ac8a8b46a309677a8bb7721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mustHaveEquipped: {fileID: 11400000, guid: 356a9c6b02161db43b9ff3cd296f83b0, type: 2}
+  mustNotHaveEquipped: {fileID: 0}
+  mustHaveTheseItems: []
+  mustHaveAtLeastOneOfTheseItems: []
+  mustHaveEquippedAtLeastOneOfTheseItems: []
 --- !u!1 &726004441
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,7 +1697,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &829138741
 MonoBehaviour:

@@ -49,6 +49,13 @@ namespace Items.Collectables
 
         public bool MeetsCriteriaToInteract(Collider playerCollider)
         {
+            InventoryChecker checker = this.gameObject.GetComponent<InventoryChecker>();
+
+            if (checker != null)
+            {
+                return checker.InventoryStateMeetsCriteria();
+            }
+            
             return true;
         }
     }

@@ -49,6 +49,8 @@ namespace Items.Interactables
 
         public event Action OnLeaveInteractionRadius;
 
+        public event Action<bool> CanInteractUpdate;
+
         public void InInteractionRadius(bool mayInteract, IInteractable interactable)
         {
             if (this.interactableCurrentlyInRange != null)
@@ -90,6 +92,27 @@ namespace Items.Interactables
             if (OnLeaveInteractionRadius != null)
             {
                 OnLeaveInteractionRadius();
+            }
+        }
+
+        //May remove this if it causes performance issues
+        public void CheckWhetherCanStillInteract(Collider playerCollider)
+        {
+            if (this.interactableCurrentlyInRange == null)
+            {
+                Debug.LogError("Interactable not currently in range.");
+                return;
+            }
+
+            bool previous = this.mayInteractWithCurrentInteractable;
+            this.mayInteractWithCurrentInteractable = this.interactableCurrentlyInRange.MeetsCriteriaToInteract(playerCollider);
+
+            if (previous != this.mayInteractWithCurrentInteractable)
+            {
+                if (CanInteractUpdate != null)
+                {
+                    CanInteractUpdate(this.mayInteractWithCurrentInteractable);
+                }
             }
         }
     }
