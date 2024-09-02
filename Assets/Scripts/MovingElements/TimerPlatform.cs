@@ -126,14 +126,14 @@ public class TimerPlatform : MonoBehaviour
     {
         float timer = 0;
         float moveDuration = EventSys.SecPerBeat();
-        float speed = Vector3.Distance(this.transform.position, target) / moveDuration;
+        Vector3 startPos = this.transform.position;
 
         while (timer <= moveDuration)
         {
-            this.transform.position = Vector3.MoveTowards(
-                this.transform.position,
+            this.transform.position = Vector3.Lerp(
+                startPos,
                 target,
-                speed * Time.deltaTime
+                Mathf.SmoothStep(0, 1, timer / moveDuration)
             );
             timer += Time.deltaTime;
             yield return null;
