@@ -22,19 +22,22 @@ public class DialogueGraph : EditorWindow
 
     //open the editing window
     private void OnEnable() {
-        _graphView = new DialogueGraphView{
-            name = "Dialogue Graph" 
-            };
-        _graphView.StretchToParentSize();
-        rootVisualElement.Add(_graphView);
-        }
-    //close the editing window
-    private void OnDisable() {
-        rootVisualElement.Remove(_graphView);
+        ConstructGraphView();
+        GenerateToolbar();
         }
 
 
     private void ConstructGraphView() {
+        _graphView = new DialogueGraphView {
+            name = "Dialogue Graph"
+            };
+        _graphView.StretchToParentSize();
+        rootVisualElement.Add(_graphView);
+        }
+
+    //close the editing window
+    private void OnDisable() {
+        rootVisualElement.Remove(_graphView);
         _graphView = new DialogueGraphView {
             name = "Dialogue Graph"
             };
@@ -47,7 +50,7 @@ public class DialogueGraph : EditorWindow
         var toolbar = new Toolbar();
 
         //new node button
-        var nodeCreateButton = new Button(clickEvent: () => { _graphView.CreateDialogueNode("Dialogue Node"); });
+        var nodeCreateButton = new Button(clickEvent: () => { _graphView.CreateNode("Dialogue Node"); });
         nodeCreateButton.text = "Create Node";
         toolbar.Add(nodeCreateButton);
 

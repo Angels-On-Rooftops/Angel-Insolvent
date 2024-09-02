@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
+
 
 public class DialogueGraphView : GraphView
 {
@@ -48,7 +49,7 @@ public class DialogueGraphView : GraphView
         
         }
 
-    //add nodes to the graph
+    //creates new node
     public DialogueNode CreateDialogueNode(string nodeName) {
         var dialogueNode = new DialogueNode {
             title = nodeName,
@@ -60,10 +61,49 @@ public class DialogueGraphView : GraphView
         var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
         inputPort.portName = "Input";
         dialogueNode.inputContainer.Add(inputPort);
+
+        //button to choices
+        var button = new Button(() => { AddChoicePort(dialogueNode); });
+        button.text = "New Choice";
+        dialogueNode.titleContainer.Add(button);
+
         dialogueNode.RefreshExpandedState();
         dialogueNode.RefreshPorts();
+
         dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
 
         return dialogueNode;
         }
+
+    //adds choices to node
+    private void AddChoicePort(DialogueNode dialogueNode) {
+        var generatePort = GeneratePort(dialogueNode,Direction.Output);
+        var outputPortCount = dialogueNode.outputContainer.Query("connector").ToList().Count;
+        var outputPortName = $"Choice {outputPortCount}";
+
+        dialogueNode.outputContainer.Add(generatePort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        }
+
+    //adds node to graph
+    public void CreateNode(string nodeName) {
+        AddElement(CreateDialogueNode(nodeName));
+        }
+
+    //lets ports be connected
+    public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter) {
+        var compatiblePorts = new List<Port>();
+
+        ports.ForEach(port => {
+            //don't connect a port to itself
+            if(startPort != port && startPort.node != port.node) {
+                compatiblePorts.Add(port);
+                }
+        });
+
+        return compatiblePorts;
+        }
+
+    
     }
