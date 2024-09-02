@@ -17,19 +17,16 @@ public class SettingsController : MonoBehaviour
 {
     [SerializeField]
     public SettingsCategory[] settingsCategories;
-    float currVolume;
     Resolution[] resolutions;
-    int currentResolutionIndex;
-    //too many serializefields, remember to refactor
-    [SerializeField] Button categoryButtonPrefab;
-    [SerializeField] GameObject settingsPanelPrefab;
-    [SerializeField] GameObject singleSettingPrefab;
+    [SerializeField] AudioSource audioSource;
 
-    [SerializeField] GameObject categoriesPanel;
-    [SerializeField] GameObject settingsPanel;
+    Button categoryButtonPrefab;
+    GameObject settingsPanelPrefab;
+    GameObject singleSettingPrefab;
 
-    GameObject[] categoryButtons;
-    GameObject[] settingsCategoryPanels;
+    GameObject categoriesPanel;
+    GameObject settingsPanel;
+
     Dictionary<Button, GameObject> categoryButtonsDictionary = new Dictionary<Button, GameObject>();
 
     GameObject activeCategory;
@@ -37,7 +34,14 @@ public class SettingsController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (int j = 0; j < settingsCategories.Length; j++)
+        categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/SettingCategoryButton");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/SettingsPanelPrefab");
+        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/SingleSettingPrefab");
+
+        categoriesPanel = this.gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
+        settingsPanel = this.gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
+
+        for (int j = 0; j < settingsCategories.Length; j++) //For each category
         {
             //Setup category button
             Button categoryButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
@@ -51,7 +55,7 @@ public class SettingsController : MonoBehaviour
             var settingsObjects = settingsCategories[j].settings;
 
             GameObject newSettingsPanel = Instantiate(settingsPanelPrefab, settingsPanel.gameObject.transform);
-            for (int i = 0; i < settingsObjects.Length; i++)
+            for (int i = 0; i < settingsObjects.Length; i++) //for each setting in category
             {
                 GameObject newSetting = Instantiate(singleSettingPrefab, newSettingsPanel.gameObject.transform);
                 settingsObjects[i].CreateUIElement(newSetting, i);
@@ -61,14 +65,21 @@ public class SettingsController : MonoBehaviour
             categoryButtonsDictionary.Add(categoryButton, newSettingsPanel);
         }
 
+        //Setup done button
+        Button doneButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
+        doneButton.onClick.AddListener(delegate { this.gameObject.transform.parent.GetComponent<EscMenuController>().CloseSettings();  });
+        var doneLabel = doneButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        doneLabel.text = "Done";
+
+
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
-        LoadSettings(currentResolutionIndex);
     }
 
     private void SwitchSettingsCategory(Button categoryButton)
     {
         activeCategory.SetActive(false);
         categoryButtonsDictionary[categoryButton].SetActive(true);
+        activeCategory = categoryButtonsDictionary[categoryButton];
     }
 
     public void SetupResolutionDropdown(MonoBehaviour resolutionUIElement)
@@ -93,6 +104,18 @@ public class SettingsController : MonoBehaviour
         resolutionDropdown.onValueChanged.AddListener(delegate { SetResolution(resolutionDropdown.value); });
     }
 
+    public void SetupVolumeSlider(MonoBehaviour volumeUIElement)
+    {
+        var volumeSlider = volumeUIElement as Slider;
+        volumeSlider.onValueChanged.AddListener(delegate { SetVolume(volumeSlider.value); });
+    }
+
+    public void SetupFullscreenToggle(MonoBehaviour fullscreenUIElement)
+    {
+        var fullscreenToggle = fullscreenUIElement as Toggle;
+        fullscreenToggle.onValueChanged.AddListener(delegate { SetFullscreen(fullscreenToggle.isOn); });
+    }
+
     public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
@@ -100,34 +123,13 @@ public class SettingsController : MonoBehaviour
 
     public void SetVolume(float vol)
     {
-        //audioSource.volume = vol;
-        currVolume = vol;
+        audioSource.volume = vol;
     }
 
     public void SetResolution(int index)
     {
         Resolution resolution = resolutions[index];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
-
-    public void SaveSettings()
-    {
-        //PlayerPrefs.SetInt("ResolutionPreference", resolutionDropdown.value);
-        PlayerPrefs.SetFloat("VolumePreference", currVolume);
-    }
-
-    public void LoadSettings(int currentResolutionIndex)
-    {
-        //if (PlayerPrefs.HasKey("ResolutionPreference"))
-        //{
-        //    resolutionDropdown.value = PlayerPrefs.GetInt("ResolutionPreference");
-        //}
-        //else
-        //{
-        //    resolutionDropdown.value = currentResolutionIndex;
-        //}
-
-        //volumeSlider.value = PlayerPrefs.GetFloat("VolumePreference");
     }
 
     [System.Serializable]
@@ -195,8 +197,8 @@ public class SettingsController : MonoBehaviour
         private void SetupSlider(Slider slider)
         {
             slider.minValue = 0;
-            slider.maxValue = 100;
-            slider.value = 50;
+            slider.maxValue = 1;
+            slider.value = 0.5f;
             config.customSetup?.Invoke(slider);
         }
 
@@ -208,5 +210,5 @@ public class SettingsController : MonoBehaviour
     }
 
     [System.Serializable]
-    public class SettingsCategory { [SerializeField] public string name; [SerializeField] public SettingsObject[] settings; }
+    public struct SettingsCategory { [SerializeField] public string name; [SerializeField] public SettingsObject[] settings; }
 }
