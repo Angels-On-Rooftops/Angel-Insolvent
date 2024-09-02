@@ -93,7 +93,6 @@ public class TimerPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(activeRing);
         for (int i = 0; i < TriangleRings[activeRing].Length; i++)
         {
             RenderParams toUse = i < countdown ? onParams : offParams;
