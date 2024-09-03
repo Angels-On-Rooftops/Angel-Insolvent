@@ -9,6 +9,7 @@ namespace Inventory.Testing
     { 
         [SerializeField] private MovementControl movementController; 
         [SerializeField] private EscMenuController escMenuController; 
+        [SerializeField] private NpcInteractController interactController;
         private InputActions inputScheme;
         private UITestHandler uiTestHandler;
         
@@ -16,7 +17,7 @@ namespace Inventory.Testing
         { 
             inputScheme = new InputActions(); 
             movementController.Initialize(inputScheme.Player.Move);
-            uiTestHandler = new UITestHandler(inputScheme.Player.Menu, escMenuController);
+            uiTestHandler = new UITestHandler(inputScheme.Player.Menu, inputScheme.Player.Interact, escMenuController, interactController);
         }
     } 
 } 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class NPCSystem : MonoBehaviour
+public class NpcInteractController : MonoBehaviour
 {
 
     bool playerDetection = false;
@@ -16,10 +16,10 @@ public class NPCSystem : MonoBehaviour
         npc = transform.parent;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Interact()
     {
-        if(playerDetection && Input.GetKeyDown(KeyCode.E))
+        Debug.Log("Test");
+        if(playerDetection)
         {
             Debug.Log("NPC Interacted with player!");
         }
