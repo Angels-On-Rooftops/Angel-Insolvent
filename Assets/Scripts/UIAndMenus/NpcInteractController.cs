@@ -5,7 +5,7 @@ using TMPro;
 
 public class NpcInteractController : MonoBehaviour
 {
-
+    string postInteractText = "Dialogue";
     bool playerDetection = false;
     private Transform npc;
     public GameObject popup;
@@ -22,6 +22,7 @@ public class NpcInteractController : MonoBehaviour
         if(playerDetection)
         {
             Debug.Log("NPC Interacted with player!");
+            canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = postInteractText;
         }
     }
 

@@ -19,7 +19,7 @@ public class SettingsController : MonoBehaviour
     public SettingsCategory[] settingsCategories;
     Resolution[] resolutions;
     [SerializeField] AudioSource audioSource;
-    [SerializeField] EscMenuController escMenuController;
+    [SerializeField] UnityEvent doneBehavior;
 
     Button categoryButtonPrefab;
     GameObject settingsPanelPrefab;
@@ -68,7 +68,7 @@ public class SettingsController : MonoBehaviour
 
         //Setup done button
         Button doneButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
-        doneButton.onClick.AddListener(delegate { escMenuController.CloseSettings();  });
+        doneButton.onClick.AddListener(delegate { doneBehavior.Invoke(); });
         var doneLabel = doneButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         doneLabel.text = "Done";
 

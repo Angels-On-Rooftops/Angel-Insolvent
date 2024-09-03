@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class UITestHandler : MonoBehaviour
+public class UITestHandler
 {
     private EscMenuController escMenuController;
     private NpcInteractController interactController;
