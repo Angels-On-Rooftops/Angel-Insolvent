@@ -15,35 +15,22 @@ public class EscMenuController : MonoBehaviour
         settingsMenuPanel.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void MenuToggle()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(pauseMenuPanel.activeSelf)
         {
-            if(pauseMenuPanel.activeSelf || settingsMenuPanel.activeSelf)
+            if (settingsMenuPanel.activeSelf)
             {
-                Resume();
-            } else
-            {
-                Pause();
+                CloseSettings();
             }
+            pauseMenuPanel.SetActive(false);
+            Time.timeScale = 1f;
         }
-    }
-
-    public void Resume()
-    {
-        if(settingsMenuPanel.activeSelf)
+        else
         {
-            CloseSettings();
+            pauseMenuPanel.SetActive(true);
+            Time.timeScale = 0f;
         }
-        pauseMenuPanel.SetActive(false);
-        Time.timeScale = 1f;
-    }
-
-    private void Pause()
-    {
-        pauseMenuPanel.SetActive(true);
-        Time.timeScale = 0f;
     }
 
     public void OpenSettings()
