@@ -34,6 +34,10 @@ public class DialogueGraphView : GraphView
         generatedPort.portName = "Next";
         node.outputContainer.Add(generatedPort);
 
+        //dont allow for move or deletaion
+        node.capabilities &= ~Capabilities.Movable;
+        node.capabilities &= ~Capabilities.Deletable;
+
         node.RefreshExpandedState();
         node.RefreshPorts();
 
@@ -51,6 +55,7 @@ public class DialogueGraphView : GraphView
 
     //creates new node
     public DialogueNode CreateDialogueNode(string nodeName) {
+
         var dialogueNode = new DialogueNode {
             title = nodeName,
             DialogueText = nodeName,
@@ -61,40 +66,40 @@ public class DialogueGraphView : GraphView
         var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
         inputPort.portName = "Input";
         dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
 
-        //button to choices
-        var button = new Button(() => { AddChoicePort(dialogueNode); });
-        button.text = "New Choice";
-        dialogueNode.titleContainer.Add(button);
-
+        //character dialogue
         var textField = new TextField(string.Empty);
         textField.RegisterValueChangedCallback(evt => {
             dialogueNode.DialogueText = evt.newValue;
             dialogueNode.title = evt.newValue;
         });
         textField.SetValueWithoutNotify(dialogueNode.title);
-
-
-        dialogueNode.RefreshExpandedState();
-        dialogueNode.RefreshPorts();
-
-        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
         dialogueNode.mainContainer.Add(textField);
+
+        //button to add choices
+        var button = new Button(() => { AddChoicePort(dialogueNode); });
+        button.text = "Add Choice";
+        dialogueNode.titleContainer.Add(button);
 
         return dialogueNode;
         }
 
     //adds choices to node
+        //output ports are invisible for some reason
     public void AddChoicePort(DialogueNode dialogueNode, string overriddenPortName = "") {
         var generatePort = GeneratePort(dialogueNode,Direction.Output);
-        var outputPortCount = dialogueNode.outputContainer.Query("connector").ToList().Count;
+       
         var oldLabel = generatePort.contentContainer.Q<Label>("type");
         generatePort.contentContainer.Remove(oldLabel);
-        
+
+        var outputPortCount = dialogueNode.outputContainer.Query("connector").ToList().Count;
         var choicePortName = string.IsNullOrEmpty(overriddenPortName) ? $"Choice {outputPortCount + 1}" : overriddenPortName;
 
-        //actual text
-        var textField = new TextField {
+        //character reponse
+        var textField = new TextField(){
             name = string.Empty,
             value = choicePortName
             };
@@ -103,9 +108,9 @@ public class DialogueGraphView : GraphView
         generatePort.contentContainer.Add(new Label("  "));
         generatePort.contentContainer.Add(textField);
         
-
+        //delete unwanted ports
         var deleteButton = new Button(() => RemovePort(dialogueNode, generatePort)){
-            text = "x",
+            text = "X",
             };
 
 
@@ -118,7 +123,7 @@ public class DialogueGraphView : GraphView
         }
 
     private void RemovePort(DialogueNode dialogueNode, Port generatePort) {
-        var targetEdge = edges.ToList().Where(x => x.output.portName == generatePort.portName && x.output.node == generatePort.node); //dont delete ports from other nodes
+        var targetEdge = edges.ToList().Where(x => x.output.portName == generatePort.portName && x.output.node == generatePort.node);
         if (targetEdge.Any()){
             var edge = targetEdge.First();
             edge.input.Disconnect(edge);
