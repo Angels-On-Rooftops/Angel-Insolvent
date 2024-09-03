@@ -2,34 +2,90 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Reflection.Emit;
+using TMPro;
 using Unity.VisualScripting.FullSerializer;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class SettingsController : MonoBehaviour
 {
-    public SettingsObject[] settingsObjects;
-    float currVolume;
+    [SerializeField]
+    public SettingsCategory[] settingsCategories;
     Resolution[] resolutions;
-    int currentResolutionIndex;
-    public GameObject settingsTitle;
+    [SerializeField] AudioSource audioSource;
+
+    Button categoryButtonPrefab;
+    GameObject settingsPanelPrefab;
+    GameObject singleSettingPrefab;
+
+    GameObject categoriesPanel;
+    GameObject settingsPanel;
+
+    Dictionary<Button, GameObject> categoryButtonsDictionary = new Dictionary<Button, GameObject>();
+
+    GameObject activeCategory;
 
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < settingsObjects.Length; i++)
+        categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/SettingCategoryButton");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/SettingsPanelPrefab");
+        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/SingleSettingPrefab");
+
+        categoriesPanel = this.gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
+        settingsPanel = this.gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
+
+        for (int j = 0; j < settingsCategories.Length; j++) //For each category
         {
-            settingsObjects[i].CreateUIElement(settingsTitle, i);
+            //Setup category button
+            Button categoryButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
+            categoryButton.onClick.AddListener(delegate { SwitchSettingsCategory(categoryButton); });
+
+            //Setup button text
+            string categoryName = settingsCategories[j].name;
+            var categoryLabel = categoryButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            categoryLabel.text = categoryName;
+
+            var settingsObjects = settingsCategories[j].settings;
+
+            GameObject newSettingsPanel = Instantiate(settingsPanelPrefab, settingsPanel.gameObject.transform);
+            for (int i = 0; i < settingsObjects.Length; i++) //for each setting in category
+            {
+                GameObject newSetting = Instantiate(singleSettingPrefab, newSettingsPanel.gameObject.transform);
+                settingsObjects[i].CreateUIElement(newSetting, i);
+            }
+            newSettingsPanel.SetActive(false);
+
+            categoryButtonsDictionary.Add(categoryButton, newSettingsPanel);
         }
-        LoadSettings(currentResolutionIndex);
+
+        //Setup done button
+        Button doneButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
+        doneButton.onClick.AddListener(delegate { this.gameObject.transform.parent.GetComponent<EscMenuController>().CloseSettings();  });
+        var doneLabel = doneButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        doneLabel.text = "Done";
+
+
+        activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
     }
 
-    public void SetupResolutionDropdown(MonoBehaviour resolutionDropdown)
+    private void SwitchSettingsCategory(Button categoryButton)
     {
-        (resolutionDropdown as TMPro.TMP_Dropdown).ClearOptions();
+        activeCategory.SetActive(false);
+        categoryButtonsDictionary[categoryButton].SetActive(true);
+        activeCategory = categoryButtonsDictionary[categoryButton];
+    }
+
+    public void SetupResolutionDropdown(MonoBehaviour resolutionUIElement)
+    {
+        var resolutionDropdown = resolutionUIElement as TMPro.TMP_Dropdown;
+        resolutionDropdown.ClearOptions();
         List<string> resolutionOptions = new List<string>();
         resolutions = Screen.resolutions;
         int currentResolutionIndex = 0;
@@ -42,10 +98,22 @@ public class SettingsController : MonoBehaviour
                 currentResolutionIndex = i;
             }
         }
-        (resolutionDropdown as TMPro.TMP_Dropdown).AddOptions(resolutionOptions);
-        (resolutionDropdown as TMPro.TMP_Dropdown).RefreshShownValue();
+        resolutionDropdown.AddOptions(resolutionOptions);
+        resolutionDropdown.RefreshShownValue();
 
-        (resolutionDropdown as TMPro.TMP_Dropdown).onValueChanged.AddListener(delegate { SetResolution((resolutionDropdown as TMPro.TMP_Dropdown).value); });
+        resolutionDropdown.onValueChanged.AddListener(delegate { SetResolution(resolutionDropdown.value); });
+    }
+
+    public void SetupVolumeSlider(MonoBehaviour volumeUIElement)
+    {
+        var volumeSlider = volumeUIElement as Slider;
+        volumeSlider.onValueChanged.AddListener(delegate { SetVolume(volumeSlider.value); });
+    }
+
+    public void SetupFullscreenToggle(MonoBehaviour fullscreenUIElement)
+    {
+        var fullscreenToggle = fullscreenUIElement as Toggle;
+        fullscreenToggle.onValueChanged.AddListener(delegate { SetFullscreen(fullscreenToggle.isOn); });
     }
 
     public void SetFullscreen(bool isFullscreen)
@@ -55,34 +123,13 @@ public class SettingsController : MonoBehaviour
 
     public void SetVolume(float vol)
     {
-        //audioSource.volume = vol;
-        currVolume = vol;
+        audioSource.volume = vol;
     }
 
     public void SetResolution(int index)
     {
         Resolution resolution = resolutions[index];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
-
-    public void SaveSettings()
-    {
-        //PlayerPrefs.SetInt("ResolutionPreference", resolutionDropdown.value);
-        PlayerPrefs.SetFloat("VolumePreference", currVolume);
-    }
-
-    public void LoadSettings(int currentResolutionIndex)
-    {
-        //if (PlayerPrefs.HasKey("ResolutionPreference"))
-        //{
-        //    resolutionDropdown.value = PlayerPrefs.GetInt("ResolutionPreference");
-        //}
-        //else
-        //{
-        //    resolutionDropdown.value = currentResolutionIndex;
-        //}
-
-        //volumeSlider.value = PlayerPrefs.GetFloat("VolumePreference");
     }
 
     [System.Serializable]
@@ -97,20 +144,27 @@ public class SettingsController : MonoBehaviour
             public string label;
 
             public UnityEvent<MonoBehaviour> customSetup;
-
-            public UnityEvent<int> onDropdownValueChanged;
-            public UnityEvent<float> onSliderValueChanged;
-            public UnityEvent<bool> onToggleValueChanged;
         }
 
         public UIElementConfig config;
         public GameObject prefab;
 
+        [NonSerialized]
+        public object value;
+
         public void CreateUIElement(GameObject parent, int listIndex)
         {
-            GameObject uiElement = null;
+            //Create setting label
+            GameObject settingLabel = new GameObject("Label");
+            settingLabel.transform.SetParent(parent.gameObject.transform, false);
+            settingLabel.AddComponent<RectTransform>();
+            var labelText = settingLabel.AddComponent<TextMeshProUGUI>();
+            labelText.text = config.label;
 
+            //Create setting UI element
+            GameObject uiElement = null;
             uiElement = Instantiate(prefab, parent.gameObject.transform);
+
 
             switch (config.type)
             {
@@ -143,19 +197,18 @@ public class SettingsController : MonoBehaviour
         private void SetupSlider(Slider slider)
         {
             slider.minValue = 0;
-            slider.maxValue = 100;
-            slider.value = 50;
+            slider.maxValue = 1;
+            slider.value = 0.5f;
             config.customSetup?.Invoke(slider);
-
-            slider.onValueChanged.AddListener(config.onSliderValueChanged.Invoke);
         }
 
         private void SetupToggle(Toggle toggle)
         {
             toggle.isOn = true;
             config.customSetup?.Invoke(toggle);
-
-            toggle.onValueChanged.AddListener(config.onToggleValueChanged.Invoke);
         }
     }
+
+    [System.Serializable]
+    public struct SettingsCategory { [SerializeField] public string name; [SerializeField] public SettingsObject[] settings; }
 }
