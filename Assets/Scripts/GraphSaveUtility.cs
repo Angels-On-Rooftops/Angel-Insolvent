@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 //lets graphees be saved and loaded into editor
@@ -68,8 +69,30 @@ public class GraphSaveUtility
         }
 
     private void ConnectNodes() {
-        
+        for(int i = 0; i < Nodes.Count; i++) {
+            var connections = _containerCache.NodeLinks.Where(x => x.BaseNodeGuID == Nodes[i].GUID).ToList();
+            for (int j = 0; j < connections.Count; j++) {
+                var targetNodeGuid = connections[j].TargetNodeGuID;
+                var targetNode = Nodes.First(x => x.GUID == targetNodeGuid);
+                LinkNodes(Nodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0]);
+                targetNode.SetPosition(new Rect(_containerCache.DialogueNodeData.First(x => x.NodeGuID == targetNodeGuid).position, 
+                    _targetGraphView.defaultNodeSize));
+                }
+            }
         }
+
+    private void LinkNodes(Port port1, Port port2) {
+        var tempEdge = new Edge{ 
+            output = port1,
+            input = port2
+            };
+        tempEdge.input.Connect(tempEdge);
+        tempEdge.output.Connect(tempEdge);
+        _targetGraphView.Add(tempEdge);
+
+        }
+
+
 
     private void CreateNodes() {
         foreach(var nodeData in _containerCache.DialogueNodeData) {
@@ -85,7 +108,7 @@ public class GraphSaveUtility
     private void ClearGraph() {
         Nodes.Find(x => x.EntryPoint).GUID = _containerCache.NodeLinks[0].BaseNodeGuID;
         foreach(var node in Nodes) {
-            if (node.EntryPoint) return;
+            if (node.EntryPoint) continue;
             Edges.Where(x => x.input.node == node).ToList().ForEach(edge => _targetGraphView.RemoveElement(edge));
             _targetGraphView.RemoveElement(node);
             }
