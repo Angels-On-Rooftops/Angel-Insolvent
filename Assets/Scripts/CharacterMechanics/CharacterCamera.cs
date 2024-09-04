@@ -91,50 +91,56 @@ public class CharacterCamera : MonoBehaviour
         emptyGO = new();
         emptyGO.name = "CameraHelper";
 
-        Rotate.performed += (InputAction.CallbackContext context) =>
-        {
-            if (!CanOrbit)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                return;
-            }
+        Rotate.performed += DoRotate;
 
-            Cursor.lockState = CursorLockMode.Locked;
-
-            Camera cam = GetComponent<Camera>();
-            Vector2 delta = new(-context.ReadValue<Vector2>().y, context.ReadValue<Vector2>().x);
-
-            if (context.control.device.description.deviceClass == "Mouse")
-            {
-                delta = MouseRotationSensitivity * Vector2.Scale(delta, new Vector2(1f / cam.pixelHeight, 1f / cam.pixelWidth));
-            } 
-            else
-            {
-                delta *= GamepadRotationSensitivity;
-            }
-
-            AddRotationDelta(360 * delta);
-        };
-
-        Zoom.performed += (InputAction.CallbackContext context) =>
-        {
-            if (!CanZoom)
-            {
-                return;
-            }
-
-            ZoomLevel = Mathf.Clamp(
-                ZoomLevel - Vector3.Normalize(context.ReadValue<Vector2>()).y * ZoomSensitivity,
-                MinZoom, MaxZoom
-            );
-        };
+        Zoom.performed += DoZoom;
 
         Rotate.Enable();
         Zoom.Enable();
     }
 
+    void DoRotate(InputAction.CallbackContext context)
+    {
+        if (!CanOrbit)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            return;
+        }
+
+        Cursor.lockState = CursorLockMode.Locked;
+
+        Camera cam = GetComponent<Camera>();
+        Vector2 delta = new(-context.ReadValue<Vector2>().y, context.ReadValue<Vector2>().x);
+
+        if (context.control.device.description.deviceClass == "Mouse")
+        {
+            delta = MouseRotationSensitivity * Vector2.Scale(delta, new Vector2(1f / cam.pixelHeight, 1f / cam.pixelWidth));
+        }
+        else
+        {
+            delta *= GamepadRotationSensitivity;
+        }
+
+        AddRotationDelta(360 * delta);
+    }
+
+    void DoZoom(InputAction.CallbackContext context)
+    {
+        if (!CanZoom)
+        {
+            return;
+        }
+
+        ZoomLevel = Mathf.Clamp(
+            ZoomLevel - Vector3.Normalize(context.ReadValue<Vector2>()).y* ZoomSensitivity,
+            MinZoom, MaxZoom
+        );
+    }
+
     private void OnDisable()
     {
+        Rotate.performed -= DoRotate;
+        Zoom.performed -= DoZoom;
         Destroy(emptyGO);
     }
 
