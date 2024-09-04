@@ -341,11 +341,11 @@ MonoBehaviour:
   Audio: {fileID: 1425561188}
   EQBlock: {fileID: 6966335717031523820, guid: f11c6932870f94aa58181d9449c901f3, type: 3}
   ScaleRef: {fileID: 1433477887}
-  NumBins: 8
-  BinMin: 0
-  BinMax: 1
-  SampleArrayPower: 6
-  WindowType: 0
+  NumBins: 64
+  BinMax: 5
+  AmpMult: 50
+  SampleArrayPower: 9
+  WindowType: 4
 --- !u!1 &724895595
 GameObject:
   m_ObjectHideFlags: 0
