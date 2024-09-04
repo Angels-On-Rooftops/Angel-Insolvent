@@ -12,8 +12,9 @@ public class RespawnWhenTouched : MonoBehaviour
     {
         if (other.TryGetComponent(out CharacterController controller))
         {
-            controller.Move(backToPosition - controller.transform.position);
+            controller.enabled = false;
             controller.transform.position = backToPosition;
+            controller.enabled = true;
         }
     }
 }
