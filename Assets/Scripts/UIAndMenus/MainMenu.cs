@@ -5,13 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] GameObject mainMenuPanel;
-    [SerializeField] GameObject settingsPanel;
+    [SerializeField]
+    GameObject mainMenuPanel;
+
+    [SerializeField]
+    GameObject settingsPanel;
 
     private void Awake()
     {
         settingsPanel.SetActive(false);
     }
+
     public void OnPlayButton()
     {
         Debug.Log("Hit Play Button");
@@ -28,6 +32,7 @@ public class MainMenu : MonoBehaviour
         mainMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
     }
+
     public void OnQuitButton()
     {
         Application.Quit();
@@ -38,5 +43,15 @@ public class MainMenu : MonoBehaviour
     public void LoadPauseAndDialogueDemo()
     {
         SceneManager.LoadScene("UI_testing");
+    }
+
+    public void InventoryDemo()
+    {
+        SceneManager.LoadScene("InventoryTestScene");
+    }
+
+    public void MusicDemo()
+    {
+        SceneManager.LoadScene("Cadence Testing");
     }
 }

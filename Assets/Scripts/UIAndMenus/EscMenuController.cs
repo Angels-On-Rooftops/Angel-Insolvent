@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EscMenuController : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class EscMenuController : MonoBehaviour
 
     public void MenuToggle()
     {
-        if(pauseMenuPanel.activeSelf)
+        if (pauseMenuPanel.activeSelf)
         {
             if (settingsMenuPanel.activeSelf)
             {
@@ -47,6 +48,6 @@ public class EscMenuController : MonoBehaviour
 
     public void Quit()
     {
-        Application.Quit();
+        SceneManager.LoadScene("MainMenu");
     }
 }
