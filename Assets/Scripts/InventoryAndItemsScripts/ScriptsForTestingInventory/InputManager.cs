@@ -22,7 +22,15 @@ namespace Inventory.Testing
         {
             inputScheme = new InputActions();
             movementController.Initialize(inputScheme.Player.Move);
-            //uiTestHandler = new UITestHandler(inputScheme.Player.Menu, inputScheme.Player.Interact, escMenuController, interactController);
+            if (escMenuController is not null && interactController is not null)
+            {
+                uiTestHandler = new UITestHandler(
+                    inputScheme.Player.Menu,
+                    inputScheme.Player.Interact,
+                    escMenuController,
+                    interactController
+                );
+            }
         }
     }
 }
