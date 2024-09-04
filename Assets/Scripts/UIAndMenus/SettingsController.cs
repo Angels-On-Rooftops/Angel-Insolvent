@@ -16,7 +16,7 @@ public class SettingsController : MonoBehaviour
 {
     [SerializeField]
     public SettingsCategory[] settingsCategories;
-    Resolution[] resolutions;
+    List<Resolution> resolutions;
 
     [SerializeField]
     AudioSource audioSource;
@@ -101,6 +101,7 @@ public class SettingsController : MonoBehaviour
         doneLabel.text = "Done";
 
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
+        SetResolution(resolutions.IndexOf(Screen.currentResolution));
     }
 
     private void SwitchSettingsCategory(Button categoryButton)
@@ -115,15 +116,16 @@ public class SettingsController : MonoBehaviour
         var resolutionDropdown = resolutionUIElement as TMPro.TMP_Dropdown;
         resolutionDropdown.ClearOptions();
         List<string> resolutionOptions = new List<string>();
-        resolutions = Screen.resolutions;
+        var resolutionsEnum = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct();
+        resolutions = resolutionsEnum.ToList();
         int currentResolutionIndex = 0;
-        for (int i = 0; i < resolutions.Length; i++)
+        for (int i = 0; i < resolutions.Count(); i++)
         {
-            string resolutionOption = resolutions[i].width + " x " + resolutions[i].height;
+            string resolutionOption = resolutions.ElementAt(i).width + " x " + resolutions.ElementAt(i).height;
             resolutionOptions.Add(resolutionOption);
             if (
-                resolutions[i].width == Screen.currentResolution.width
-                && resolutions[i].height == Screen.currentResolution.height
+                resolutions.ElementAt(i).width == Screen.currentResolution.width
+                && resolutions.ElementAt(i).height == Screen.currentResolution.height
             )
             {
                 currentResolutionIndex = i;
@@ -174,7 +176,7 @@ public class SettingsController : MonoBehaviour
 
     public void SetResolution(int index)
     {
-        Resolution resolution = resolutions[index];
+        Resolution resolution = resolutions.ElementAt(index);
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 

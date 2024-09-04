@@ -8,8 +8,14 @@ public class UITestHandler
     private EscMenuController escMenuController;
     private NpcInteractController interactController;
 
-    public UITestHandler(InputAction menuAction, InputAction interactAction, EscMenuController _escMenuController, NpcInteractController _interactController)
+    private InputAction menuAction;
+    private InputAction interactAction;
+
+    public UITestHandler(InputAction _menuAction, InputAction _interactAction, EscMenuController _escMenuController, NpcInteractController _interactController)
     {
+        menuAction = _menuAction;
+        interactAction = _interactAction;
+
         menuAction.performed += MenuAction_performed;
         menuAction.Enable();
 
@@ -27,5 +33,11 @@ public class UITestHandler
     private void InteractAction_performed(InputAction.CallbackContext obj)
     {
         interactController.Interact();
+    }
+
+    public void Unbind()
+    {
+        menuAction.performed -= MenuAction_performed;
+        interactAction.performed -= InteractAction_performed;
     }
 }

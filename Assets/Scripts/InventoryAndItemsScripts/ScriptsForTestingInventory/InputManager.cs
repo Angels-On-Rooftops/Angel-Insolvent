@@ -32,5 +32,13 @@ namespace Inventory.Testing
                 );
             }
         }
+
+        private void OnDisable()
+        {
+            if(uiTestHandler is not null)
+            {
+                uiTestHandler.Unbind();
+            }
+        }
     }
 }
