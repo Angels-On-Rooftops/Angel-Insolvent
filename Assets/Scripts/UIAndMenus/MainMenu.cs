@@ -54,4 +54,9 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene("Cadence Testing");
     }
+
+    public void MovementDemo()
+    {
+        SceneManager.LoadScene("Movement");
+    }
 }
