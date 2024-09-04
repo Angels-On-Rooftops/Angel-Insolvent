@@ -142,6 +142,8 @@ public class CharacterCamera : MonoBehaviour
         Rotate.performed -= DoRotate;
         Zoom.performed -= DoZoom;
         Destroy(emptyGO);
+
+        Cursor.lockState = CursorLockMode.None;
     }
 
     void AddRotationDelta(Vector3 delta)
