@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class RespawnWhenTouched : MonoBehaviour
 {
-    Vector3 backToPosition = new Vector3(5.35290718f, 1.2500124f, 4.65454578f);
+    [SerializeField]
+    Vector3 backToPosition;
 
     // Start is called before the first frame update
     private void OnTriggerEnter(Collider other)
@@ -12,6 +13,7 @@ public class RespawnWhenTouched : MonoBehaviour
         if (other.TryGetComponent(out CharacterController controller))
         {
             controller.Move(backToPosition - controller.transform.position);
+            controller.transform.position = backToPosition;
         }
     }
 }
