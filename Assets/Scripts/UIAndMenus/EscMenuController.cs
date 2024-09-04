@@ -18,6 +18,10 @@ public class EscMenuController : MonoBehaviour
 
     public void MenuToggle()
     {
+        if (this is null)
+        {
+            return;
+        }
         if (pauseMenuPanel.activeSelf)
         {
             if (settingsMenuPanel.activeSelf)
@@ -48,6 +52,7 @@ public class EscMenuController : MonoBehaviour
 
     public void Quit()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
 }
