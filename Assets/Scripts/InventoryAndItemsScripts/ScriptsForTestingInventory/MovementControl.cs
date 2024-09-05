@@ -13,21 +13,21 @@ namespace Inventory.Testing
  
         public void Initialize(InputAction moveAction) 
         { 
-            this.moveAction = moveAction; 
-            this.moveAction.Enable(); 
+            this.moveAction = moveAction;
+            this.moveAction.Enable();
         } 
  
-        private void FixedUpdate() 
+        private void FixedUpdate()
         { 
-            float moveDistance = this.speed * Time.deltaTime; 
-            Vector2 moveDirection = this.moveAction.ReadValue<Vector2>(); 
-            Vector2 moveVector = moveDistance * moveDirection; 
+            float moveDistance = this.speed * Time.deltaTime;
+            Vector2 moveDirection = this.moveAction.ReadValue<Vector2>();
+            Vector2 moveVector = moveDistance * moveDirection;
  
             float deltaZ = moveVector.y; //Movement forward/backward 
             float deltaX = moveVector.x; //Movement left/right 
  
-            this.player.transform.Translate(deltaX, 0, deltaZ); 
-        } 
+            this.player.transform.Translate(deltaX, 0, deltaZ);
+        }
     }
 }
 
