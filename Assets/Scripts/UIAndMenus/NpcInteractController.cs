@@ -8,7 +8,7 @@ public class NpcInteractController : MonoBehaviour
     string postInteractText = "Dialogue";
     bool playerDetection = false;
     private Transform npc;
-    public GameObject popup;
+    public GameObject popup;  // this isn't being used? I don't think we need it
     public GameObject canvas;
 
     private void Start()
