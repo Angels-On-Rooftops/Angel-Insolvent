@@ -452,7 +452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b917a13aa5182a241aaad49975aa9185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIPrefab: {fileID: 5317224358754902339, guid: e9dd0843d57f77c4481f8202833a7872, type: 3}
+  UIPrefab: {fileID: 1898114188681818198, guid: d9597a0bebcc3c34b9f2570eccd39169, type: 3}
 --- !u!1 &358070969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1441,7 +1441,9 @@ MonoBehaviour:
   mustHaveEquipped: {fileID: 0}
   mustNotHaveEquipped: {fileID: 0}
   mustHaveTheseItems: []
-  mustHaveAtLeastOneOfTheseItems: []
+  mustHaveAtLeastOneOfTheseItems:
+  - {fileID: 11400000, guid: ff584130d9ad0c840b6a456332801300, type: 2}
+  - {fileID: 11400000, guid: 404dfd89698611b4f90c577f58e30051, type: 2}
   mustHaveEquippedAtLeastOneOfTheseItems: []
 --- !u!1 &726004441
 GameObject:
@@ -3033,6 +3035,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementController: {fileID: 1714553704}
+  escMenuController: {fileID: 0}
+  interactController: {fileID: 0}
 --- !u!1 &1657922137
 GameObject:
   m_ObjectHideFlags: 0
