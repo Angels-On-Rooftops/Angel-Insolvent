@@ -12,8 +12,28 @@ namespace Items.Interactables
 
         private bool isActive = false;
         private GameObject instantiatedUIPrefab;
+        private InteractableOverlayHelper interactableOverlay;
 
         public bool DestroyAfterInteracting { get { return false; } }
+
+        void Awake()
+        {
+            this.interactableOverlay = this.GetComponentInChildren<InteractableOverlayHelper>();
+            if (this.interactableOverlay == null)
+            {
+                Debug.LogError("Child of Interactable should have InteractableOverlayHelper");
+            }
+        }
+
+        public void DisableInteractableCanvas()
+        {
+            this.interactableOverlay?.DisableCanvas();
+        }
+
+        public void EnableInteractableCanvas()
+        {
+            this.interactableOverlay?.EnableCanvas();
+        }
 
         public void Interact()
         {

@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 namespace Items.Interactables
 {
     /// <summary>
     /// Handles player interaction with interactable objects
-    /// (Singleton to make working with the UI easier)
     /// </summary>
-    public class PlayerInteractor
+    public class PlayerInteractor : MonoBehaviour
     {
-        private static PlayerInteractor instance = null;
-        private static readonly object instanceLock = new object(); //thread-safe for co-routines
+        [SerializeField]
+        [Tooltip("The keybinds that control character interaction with NPCs and objects in the environment.")]
+        InputAction InteractAction;
 
         /// <summary>
         /// null if none are in range; 
@@ -22,22 +24,17 @@ namespace Items.Interactables
         private IInteractable interactableCurrentlyInRange = null;
 
         private bool mayInteractWithCurrentInteractable = false;
-        
-        PlayerInteractor() { }
 
-        public static PlayerInteractor Instance
+        private void OnEnable()
         {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new PlayerInteractor();
-                    }
-                    return instance;
-                }
-            }
+            InteractAction.performed += Interact;
+            InteractAction.Enable();
+        }
+
+        private void OnDisable()
+        {
+            InteractAction.performed -= Interact;
+            InteractAction.Disable();
         }
 
         /// <summary>
@@ -61,13 +58,15 @@ namespace Items.Interactables
             this.interactableCurrentlyInRange = interactable;
             this.mayInteractWithCurrentInteractable = mayInteract;
 
+            interactable.EnableInteractableCanvas();
+
             if (OnInInteractionRadius != null)
             {
                 OnInInteractionRadius(mayInteract);
             }
         }
 
-        public void Interact()
+        void Interact(CallbackContext c)
         {
             if (this.interactableCurrentlyInRange == null || !this.mayInteractWithCurrentInteractable)
             {
@@ -86,6 +85,7 @@ namespace Items.Interactables
 
         public void LeaveInteractionRadius()
         {
+            this.interactableCurrentlyInRange.DisableInteractableCanvas();
             this.interactableCurrentlyInRange = null;
             this.mayInteractWithCurrentInteractable = false;
 

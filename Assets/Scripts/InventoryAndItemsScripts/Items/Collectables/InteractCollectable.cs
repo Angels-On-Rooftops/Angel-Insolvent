@@ -14,6 +14,7 @@ namespace Items.Collectables
         
         private int numberOfTimesHasInteracted = 0;
         private bool willDestroyWhenDoneCollecting;
+        private InteractableOverlayHelper interactableOverlay;
 
         /// <summary>
         /// Use this property AFTER calling Interact()
@@ -30,6 +31,22 @@ namespace Items.Collectables
         {
             this.willDestroyWhenDoneCollecting = this.destroyOnCollect;
             this.destroyOnCollect = false;
+
+            this.interactableOverlay = this.GetComponentInChildren<InteractableOverlayHelper>();
+            if (this.interactableOverlay == null)
+            {
+                Debug.LogError("Child of Interactable should have InteractableOverlayHelper");
+            }
+        }
+
+        public void DisableInteractableCanvas()
+        {
+            this.interactableOverlay?.DisableCanvas();
+        }
+
+        public void EnableInteractableCanvas()
+        {
+            this.interactableOverlay?.EnableCanvas();
         }
 
         public void Interact()

@@ -24,23 +24,11 @@ namespace Items.Interactables
             }
         }
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.tag == "Player")
             {
-                PlayerInteractor.Instance.InInteractionRadius
+                other.GetComponent<PlayerInteractor>().InInteractionRadius
                     (this.interactable.MeetsCriteriaToInteract(other), this.interactable);
             }
         }
@@ -49,7 +37,7 @@ namespace Items.Interactables
         {
             if (other.gameObject.tag == "Player")
             {
-                PlayerInteractor.Instance.LeaveInteractionRadius();
+                other.GetComponent<PlayerInteractor>().LeaveInteractionRadius();
             }
         }
 
@@ -58,7 +46,7 @@ namespace Items.Interactables
         {
             if (other.gameObject.tag == "Player")
             {
-                PlayerInteractor.Instance.CheckWhetherCanStillInteract(other);
+                other.GetComponent<PlayerInteractor>().CheckWhetherCanStillInteract(other);
             }
         }
     }

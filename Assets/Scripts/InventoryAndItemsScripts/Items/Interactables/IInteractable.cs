@@ -11,5 +11,9 @@ namespace Items.Interactables
         void Interact();
 
         bool DestroyAfterInteracting { get; }
+
+        void EnableInteractableCanvas();
+
+        void DisableInteractableCanvas();
     }
 }

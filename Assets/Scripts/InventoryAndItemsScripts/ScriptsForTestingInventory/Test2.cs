@@ -20,7 +20,7 @@ public class Test2 : MonoBehaviour
         
     }
 
-    void OnEnable()
+    /*void OnEnable()
     {
         PlayerInteractor.Instance.OnInInteractionRadius += ActivateInteractButton;
         PlayerInteractor.Instance.OnLeaveInteractionRadius += DeActivateInteractButton;
@@ -54,5 +54,5 @@ public class Test2 : MonoBehaviour
     public void Interact()
     {
         PlayerInteractor.Instance.Interact();
-    }
+    }*/
 }

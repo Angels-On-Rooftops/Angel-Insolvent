@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Items.Interactables
 {
@@ -10,16 +11,20 @@ namespace Items.Interactables
     /// </summary>
     public class AttachInteractorToPlayer : MonoBehaviour
     {
-        private PlayerInteractor playerInteractor;
+        /*private PlayerInteractor playerInteractor;
+
+        [SerializeField]
+        [Tooltip("The keybinds that control character interaction with NPCs and objects in the environment.")]
+        InputAction Interact;
 
         private void Awake()
         {
             this.playerInteractor = PlayerInteractor.Instance;
-        }
+        }*/
 
         /// <summary>
         /// Only use this Property after Awake()
         /// </summary>
-        public PlayerInteractor PlayerInteractor { get { return this.playerInteractor; } }
+        //public PlayerInteractor PlayerInteractor { get { return this.playerInteractor; } }
     }
 }
