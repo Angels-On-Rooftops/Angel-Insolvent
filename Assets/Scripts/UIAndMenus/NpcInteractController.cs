@@ -7,19 +7,21 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class NpcInteractController : MonoBehaviour
 {
-    string postInteractText = "Dialogue";
     bool playerDetection = false;
     private Transform npc;
-    // public GameObject popup;  // this isn't being used? I don't think we need it
-    public GameObject canvas;
+    public float radius;
+    
+    [SerializeField]
+    private GameObject canvas;
 
     [SerializeField]
-    [Tooltip("The keybinds that control lateral character movement. To restrict character movement to a single axis, unbind the directions you don't want accessible.")]
+    [Tooltip("The keybinds that control character interaction with NPCs and objects in the environment.")]
     InputAction Interact;
 
     private void Start()
     {
         npc = transform.parent;
+        npc.GetComponentInChildren<SphereCollider>().radius = radius;
     }
 
     private void OnEnable()
@@ -38,8 +40,7 @@ public class NpcInteractController : MonoBehaviour
     {
         if(playerDetection)
         {
-            Debug.Log("NPC Interacted with player!");
-            // canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = postInteractText;
+            Debug.Log("Interacted with player!");
         }
     }
 

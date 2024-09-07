@@ -6,15 +6,14 @@ using UnityEngine;
 public class InteractableOverlayHelper : MonoBehaviour
 {
     public string displayText;
-    private Canvas canvas;
-    private TextMeshProUGUI text;
 
-    // Start is called before the first frame update
+    [SerializeField]
+    private Canvas canvas;
+
     void Start()
     {
-        canvas = GetComponentInChildren<Canvas>();
-        text = GetComponentInChildren<TextMeshProUGUI>();
+        canvas.worldCamera = Camera.main;
+        TextMeshProUGUI text = canvas.GetComponentInChildren<TextMeshProUGUI>();
         text.text = displayText;
-        Debug.Log(text.text);
     }
 }

@@ -241,8 +241,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeff9046c6694cf4cb14748e1f7cee66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popup: {fileID: 0}
   canvas: {fileID: 2014762511}
+  radius: 0.5
+  Interact:
+    m_Name: Interact
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 83df4c00-acf7-438e-a74e-589a267e198c
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 46e1d442-6fef-411f-9417-031aab40230e
+      m_Path: <Keyboard>/e
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Interact
+      m_Flags: 0
+    m_Flags: 0
 --- !u!1 &203844586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1404,8 +1421,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeff9046c6694cf4cb14748e1f7cee66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popup: {fileID: 0}
   canvas: {fileID: 0}
+  radius: 0
+  Interact:
+    m_Name: Interact
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 62cbccfb-3ad2-43cf-b1cb-632f0e1247de
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!135 &1777157086
 SphereCollider:
   m_ObjectHideFlags: 0
