@@ -11,6 +11,11 @@ using UnityEngine.UIElements;
 //lets graphees be saved and loaded into editor
 public class GraphSaveUtility 
 {
+    private string parentSaveFolder = "Assets/Resources"; //must already exist
+    private string saveFolder = "DialogueContainers"; //single folder (not a path)
+    private string loadFolder = "DialogueContainers"; //folder path after "Assets/Resources"
+    //^these are separate to work with Unity's save and load system (to avoid needing to code a string parser)
+
     private DialogueGraphView _targetGraphView;
     private DialogueContainer _containerCache;
 
@@ -48,17 +53,18 @@ public class GraphSaveUtility
             }
 
         //create folder if necessary
-        if (!AssetDatabase.IsValidFolder("Assets/Resources")) {
-            AssetDatabase.CreateFolder("Assets", "Resources");
+        if (!AssetDatabase.IsValidFolder(this.parentSaveFolder + this.saveFolder)) {
+            AssetDatabase.CreateFolder(this.parentSaveFolder, this.saveFolder);
             }
         //save graph
-        AssetDatabase.CreateAsset(dialogueContainer, $"Assets/Resources/{fileName}.asset");
+        string filePathStr = this.parentSaveFolder + "/" + this.saveFolder + "/" + fileName + ".asset";
+        AssetDatabase.CreateAsset(dialogueContainer, filePathStr);
         AssetDatabase.SaveAssets();
         
 
         }
     public void LoadGraph(string fileName) {
-        _containerCache = Resources.Load<DialogueContainer>(fileName);
+        _containerCache = Resources.Load<DialogueContainer>(this.loadFolder + "/" + fileName);
         if (_containerCache == null) {
             EditorUtility.DisplayDialog("File not found", "Target dialogue graph does not exist", "OK");
             return;

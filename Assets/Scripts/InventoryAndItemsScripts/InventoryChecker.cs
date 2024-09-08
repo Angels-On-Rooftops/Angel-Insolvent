@@ -70,14 +70,13 @@ namespace Inventory
         {
             foreach (InventoryItem neededItem in this.mustHaveTheseItems)
             {
-                if (PlayerInventory.Instance.ItemDictionary.TryGetValue(neededItem.Data, out InventoryItem inventoryItem))
+                if (!PlayerInventory.Instance.ItemDictionary.TryGetValue(neededItem.Data, out InventoryItem inventoryItem))
                 {
-                    if (inventoryItem.StackSize < neededItem.StackSize)
-                    {
-                        return false;
-                    }
+                    return false;
+                    
                 }
-                else
+
+                if (inventoryItem.StackSize < neededItem.StackSize)
                 {
                     return false;
                 }

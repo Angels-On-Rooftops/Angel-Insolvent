@@ -19,10 +19,14 @@ namespace Items.Interactables
         void Awake()
         {
             this.interactableOverlay = this.GetComponentInChildren<InteractableOverlayHelper>();
-            if (this.interactableOverlay == null)
+            if (this.interactableOverlay is null)
             {
                 Debug.LogError("Child of Interactable should have InteractableOverlayHelper");
             }
+
+            //Creates prefab in the center
+            this.instantiatedUIPrefab = Instantiate(this.UIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            this.instantiatedUIPrefab.SetActive(false);
         }
 
         public void DisableInteractableCanvas()
@@ -41,15 +45,14 @@ namespace Items.Interactables
 
             if (this.isActive)
             {
-                //Creates prefab in the center
-                this.instantiatedUIPrefab = Instantiate(this.UIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                this.instantiatedUIPrefab?.SetActive(true);
 
                 //Pause game (should later replace with game's pause system)
                 Time.timeScale = 0;
             }
             else
             {
-                Destroy(this.instantiatedUIPrefab);
+                this.instantiatedUIPrefab?.SetActive(false);
 
                 //UnPause game (should later replace with game's pause system)
                 Time.timeScale = 1;

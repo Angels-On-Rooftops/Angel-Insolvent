@@ -33,7 +33,7 @@ namespace Items.Collectables
             this.destroyOnCollect = false;
 
             this.interactableOverlay = this.GetComponentInChildren<InteractableOverlayHelper>();
-            if (this.interactableOverlay == null)
+            if (this.interactableOverlay is null)
             {
                 Debug.LogError("Child of Interactable should have InteractableOverlayHelper");
             }

@@ -31,9 +31,6 @@ namespace Items.Interactables.Dialogue
             this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.First(node => node.NodeGuID == firstNodeLink.TargetNodeGuID);
 
             getCurrentScreen();
-
-            /*List<NodeLinkData> childNodes = this.dialogueContainer.NodeLinks.Where(x => x.BaseNodeGuID == Nodes[i].GUID).ToList();
-            this.button1.GetComponent<TMP_Text>().text = this.currentDialogueNodeData.DialogueText;*/
         }
 
         private void getCurrentScreen()
@@ -62,8 +59,8 @@ namespace Items.Interactables.Dialogue
         {
             GameObject newButton = Instantiate(this.buttonPrefab, buttonPosition, Quaternion.identity, this.parentCanvas.transform);
             
-            Button newButtonButton = newButton.GetComponentInChildren<Button>();
-            newButtonButton.onClick.AddListener(delegate {OnButtonPress(newButton);});
+            Button buttonComponent = newButton.GetComponentInChildren<Button>();
+            buttonComponent.onClick.AddListener(delegate {OnButtonPress(newButton);});
 
             newButton.GetComponentInChildren<TMP_Text>().text = childNode.PortName;
 

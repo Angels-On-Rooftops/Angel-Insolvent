@@ -14,23 +14,25 @@ namespace Inventory
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject.tag == "Player")
+            if (other.gameObject.tag != "Player")
             {
-                InventoryChecker inventoryChecker = GetComponent<InventoryChecker>();
+                return;
+            }
 
-                if (inventoryChecker.InventoryStateMeetsCriteria())
+            InventoryChecker inventoryChecker = GetComponent<InventoryChecker>();
+
+            if (inventoryChecker.InventoryStateMeetsCriteria())
+            {
+                if (PassedInventoryCheck != null)
                 {
-                    if (PassedInventoryCheck != null)
-                    {
-                        PassedInventoryCheck(other.gameObject);
-                    }
+                    PassedInventoryCheck(other.gameObject);
                 }
-                else
+            }
+            else
+            {
+                if (FailedInventoryCheck != null)
                 {
-                    if (FailedInventoryCheck != null)
-                    {
-                        FailedInventoryCheck(other.gameObject);
-                    }
+                    FailedInventoryCheck(other.gameObject);
                 }
             }
         }

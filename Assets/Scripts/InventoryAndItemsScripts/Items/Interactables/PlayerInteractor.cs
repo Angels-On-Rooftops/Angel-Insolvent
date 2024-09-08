@@ -70,7 +70,7 @@ namespace Items.Interactables
         {
             if (this.interactableCurrentlyInRange == null || !this.mayInteractWithCurrentInteractable)
             {
-                Debug.LogError("Cannot Interact.");
+                Debug.Log("Cannot Interact.");
                 return;
             }
 
@@ -85,7 +85,12 @@ namespace Items.Interactables
 
         public void LeaveInteractionRadius()
         {
+            if (this.interactableCurrentlyInRange == null)
+            {
+                return;
+            }
             this.interactableCurrentlyInRange.DisableInteractableCanvas();
+
             this.interactableCurrentlyInRange = null;
             this.mayInteractWithCurrentInteractable = false;
 
@@ -100,7 +105,7 @@ namespace Items.Interactables
         {
             if (this.interactableCurrentlyInRange == null)
             {
-                Debug.LogError("Interactable not currently in range.");
+                Debug.Log("Interactable not currently in range.");
                 return;
             }
 
