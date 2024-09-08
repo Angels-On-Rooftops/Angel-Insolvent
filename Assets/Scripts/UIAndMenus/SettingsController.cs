@@ -191,22 +191,40 @@ public class SettingsController : MonoBehaviour
 
         private void SetupDropdown(TMPro.TMP_Dropdown dropdown)
         {
-            dropdown.options.Clear();
-            config.customSetup?.Invoke(dropdown);
+            if (dropdown.GetType() == typeof(TMPro.TMP_Dropdown))
+            {
+                dropdown.options.Clear();
+                config.customSetup?.Invoke(dropdown);
+            } else
+            {
+                Debug.Log("Dropdown prefab is not of type TMPro.TMP_Dropdown.");
+            }
         }
 
         private void SetupSlider(Slider slider)
         {
-            slider.minValue = 0;
-            slider.maxValue = 1;
-            slider.value = 0.5f;
-            config.customSetup?.Invoke(slider);
+            if(slider.GetType() == typeof(Slider))
+            {
+                slider.minValue = 0;
+                slider.maxValue = 1;
+                slider.value = 0.5f;
+                config.customSetup?.Invoke(slider);
+            } else
+            {
+                Debug.Log("Slider prefab is not of type Slider.");
+            }
         }
 
         private void SetupToggle(Toggle toggle)
         {
-            toggle.isOn = true;
-            config.customSetup?.Invoke(toggle);
+            if(toggle.GetType() == typeof(Toggle))
+            {
+                toggle.isOn = true;
+                config.customSetup?.Invoke(toggle);
+            } else
+            {
+                Debug.Log("Toggle prefab is not of type Toggle.");
+            }
         }
     }
 
