@@ -1,3 +1,4 @@
+using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -21,37 +22,30 @@ public class EscMenuController : MonoBehaviour
 
     private void OnEnable()
     {
-        pauseAction.performed += MenuToggle;
+        pauseAction.performed += PauseToggle;
         pauseAction.Enable();
     }
 
     private void OnDisable()
     {
-        pauseAction.performed -= MenuToggle;
+        pauseAction.performed -= PauseToggle;
         pauseAction.Disable();
     }
 
-    public void MenuToggle(CallbackContext c)
+    public void PauseToggle(CallbackContext c)
     {
-        if(pauseMenuPanel.activeSelf || settingsMenuPanel.activeSelf)
+        if(GameStateManager.Instance.CurrentState is PlayingState)
         {
-            if (settingsMenuPanel.activeSelf)
-            {
-                CloseSettings();
-            }
-            pauseMenuPanel.SetActive(false);
-            Time.timeScale = 1f;
-        }
-        else
+            GameStateManager.Instance.SetState(new GameStateManagement.PauseState(this));
+        } else
         {
-            pauseMenuPanel.SetActive(true);
-            Time.timeScale = 0f;
+            GameStateManager.Instance.SetState(new PlayingState(this));
         }
     }
 
     public void OnResumeButtonClick()
     {
-        MenuToggle(new CallbackContext());
+        GameStateManager.Instance.SetState(new PlayingState(this));
     }
 
     public void OpenSettings()

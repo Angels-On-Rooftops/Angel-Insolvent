@@ -6,16 +6,27 @@ namespace GameStateManagement
 {
     public class PauseState : MonoBehaviour, IGameState
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        private EscMenuController EscMenuController;
 
+        public PauseState(EscMenuController escMenuController)
+        {
+            EscMenuController = escMenuController;
         }
 
-        // Update is called once per frame
-        void Update()
+        public void EnterState()
         {
+            EscMenuController.pauseMenuPanel.SetActive(true);
+            Time.timeScale = 0f;
+        }
 
+        public void ExitState()
+        {
+            if(EscMenuController.settingsMenuPanel.activeSelf)
+            {
+                EscMenuController.CloseSettings();
+            }
+            EscMenuController.pauseMenuPanel.SetActive(false);
+            Time.timeScale = 1f;
         }
     }
 }

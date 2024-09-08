@@ -26,10 +26,9 @@ namespace GameStateManagement
 
         public void EnterState()
         {
-            if(newScene)
+            if (newScene)
             {
                 SceneManager.LoadScene(scene.path);
-
             }
         }
 
