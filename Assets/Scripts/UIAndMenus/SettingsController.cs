@@ -197,7 +197,7 @@ public class SettingsController : MonoBehaviour
                 config.customSetup?.Invoke(dropdown);
             } else
             {
-                Debug.Log("Dropdown prefab is not of type TMPro.TMP_Dropdown.");
+                Debug.Log("Dropdown prefab is not of type TMPro.TMP_Dropdown on " + config.label);
             }
         }
 
@@ -211,7 +211,7 @@ public class SettingsController : MonoBehaviour
                 config.customSetup?.Invoke(slider);
             } else
             {
-                Debug.Log("Slider prefab is not of type Slider.");
+                Debug.Log("Slider prefab is not of type Slider on " + config.label);
             }
         }
 
@@ -223,7 +223,7 @@ public class SettingsController : MonoBehaviour
                 config.customSetup?.Invoke(toggle);
             } else
             {
-                Debug.Log("Toggle prefab is not of type Toggle.");
+                Debug.Log("Toggle prefab is not of type Toggle on " + config.label);
             }
         }
     }
