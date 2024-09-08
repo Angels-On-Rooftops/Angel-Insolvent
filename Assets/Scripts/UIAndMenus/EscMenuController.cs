@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class EscMenuController : MonoBehaviour
 {
+    [SerializeField] private InputAction pauseAction;
+
     public GameObject pauseMenuPanel;
     public GameObject settingsMenuPanel;
 
@@ -15,9 +19,21 @@ public class EscMenuController : MonoBehaviour
         settingsMenuPanel.SetActive(false);
     }
 
-    public void MenuToggle()
+    private void OnEnable()
     {
-        if(pauseMenuPanel.activeSelf)
+        pauseAction.performed += MenuToggle;
+        pauseAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pauseAction.performed -= MenuToggle;
+        pauseAction.Disable();
+    }
+
+    public void MenuToggle(CallbackContext c)
+    {
+        if(pauseMenuPanel.activeSelf || settingsMenuPanel.activeSelf)
         {
             if (settingsMenuPanel.activeSelf)
             {
@@ -31,6 +47,11 @@ public class EscMenuController : MonoBehaviour
             pauseMenuPanel.SetActive(true);
             Time.timeScale = 0f;
         }
+    }
+
+    public void OnResumeButtonClick()
+    {
+        MenuToggle(new CallbackContext());
     }
 
     public void OpenSettings()

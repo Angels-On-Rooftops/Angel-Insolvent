@@ -2,27 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class NpcInteractController : MonoBehaviour
 {
-    string postInteractText = "Dialogue";
     bool playerDetection = false;
     private Transform npc;
-    public GameObject popup;
-    public GameObject canvas;
+    public float radius;
+    
+    [SerializeField]
+    private GameObject canvas;
+
+    [SerializeField]
+    [Tooltip("The keybinds that control character interaction with NPCs and objects in the environment.")]
+    InputAction Interact;
 
     private void Start()
     {
         npc = transform.parent;
+        npc.GetComponentInChildren<SphereCollider>().radius = radius;
     }
 
-    public void Interact()
+    private void OnEnable()
     {
-        Debug.Log("Test");
+        Interact.performed += DoInteraction;
+        Interact.Enable();
+    }
+
+    private void OnDisable()
+    {
+        Interact.performed -= DoInteraction;
+        Interact.Disable();
+    }
+
+    public void DoInteraction(CallbackContext c)
+    {
         if(playerDetection)
         {
-            Debug.Log("NPC Interacted with player!");
-            canvas.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = postInteractText;
+            Debug.Log("Interacted with player!");
         }
     }
 
