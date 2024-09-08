@@ -35,9 +35,9 @@ public class SettingsController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/SettingCategoryButton");
-        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/SettingsPanelPrefab");
-        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/SingleSettingPrefab");
+        categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/Settings/SettingCategoryButton");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SettingsPanelPrefab");
+        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SingleSettingPrefab");
 
         categoriesPanel = this.gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
         settingsPanel = this.gameObject.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
