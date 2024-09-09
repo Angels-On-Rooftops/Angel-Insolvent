@@ -18,6 +18,7 @@ public class EscMenuController : MonoBehaviour
     {
         pauseMenuPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
@@ -39,13 +40,13 @@ public class EscMenuController : MonoBehaviour
             GameStateManager.Instance.SetState(new GameStateManagement.PauseState(this));
         } else
         {
-            GameStateManager.Instance.SetState(new PlayingState(this));
+            GameStateManager.Instance.SetState(new PlayingState());
         }
     }
 
     public void OnResumeButtonClick()
     {
-        GameStateManager.Instance.SetState(new PlayingState(this));
+        GameStateManager.Instance.SetState(new PlayingState());
     }
 
     public void OpenSettings()
@@ -62,6 +63,6 @@ public class EscMenuController : MonoBehaviour
 
     public void Quit()
     {
-        Application.Quit();
+        GameStateManager.Instance.SetState(new MainMenuState());
     }
 }

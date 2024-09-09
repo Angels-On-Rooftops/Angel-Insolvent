@@ -16,7 +16,8 @@ namespace GameStateManagement
             if(Instance != null && Instance != this)
             {
                 Destroy(gameObject);
-            } else
+            } 
+            else
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);

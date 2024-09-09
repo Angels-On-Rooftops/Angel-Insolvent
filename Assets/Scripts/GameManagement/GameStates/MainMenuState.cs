@@ -5,16 +5,19 @@ using UnityEngine.SceneManagement;
 
 namespace GameStateManagement
 {
-    public class MainMenuState : MonoBehaviour, IGameState
+    public class MainMenuState : IGameState
     {
         public void EnterState()
         {
-            SceneManager.LoadScene("MainMenu");
+            if(SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Main Menu"))
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
         }
 
         public void ExitState()
         {
-            SceneManager.UnloadSceneAsync("MainMenu");
+            Debug.Log("exit main menu state");
         }
     }
 }

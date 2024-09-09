@@ -15,8 +15,7 @@ public class MainMenu : MonoBehaviour
     }
     public void OnPlayButton()
     {
-        Debug.Log("Hit Play Button");
-        GameStateManager.Instance.SetState(new PlayingState(SceneManager.GetSceneByName("UI_testing")));
+        GameStateManager.Instance.SetState(new PlayingState("UI_testing"));
     }
 
     public void OnSettingsButton()
@@ -33,6 +32,5 @@ public class MainMenu : MonoBehaviour
     public void OnQuitButton()
     {
         Application.Quit();
-        Debug.Log("Hit Quit Button");
     }
 }

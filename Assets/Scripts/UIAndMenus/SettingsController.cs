@@ -72,7 +72,6 @@ public class SettingsController : MonoBehaviour
         var doneLabel = doneButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         doneLabel.text = "Done";
 
-
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
     }
 

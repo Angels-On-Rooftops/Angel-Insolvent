@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameStateManagement
 {
-    public class PauseState : MonoBehaviour, IGameState
+    public class PauseState : IGameState
     {
         private EscMenuController EscMenuController;
 
