@@ -13,7 +13,7 @@ namespace Items.Collectables
     /// </summary>
     public class Collectable : MonoBehaviour
     {
-        [SerializeField] private bool destroyOnCollect;
+        [SerializeField] protected bool destroyOnCollect;
 
         //Will probably remove these eventually, but for now they demonstrate
         //how the co-routine can be used

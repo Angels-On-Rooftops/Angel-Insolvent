@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class UILookAtCam : MonoBehaviour
 {
-    void LateUpdate()
+    private void LateUpdate()
     {
-        transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
+        //transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
+        transform.rotation = Camera.main.transform.rotation;
     }
+
 }
