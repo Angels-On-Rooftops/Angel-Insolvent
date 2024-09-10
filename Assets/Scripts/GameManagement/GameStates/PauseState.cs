@@ -15,17 +15,17 @@ namespace GameStateManagement
 
         public void EnterState()
         {
-            EscMenuController.pauseMenuPanel.SetActive(true);
+            EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
         }
 
         public void ExitState()
         {
-            if(EscMenuController.settingsMenuPanel.activeSelf)
+            if(EscMenuController.getSettingsMenuPanel().activeSelf)
             {
                 EscMenuController.CloseSettings();
             }
-            EscMenuController.pauseMenuPanel.SetActive(false);
+            EscMenuController.getPauseMenuPanel().SetActive(false);
             Time.timeScale = 1f;
         }
     }

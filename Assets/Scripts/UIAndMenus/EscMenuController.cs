@@ -10,15 +10,17 @@ public class EscMenuController : MonoBehaviour
 {
     [SerializeField] private InputAction pauseAction;
 
-    public GameObject pauseMenuPanel;
-    public GameObject settingsMenuPanel;
+    [SerializeField] private GameObject pauseMenuPanel;
+    [SerializeField] private GameObject settingsMenuPanel;
+
+    public GameObject getPauseMenuPanel() { return pauseMenuPanel; }
+    public GameObject getSettingsMenuPanel() { return settingsMenuPanel; }
 
     // Start is called before the first frame update
     void Start()
     {
         pauseMenuPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
-        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
@@ -38,7 +40,7 @@ public class EscMenuController : MonoBehaviour
         if(GameStateManager.Instance.CurrentState is PlayingState)
         {
             GameStateManager.Instance.SetState(new GameStateManagement.PauseState(this));
-        } else
+        } else if(GameStateManager.Instance.CurrentState is not MainMenuState)
         {
             GameStateManager.Instance.SetState(new PlayingState());
         }
@@ -61,7 +63,7 @@ public class EscMenuController : MonoBehaviour
         pauseMenuPanel.SetActive(true);
     }
 
-    public void Quit()
+    public void QuitToMainMenu()
     {
         GameStateManager.Instance.SetState(new MainMenuState());
     }
