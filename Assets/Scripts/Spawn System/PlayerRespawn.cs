@@ -24,7 +24,6 @@ public class PlayerRespawn : MonoBehaviour
         
         respawnPoint = spawn.position;
         respawnPlayer();
-        
     }
 
    
