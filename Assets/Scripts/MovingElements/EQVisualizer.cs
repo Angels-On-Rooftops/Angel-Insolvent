@@ -29,7 +29,7 @@ public class EQVisualizer : MonoBehaviour
     int SampleArrayPower = 6;
 
     [SerializeField]
-    FFTWindow WindowType = FFTWindow.Rectangular;
+    FFTWindow WindowType = FFTWindow.Hamming;
 
     float[] Spectrum;
     GameObject[] BinObjects;
@@ -48,28 +48,55 @@ public class EQVisualizer : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
-        if(timer < 0.05f)
+        if (timer < 0.05f)
         {
             return;
         }
         timer = 0;
 
         Audio.GetSpectrumData(Spectrum, 0, WindowType);
-        float[] subSpectrum = new float[64];
-        Array.Copy(Spectrum, subSpectrum, 64);
-        
+        //float[] subSpectrum = new float[64];
+        //Array.Copy(Spectrum, subSpectrum, 64);
+
 
         //Debug.Log(string.Join(",", Spectrum));
 
-        foreach(GameObject binVis in BinObjects)
+        foreach (GameObject binVis in BinObjects)
         {
-            TransformUtil.AddScaleOneDirection(binVis.transform, -Vector3.up * binVis.transform.localScale.y);
+            TransformUtil.AddScaleOneDirection(
+                binVis.transform,
+                -Vector3.up * binVis.transform.localScale.y
+            );
         }
-
-        for (int i = 0; i < subSpectrum.Length; i++)
+        Debug.Log(Spectrum.Length + ", " + BinObjects.Length);
+        int sampleIndex = 0;
+        int nextCap = 0;
+        for (int binIndex = 0; binIndex < BinObjects.Length; binIndex++)
         {
-            int bin = i;
-            TransformUtil.AddScaleOneDirection(BinObjects[bin].transform, AmpMult * subSpectrum[i] * Vector3.up);
+            int samplesPerBin =
+                (int)Mathf.Pow(2, binIndex) * (int)Mathf.Pow(2, SampleArrayPower - NumBins);
+
+            if (samplesPerBin < 1)
+            {
+                samplesPerBin = 1;
+            }
+
+            nextCap += samplesPerBin;
+
+            if (nextCap > Spectrum.Length)
+            {
+                nextCap = Spectrum.Length;
+            }
+
+            while (sampleIndex < nextCap)
+            {
+                TransformUtil.AddScaleOneDirection(
+                    BinObjects[binIndex].transform,
+                    AmpMult * Spectrum[sampleIndex] * Vector3.up
+                );
+                sampleIndex++;
+            }
+
             /*
                 BinObjects[bin].transform.localScale += Vector3.up * Spectrum[i] * AmpMult;
             if(BinObjects[bin].transform.localScale.y > BinMax)
@@ -84,14 +111,16 @@ public class EQVisualizer : MonoBehaviour
     {
         float EQWidth = ScaleRef.transform.localScale.x;
         Vector3 instanceScale = new Vector3(EQWidth / NumBins, 0, ScaleRef.transform.localScale.z);
-        for (int i = 0; i<NumBins; i++)
-        { 
+        for (int i = 0; i < NumBins; i++)
+        {
             //create block instance
             GameObject currInstance = Instantiate(EQBlock, transform);
 
             //offset to correct position
             currInstance.transform.Translate(Vector3.up * ScaleRef.transform.localScale.y / 2);
-            currInstance.transform.Translate(Vector3.right * (-EQWidth/2 + EQWidth/NumBins * i + EQWidth/(NumBins*2)));
+            currInstance.transform.Translate(
+                Vector3.right * (-EQWidth / 2 + EQWidth / NumBins * i + EQWidth / (NumBins * 2))
+            );
 
             //scale to correct size
             currInstance.transform.localScale = instanceScale;
