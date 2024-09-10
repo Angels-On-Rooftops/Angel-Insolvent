@@ -22,7 +22,13 @@ public class EQVisualizer : MonoBehaviour
     float BinMax = 5;
 
     [SerializeField]
+    float BinMin = 0.1f;
+
+    [SerializeField]
     float AmpMult = 10;
+
+    [SerializeField]
+    float HighBoost = 2;
 
     [SerializeField]
     [Range(6, 13)]
@@ -55,11 +61,6 @@ public class EQVisualizer : MonoBehaviour
         timer = 0;
 
         Audio.GetSpectrumData(Spectrum, 0, WindowType);
-        //float[] subSpectrum = new float[64];
-        //Array.Copy(Spectrum, subSpectrum, 64);
-
-
-        //Debug.Log(string.Join(",", Spectrum));
 
         foreach (GameObject binVis in BinObjects)
         {
@@ -71,15 +72,17 @@ public class EQVisualizer : MonoBehaviour
         Debug.Log(Spectrum.Length + ", " + BinObjects.Length);
         int sampleIndex = 0;
         int nextCap = 0;
+
         for (int binIndex = 0; binIndex < BinObjects.Length; binIndex++)
         {
             int samplesPerBin =
-                (int)Mathf.Pow(2, binIndex) * (int)Mathf.Pow(2, SampleArrayPower - NumBins);
+                (int)(Mathf.Pow(2, binIndex) * Mathf.Pow(2, SampleArrayPower - NumBins));
 
             if (samplesPerBin < 1)
             {
                 samplesPerBin = 1;
             }
+
 
             nextCap += samplesPerBin;
 
@@ -88,23 +91,31 @@ public class EQVisualizer : MonoBehaviour
                 nextCap = Spectrum.Length;
             }
 
+            float scale = 0;
             while (sampleIndex < nextCap)
             {
-                TransformUtil.AddScaleOneDirection(
-                    BinObjects[binIndex].transform,
-                    AmpMult * Spectrum[sampleIndex] * Vector3.up
-                );
+                scale += Spectrum[sampleIndex];
                 sampleIndex++;
             }
 
-            /*
-                BinObjects[bin].transform.localScale += Vector3.up * Spectrum[i] * AmpMult;
-            if(BinObjects[bin].transform.localScale.y > BinMax)
+            scale *= AmpMult * binIndex * HighBoost / samplesPerBin;
+            
+
+            if (scale > BinMax)
             {
-                BinObjects[bin].transform.localScale = new Vector3(BinObjects[bin].transform.localScale.x, BinMax, BinObjects[bin].transform.localScale.z);
+                scale = BinMax;
             }
-            */
+            if (scale < BinMin)
+            {
+                scale = BinMin;
+            }
+
+            TransformUtil.AddScaleOneDirection(
+                BinObjects[binIndex].transform,
+                scale * Vector3.up
+            );
         }
+        Debug.Log(sampleIndex);
     }
 
     void MakeBins()
