@@ -25,14 +25,20 @@ public class EQVisualizer : MonoBehaviour
     float BinMin = 0.1f;
 
     [SerializeField]
+    float AngleBetween = -10f;
+
+    [SerializeField]
     float AmpMult = 10;
 
     [SerializeField]
-    float HighBoost = 2;
+    float HighBoost = 1;
 
     [SerializeField]
     [Range(6, 13)]
     int SampleArrayPower = 6;
+
+    [SerializeField]
+    bool HideScaleRef = true;
 
     [SerializeField]
     FFTWindow WindowType = FFTWindow.Hamming;
@@ -46,6 +52,10 @@ public class EQVisualizer : MonoBehaviour
         Spectrum = new float[(int)Mathf.Pow(2, SampleArrayPower)];
         BinObjects = new GameObject[NumBins];
         MakeBins();
+        if (HideScaleRef)
+        {
+            ScaleRef.SetActive(false);
+        }
     }
 
     float timer = 0;
@@ -75,14 +85,14 @@ public class EQVisualizer : MonoBehaviour
 
         for (int binIndex = 0; binIndex < BinObjects.Length; binIndex++)
         {
-            int samplesPerBin =
-                (int)(Mathf.Pow(2, binIndex) * Mathf.Pow(2, SampleArrayPower - NumBins));
+            int samplesPerBin = (int)(
+                Mathf.Pow(2, binIndex) * Mathf.Pow(2, SampleArrayPower - NumBins)
+            );
 
             if (samplesPerBin < 1)
             {
                 samplesPerBin = 1;
             }
-
 
             nextCap += samplesPerBin;
 
@@ -99,7 +109,6 @@ public class EQVisualizer : MonoBehaviour
             }
 
             scale *= Mathf.Sqrt(AmpMult * binIndex * HighBoost / samplesPerBin);
-            
 
             if (scale > BinMax)
             {
@@ -110,10 +119,7 @@ public class EQVisualizer : MonoBehaviour
                 scale = BinMin;
             }
 
-            TransformUtil.AddScaleOneDirection(
-                BinObjects[binIndex].transform,
-                scale * Vector3.up
-            );
+            TransformUtil.AddScaleOneDirection(BinObjects[binIndex].transform, scale * Vector3.up);
         }
         Debug.Log(sampleIndex);
     }
@@ -122,22 +128,43 @@ public class EQVisualizer : MonoBehaviour
     {
         float EQWidth = ScaleRef.transform.localScale.x;
         Vector3 instanceScale = new Vector3(EQWidth / NumBins, 0, ScaleRef.transform.localScale.z);
-        for (int i = 0; i < NumBins; i++)
-        {
-            //create block instance
-            GameObject currInstance = Instantiate(EQBlock, transform);
+        Vector3 firstVerticalOffset = Vector3.up * ScaleRef.transform.localScale.y / 2;
 
-            //offset to correct position
-            currInstance.transform.Translate(Vector3.up * ScaleRef.transform.localScale.y / 2);
-            currInstance.transform.Translate(
-                Vector3.right * (-EQWidth / 2 + EQWidth / NumBins * i + EQWidth / (NumBins * 2))
+        //create first bin obj
+        Vector3 firstOffset =
+            Vector3.right * (-EQWidth / 2 + EQWidth / (NumBins * 2)) + firstVerticalOffset;
+        BinObjects[0] = MakeBin(Vector3.zero, firstOffset, Quaternion.identity, instanceScale);
+        Vector3 prevOffset = BinObjects[0].transform.localPosition;
+        for (int i = 1; i < NumBins; i++)
+        {
+            Vector3 nextOffsetDir =
+                new(
+                    Mathf.Cos(Mathf.Deg2Rad * i * AngleBetween),
+                    Mathf.Sin(Mathf.Deg2Rad * i * AngleBetween),
+                    0
+                );
+            BinObjects[i] = MakeBin(
+                prevOffset,
+                BinObjects[i - 1].transform.right * EQWidth / NumBins / 2
+                    + nextOffsetDir * EQWidth / NumBins / 2,
+                Quaternion.AngleAxis(AngleBetween * i, Vector3.forward),
+                instanceScale
             );
 
-            //scale to correct size
-            currInstance.transform.localScale = instanceScale;
-
-            //add to array
-            BinObjects[i] = currInstance;
+            prevOffset = BinObjects[i].transform.localPosition;
         }
+    }
+
+    GameObject MakeBin(Vector3 basePos, Vector3 posOffset, Quaternion rotation, Vector3 scale)
+    {
+        //create block instance
+        GameObject result = Instantiate(EQBlock, transform);
+
+        result.transform.Translate(basePos + posOffset);
+        result.transform.localRotation = rotation;
+        result.transform.localScale = scale;
+        //result.transform.Translate(Vector3.up);
+
+        return result;
     }
 }

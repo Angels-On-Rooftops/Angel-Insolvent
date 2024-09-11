@@ -19,8 +19,7 @@ namespace Utility
         public static void AddScaleOneDirection(Transform transform, Vector3 scalar)
         {
             transform.localScale += scalar;
-            transform.position += scalar / 2;
+            transform.Translate(scalar / 2);
         }
     }
-
 }
