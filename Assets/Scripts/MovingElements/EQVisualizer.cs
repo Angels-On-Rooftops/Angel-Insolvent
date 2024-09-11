@@ -135,6 +135,7 @@ public class EQVisualizer : MonoBehaviour
             Vector3.right * (-EQWidth / 2 + EQWidth / (NumBins * 2)) + firstVerticalOffset;
         BinObjects[0] = MakeBin(Vector3.zero, firstOffset, Quaternion.identity, instanceScale);
         Vector3 prevOffset = BinObjects[0].transform.localPosition;
+        Vector3 prevTransContrib = Vector3.right * EQWidth / NumBins / 2;
         for (int i = 1; i < NumBins; i++)
         {
             Vector3 nextOffsetDir =
@@ -143,15 +144,26 @@ public class EQVisualizer : MonoBehaviour
                     Mathf.Sin(Mathf.Deg2Rad * i * AngleBetween),
                     0
                 );
+            Debug.Log(
+                "prev trans component: "
+                    + (
+                        transform.rotation
+                        * BinObjects[i - 1].transform.right
+                        * EQWidth
+                        / NumBins
+                        / 2
+                    )
+            );
+            Debug.Log("calc next component: " + nextOffsetDir * EQWidth / NumBins / 2);
             BinObjects[i] = MakeBin(
                 prevOffset,
-                BinObjects[i - 1].transform.right * EQWidth / NumBins / 2
-                    + nextOffsetDir * EQWidth / NumBins / 2,
+                prevTransContrib + nextOffsetDir * EQWidth / NumBins / 2,
                 Quaternion.AngleAxis(AngleBetween * i, Vector3.forward),
                 instanceScale
             );
 
             prevOffset = BinObjects[i].transform.localPosition;
+            prevTransContrib = nextOffsetDir * EQWidth / NumBins / 2;
         }
     }
 
@@ -159,8 +171,11 @@ public class EQVisualizer : MonoBehaviour
     {
         //create block instance
         GameObject result = Instantiate(EQBlock, transform);
-
-        result.transform.Translate(basePos + posOffset);
+        result.transform.Translate(basePos);
+        Debug.Log("Offset:" + posOffset);
+        Debug.Log("Pos b4 offset: " + result.transform.localPosition);
+        result.transform.Translate(posOffset);
+        Debug.Log("Pos after offset: " + result.transform.localPosition);
         result.transform.localRotation = rotation;
         result.transform.localScale = scale;
         //result.transform.Translate(Vector3.up);
