@@ -7,7 +7,7 @@ using System;
 
 namespace Inventory
 {
-    public class InventorySystem
+    public class InventorySystem : IPersistableData
     {
         private Dictionary<ItemData, InventoryItem> itemDictionary; //to search by ItemData faster
 
@@ -79,6 +79,22 @@ namespace Inventory
         public virtual void Remove(InventoryItem item)
         {
             this.Remove(item.Data, item.StackSize);
+        }
+
+        public void SaveData()
+        {
+            foreach(var item in this.itemDictionary.Values)
+            {
+                //serialize object
+            }
+        }
+
+        public void LoadData()
+        {
+            foreach (var item in this.itemDictionary.Values)
+            {
+                //deserialize object
+            }
         }
     }
 }
