@@ -98,7 +98,7 @@ public class EQVisualizer : MonoBehaviour
                 sampleIndex++;
             }
 
-            scale *= AmpMult * binIndex * HighBoost / samplesPerBin;
+            scale *= Mathf.Sqrt(AmpMult * binIndex * HighBoost / samplesPerBin);
             
 
             if (scale > BinMax)
