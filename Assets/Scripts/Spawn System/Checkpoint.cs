@@ -4,16 +4,28 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
-    
-    public bool activated = false; //stops player from reactivation old check points
-    public Vector3 postion; //spawn location
-    [SerializeField] int height = 1; //y position to spawn player at
+    private bool activated = false;//stops player from reactivation old check points
+    private Vector3 postion; //spawn location
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        postion = new Vector3(this.transform.position.x, height, this.transform.position.z);
-    }
+    public bool Activated {
+        get {
+            return activated;
+            }
+        set {
+            activated = !activated;
+            }
+        }
+    
+    public Vector3 Postion{
+        get {
+            return postion;
+            }
+        set {
+            postion = offset + this.transform.position;
+            }
+        }
+    [SerializeField] Vector3 offset;
+    
 
     
 }
