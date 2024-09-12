@@ -27,6 +27,18 @@ namespace Inventory
             }
         }
 
+        private void OnEnable()
+        {
+            //Subscribe save action
+            DataPersistenceManager.Instance.onSaveTriggered += inventorySystem.SaveData;
+        }
+
+        private void OnDisable()
+        {
+            //Unsubscribe save action
+            DataPersistenceManager.Instance.onSaveTriggered -= inventorySystem.SaveData;
+        }
+
         /// <summary>
         /// Only use this Property after Awake()
         /// </summary>
