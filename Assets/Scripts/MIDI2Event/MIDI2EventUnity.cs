@@ -88,6 +88,7 @@ public class MIDI2EventUnity : MonoBehaviour
         return (float)eventPlayer.BeatPerSec();
     }
 
+    //returns whether the system is currently playing
     public bool IsPlaying()
     {
         return eventPlayer.IsPlaying();

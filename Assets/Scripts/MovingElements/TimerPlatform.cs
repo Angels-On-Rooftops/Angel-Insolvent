@@ -9,38 +9,38 @@ using System.Drawing;
 public class TimerPlatform : MonoBehaviour
 {
     [SerializeField]
-    public MIDI2EventUnity EventSys;
+    MIDI2EventUnity EventSys;
 
     [SerializeField]
-    public Vector3[] PositionLoop;
+    Vector3[] PositionLoop;
 
     [SerializeField]
-    public Notes BeatNote;
+    Notes BeatNote;
 
     [SerializeField]
-    public int BeatOctave;
+    int BeatOctave;
 
     [SerializeField]
-    internal NoteDebounceTriplet[] Debounces;
+    NoteDebounceTriplet[] Debounces;
 
     [SerializeField]
-    public Material OnMaterial;
+    Material OnMaterial;
 
     [SerializeField]
-    public Material OffMaterial;
+    Material OffMaterial;
 
     [SerializeField]
-    public float TriangleCalculationRadius;
+    float TriangleCalculationRadius;
 
     [SerializeField]
-    public float TrianglePushout;
+    float TrianglePushout;
 
     [SerializeField]
-    public Vector3 TriangleCenterOffset;
+    Vector3 TriangleCenterOffset;
 
     [SerializeField]
     [Range(1, 179)]
-    public float MaxInternalTriangleAngle = 120;
+    float MaxInternalTriangleAngle = 120;
 
     private Mesh[][] TriangleRings;
     private RenderParams onParams;
@@ -65,6 +65,7 @@ public class TimerPlatform : MonoBehaviour
 
     private void OnEnable()
     {
+        //subscribe ring setting events
         for (int i = 0; i < Debounces.Length; i++)
         {
             int ringIndex = i;
@@ -79,6 +80,7 @@ public class TimerPlatform : MonoBehaviour
             );
         }
 
+        //subscribe beat event
         UnsubActions[Debounces.Length] = EventSys.Subscribe(DecrementCounter, BeatNote, BeatOctave);
     }
 
@@ -93,6 +95,7 @@ public class TimerPlatform : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //render current indicator
         for (int i = 0; i < TriangleRings[activeRing].Length; i++)
         {
             RenderParams toUse = i < countdown ? onParams : offParams;
@@ -108,6 +111,7 @@ public class TimerPlatform : MonoBehaviour
     public void DecrementCounter()
     {
         countdown--;
+        //move position if necessary
         if (countdown == 0)
         {
             locationIndex = (locationIndex + 1) % PositionLoop.Length;
