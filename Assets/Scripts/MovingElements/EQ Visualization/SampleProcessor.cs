@@ -22,6 +22,8 @@ public class SampleProcessor : MonoBehaviour
     {
         Bins = new float[NumBins];
         CalcSamplesPerBin();
+
+        Updated += () => { };
     }
 
     void OnEnable()
@@ -37,7 +39,7 @@ public class SampleProcessor : MonoBehaviour
     void CalcSamplesPerBin()
     {
         SamplesPerBin = new int[NumBins];
-        for (int i =0; i < SamplesPerBin.Length; i++)
+        for (int i = 0; i < SamplesPerBin.Length; i++)
         {
             //determine the number of samples to consolidate into this bin
             int samplesPerBin = (int)(
@@ -51,7 +53,6 @@ public class SampleProcessor : MonoBehaviour
             }
             SamplesPerBin[i] = samplesPerBin;
         }
-       
     }
 
     public int GetNumSamplesAtIndex(int index)

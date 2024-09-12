@@ -33,6 +33,7 @@ public class MusicSampler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //get new sample if enough time has passed
         timer += Time.deltaTime;
         if (timer >= CacheUpdateDelay)
         {

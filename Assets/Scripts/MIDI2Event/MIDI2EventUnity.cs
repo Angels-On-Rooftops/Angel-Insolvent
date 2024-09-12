@@ -23,10 +23,15 @@ public class MIDI2EventUnity : MonoBehaviour
 
     Midi2Event eventPlayer;
 
+    public Action OnPlay { get; set; }
+    public Action OnStop { get; set; }
+
     void Awake()
     {
         eventPlayer = new(chartPath, lowestOctave);
         audioSource.clip.LoadAudioData();
+        OnPlay += () => { };
+        OnStop += () => { };
     }
 
     //update the event system every frame
@@ -40,6 +45,7 @@ public class MIDI2EventUnity : MonoBehaviour
     {
         eventPlayer.Play();
         audioSource.Play();
+        OnPlay.Invoke();
     }
 
     //stops the audio and chart from playing and resets them to the beginning
@@ -47,6 +53,7 @@ public class MIDI2EventUnity : MonoBehaviour
     {
         eventPlayer.Stop();
         audioSource.Stop();
+        OnStop.Invoke();
     }
 
     /*
@@ -73,5 +80,16 @@ public class MIDI2EventUnity : MonoBehaviour
     public float SecPerBeat()
     {
         return (float)eventPlayer.SecPerBeat();
+    }
+
+    //returns the current number of seconds per beat
+    public float BeatPerSec()
+    {
+        return (float)eventPlayer.BeatPerSec();
+    }
+
+    public bool IsPlaying()
+    {
+        return eventPlayer.IsPlaying();
     }
 }

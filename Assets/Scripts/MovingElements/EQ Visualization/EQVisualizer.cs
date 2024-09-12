@@ -48,8 +48,6 @@ public class EQVisualizer : MonoBehaviour
         }
     }
 
-    float timer = 0;
-
     private void OnEnable()
     {
         Processor.Updated += UpdateBins;
@@ -62,6 +60,7 @@ public class EQVisualizer : MonoBehaviour
 
     void UpdateBins()
     {
+        //update visuals when new data availiable
         Bins = Processor.GetProcessedData();
         ResetBins();
         ScaleBins();
@@ -69,6 +68,7 @@ public class EQVisualizer : MonoBehaviour
 
     void ResetBins()
     {
+        //reset to base scale
         foreach (GameObject binVis in BinObjects)
         {
             TransformUtil.AddScaleOneDirection(
@@ -80,12 +80,14 @@ public class EQVisualizer : MonoBehaviour
 
     void ScaleBins()
     {
-        
-        for(int binIndex = 0; binIndex<Bins.Length; binIndex++)
+        for (int binIndex = 0; binIndex < Bins.Length; binIndex++)
         {
             float binVal = Bins[binIndex];
 
-            binVal *= Mathf.Sqrt(AmpMult * binIndex * HighBoost / Processor.GetNumSamplesAtIndex(binIndex));
+            //normalize bin data
+            binVal *= Mathf.Sqrt(
+                AmpMult * binIndex * HighBoost / Processor.GetNumSamplesAtIndex(binIndex)
+            );
 
             //bring value into range between binmin and binmax
             if (binVal > BinMax)
@@ -97,20 +99,26 @@ public class EQVisualizer : MonoBehaviour
                 binVal = BinMin;
             }
 
+            //scale bin
             TransformUtil.AddScaleOneDirection(BinObjects[binIndex].transform, binVal * Vector3.up);
         }
-        
     }
 
     void MakeBins()
     {
+        //calculate consts
         float EQWidth = ScaleRef.transform.localScale.x;
-        Vector3 instanceScale = new Vector3(EQWidth / Processor.NumBins, 0, ScaleRef.transform.localScale.z);
+        Vector3 instanceScale = new Vector3(
+            EQWidth / Processor.NumBins,
+            0,
+            ScaleRef.transform.localScale.z
+        );
         Vector3 firstVerticalOffset = Vector3.up * ScaleRef.transform.localScale.y / 2;
 
         //create first bin obj
         Vector3 firstOffset =
-            Vector3.right * (-EQWidth / 2 + EQWidth / (Processor.NumBins * 2)) + firstVerticalOffset;
+            Vector3.right * (-EQWidth / 2 + EQWidth / (Processor.NumBins * 2))
+            + firstVerticalOffset;
         BinObjects[0] = MakeBin(Vector3.zero, firstOffset, Quaternion.identity, instanceScale);
         Vector3 prevOffset = BinObjects[0].transform.localPosition;
         Vector3 prevTransContrib = Vector3.right * EQWidth / Processor.NumBins / 2;
@@ -145,8 +153,6 @@ public class EQVisualizer : MonoBehaviour
         result.transform.Translate(posOffset);
         result.transform.localRotation = rotation;
         result.transform.localScale = scale;
-        //result.transform.Translate(Vector3.up);
-
         return result;
     }
 }

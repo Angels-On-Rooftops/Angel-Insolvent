@@ -78,6 +78,18 @@ namespace MIDI2EventSystem
             return _usPerQuarter * US_TO_S;
         }
 
+        //returns the current number of beats per second
+        public double BeatPerSec()
+        {
+            return 1 / SecPerBeat();
+        }
+
+        //returns true if this system is currently playing
+        public bool IsPlaying()
+        {
+            return _isPlaying;
+        }
+
         //return the event in the system related to MTrkEvent e
         private Action GetEvent(MTrkEvent e)
         {
