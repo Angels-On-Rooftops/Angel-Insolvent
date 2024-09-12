@@ -16,6 +16,9 @@ public class SimpleOscillator : MonoBehaviour
     [SerializeField]
     Vector3 Direction;
 
+    [SerializeField]
+    bool ResetOnStop = true;
+
     Vector3 extremePos;
     Vector3 extremeNeg;
     Vector3 lastPos;
@@ -34,12 +37,18 @@ public class SimpleOscillator : MonoBehaviour
 
     private void OnEnable()
     {
-        TrackInfo.OnStop += ResetPos;
+        if (ResetOnStop)
+        {
+            TrackInfo.OnStop += ResetPos;
+        }
     }
 
     private void OnDisable()
     {
-        TrackInfo.OnStop -= ResetPos;
+        if (ResetOnStop)
+        {
+            TrackInfo.OnStop -= ResetPos;
+        }
     }
 
     // Update is called once per frame

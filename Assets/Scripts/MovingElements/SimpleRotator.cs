@@ -11,19 +11,28 @@ public class SimpleRotator : MonoBehaviour
     Vector3 RotationAxis = Vector3.right;
 
     [SerializeField]
-    float BeatPeriod = 4;
+    float BeatPeriod;
+
+    [SerializeField]
+    bool ResetOnStop = true;
 
     // Start is called before the first frame update
     void Start() { }
 
     private void OnEnable()
     {
-        TrackInfo.OnStop += ResetRotation;
+        if (ResetOnStop)
+        {
+            TrackInfo.OnStop += ResetRotation;
+        }
     }
 
     private void OnDisable()
     {
-        TrackInfo.OnStop -= ResetRotation;
+        if (ResetOnStop)
+        {
+            TrackInfo.OnStop -= ResetRotation;
+        }
     }
 
     // Update is called once per frame

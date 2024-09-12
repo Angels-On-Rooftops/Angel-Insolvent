@@ -263,6 +263,7 @@ MonoBehaviour:
   TrackInfo: {fileID: 2076660981}
   RotationAxis: {x: 1, y: 0, z: 0}
   BeatPeriod: 4
+  ResetOnStop: 1
 --- !u!65 &73565597
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -714,9 +715,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 2076660981}
-  BeatPeriod: 4
+  BeatPeriod: 2
   Distance: 5
   Direction: {x: 1, y: 0, z: 0}
+  ResetOnStop: 1
 --- !u!65 &789143872
 BoxCollider:
   m_ObjectHideFlags: 0
