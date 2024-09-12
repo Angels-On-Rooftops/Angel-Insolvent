@@ -21,13 +21,13 @@ public class PlayerRespawn : MonoBehaviour
    
     private void OnTriggerEnter(Collider other) {
         //change respawn to current spawn
-        if (!other.gameObject.CompareTag("Respawn")) {
-            return;
-         }
-        Checkpoint newSpawn = other.gameObject.GetComponent<Checkpoint>();
-        if (!newSpawn.Activated) {
-            respawnPoint = newSpawn.Postion;
-            newSpawn.Activated = true;
+        if (other.gameObject.CompareTag("Respawn")) {
+            Checkpoint newSpawn = other.gameObject.GetComponent<Checkpoint>();
+            if (!newSpawn.Activated) {
+                respawnPoint = newSpawn.Postion;
+                newSpawn.Activated = true;
+                }
+       
          }
      }
 
