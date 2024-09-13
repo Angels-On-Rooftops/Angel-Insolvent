@@ -54,12 +54,12 @@ public class SimpleOscillator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!TrackInfo.IsPlaying())
+        if (!TrackInfo.IsPlaying)
         {
             return;
         }
         //calc speed
-        float posMod = speedMod * TrackInfo.BeatPerSec() * 1 / BeatPeriod * Time.deltaTime;
+        float posMod = speedMod * TrackInfo.BeatPerSec * 1 / BeatPeriod * Time.deltaTime;
 
         //smoothly interpolate next position
         currentPos = Mathf.Clamp(currentPos + posMod, 0, 1);

@@ -128,7 +128,7 @@ public class TimerPlatform : MonoBehaviour
     IEnumerator MoveToPosInBeat(Vector3 target)
     {
         float timer = 0;
-        float moveDuration = EventSys.SecPerBeat();
+        float moveDuration = EventSys.SecPerBeat;
         Vector3 startPos = this.transform.position;
 
         while (timer <= moveDuration)

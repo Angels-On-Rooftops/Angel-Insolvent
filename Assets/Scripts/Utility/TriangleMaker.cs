@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Utility
 {
-    public class TriangleMaker
+    public static class TriangleMaker
     {
         public static Mesh MakeTriangle(Vector3 vertex1, Vector3 vertex2, Vector3 vertex3)
         {
@@ -23,7 +23,7 @@ namespace Utility
 
         public static Mesh MakeTriangle(Vector3[] vertecies)
         {
-            if(vertecies.Length < 3)
+            if (vertecies.Length < 3)
             {
                 Debug.Log("triangle missing vertecies!");
                 return new Mesh();

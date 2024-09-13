@@ -22,11 +22,30 @@ namespace MIDI2EventSystem
 
         private double _deltaTimeToNextUpdate = 0;
 
+        //microseconds per quarter note
         private uint _usPerQuarter = 500000;
+
+        //conversion factor from microseconds to seconds
+        private readonly double US_TO_S = 1e-6;
         private bool _isPlaying = false;
         private readonly int TET = 12;
-        private readonly double US_TO_S = 1e-6;
         int lowestOctave;
+
+        public double SecPerBeat
+        {
+            get => _usPerQuarter * US_TO_S;
+        }
+
+        public double BeatPerSec
+        {
+            get => 1 / SecPerBeat;
+        }
+
+        //returns true if this system is currently playing
+        public bool IsPlaying
+        {
+            get => _isPlaying;
+        }
 
         public Midi2Event(string filePath, int lowestOctave = -1)
         {
@@ -70,24 +89,6 @@ namespace MIDI2EventSystem
                 }
                 _deltaTimeToNextUpdate = DeltaToDeltaTime(_messages.Peek().Delta) - makeup;
             }
-        }
-
-        //returns the current number of seconds per beat
-        public double SecPerBeat()
-        {
-            return _usPerQuarter * US_TO_S;
-        }
-
-        //returns the current number of beats per second
-        public double BeatPerSec()
-        {
-            return 1 / SecPerBeat();
-        }
-
-        //returns true if this system is currently playing
-        public bool IsPlaying()
-        {
-            return _isPlaying;
         }
 
         //return the event in the system related to MTrkEvent e

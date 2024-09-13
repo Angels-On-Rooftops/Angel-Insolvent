@@ -61,7 +61,7 @@ public class EQVisualizer : MonoBehaviour
     void UpdateBins()
     {
         //update visuals when new data availiable
-        Bins = Processor.GetProcessedData();
+        Bins = Processor.ProcessedData;
         ResetBins();
         ScaleBins();
     }

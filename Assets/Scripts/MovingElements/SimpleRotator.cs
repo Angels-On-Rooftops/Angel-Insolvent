@@ -16,8 +16,13 @@ public class SimpleRotator : MonoBehaviour
     [SerializeField]
     bool ResetOnStop = true;
 
+    Quaternion startRotation;
+
     // Start is called before the first frame update
-    void Start() { }
+    void Start()
+    {
+        startRotation = this.transform.rotation;
+    }
 
     private void OnEnable()
     {
@@ -38,13 +43,13 @@ public class SimpleRotator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!TrackInfo.IsPlaying())
+        if (!TrackInfo.IsPlaying)
         {
             return;
         }
 
         Quaternion rotation = Quaternion.AngleAxis(
-            360 * TrackInfo.BeatPerSec() * 1 / BeatPeriod * Time.deltaTime,
+            360 * TrackInfo.BeatPerSec * 1 / BeatPeriod * Time.deltaTime,
             RotationAxis
         );
         this.transform.rotation *= rotation;
@@ -52,6 +57,6 @@ public class SimpleRotator : MonoBehaviour
 
     void ResetRotation()
     {
-        this.transform.rotation = Quaternion.identity;
+        this.transform.rotation = startRotation;
     }
 }

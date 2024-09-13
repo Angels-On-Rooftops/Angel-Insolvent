@@ -26,6 +26,22 @@ public class MIDI2EventUnity : MonoBehaviour
     public Action OnPlay { get; set; }
     public Action OnStop { get; set; }
 
+    public float SecPerBeat
+    {
+        get => (float)eventPlayer.SecPerBeat;
+    }
+
+    public float BeatPerSec
+    {
+        get => (float)eventPlayer.BeatPerSec;
+    }
+
+    //returns whether the system is currently playing
+    public bool IsPlaying
+    {
+        get => eventPlayer.IsPlaying;
+    }
+
     void Awake()
     {
         eventPlayer = new(chartPath, lowestOctave);
@@ -74,23 +90,5 @@ public class MIDI2EventUnity : MonoBehaviour
     )
     {
         return eventPlayer.Subscribe(action, note, octave, type);
-    }
-
-    //returns the current number of seconds per beat
-    public float SecPerBeat()
-    {
-        return (float)eventPlayer.SecPerBeat();
-    }
-
-    //returns the current number of seconds per beat
-    public float BeatPerSec()
-    {
-        return (float)eventPlayer.BeatPerSec();
-    }
-
-    //returns whether the system is currently playing
-    public bool IsPlaying()
-    {
-        return eventPlayer.IsPlaying();
     }
 }

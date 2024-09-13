@@ -1277,7 +1277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sampler: {fileID: 713612359}
-  NumBins: 8
+  numBins: 8
 --- !u!1 &1589586046
 GameObject:
   m_ObjectHideFlags: 0
@@ -1485,6 +1485,10 @@ PrefabInstance:
     - target: {fileID: 553646999709744967, guid: 5c647f3ee0c4732448c50ccb8b75e7b5, type: 3}
       propertyPath: CacheUpdateDelay
       value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2025945711910817470, guid: 5c647f3ee0c4732448c50ccb8b75e7b5, type: 3}
+      propertyPath: numBins
+      value: 32
       objectReference: {fileID: 0}
     - target: {fileID: 2415498386684935715, guid: 5c647f3ee0c4732448c50ccb8b75e7b5, type: 3}
       propertyPath: m_RootOrder

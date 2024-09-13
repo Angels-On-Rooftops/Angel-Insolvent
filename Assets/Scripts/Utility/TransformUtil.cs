@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 namespace Utility
 {
-    public class TransformUtil
+    public static class TransformUtil
     {
         /*
         public static void ScaleOneDirection(Transform transform, Vector3 scalar)

@@ -5,7 +5,6 @@ using System;
 
 public class MusicSampler : MonoBehaviour
 {
-
     [SerializeField]
     AudioSource Audio;
 
@@ -24,6 +23,16 @@ public class MusicSampler : MonoBehaviour
     float timer = 0;
     float[] cache;
 
+    public float DataArrayPower
+    {
+        get => SampleArrayPower;
+    }
+
+    public float[] SampledData
+    {
+        get => cache;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,16 +49,6 @@ public class MusicSampler : MonoBehaviour
             Audio.GetSpectrumData(cache, 0, WindowType);
             Updated.Invoke();
             timer = 0;
-        }   
-    }
-
-    public int GetArrayPow()
-    {
-        return SampleArrayPower;
-    }
-
-    public float[] GetData()
-    {
-        return cache;
+        }
     }
 }

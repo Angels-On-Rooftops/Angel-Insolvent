@@ -11,12 +11,22 @@ public class SampleProcessor : MonoBehaviour
     [SerializeField]
     MusicSampler Sampler;
 
-    public int NumBins;
+    [SerializeField]
+    int numBins;
+    public int NumBins
+    {
+        get => numBins;
+    }
 
     int[] SamplesPerBin;
     float[] Bins;
 
     public Action Updated;
+
+    public float[] ProcessedData
+    {
+        get => Bins;
+    }
 
     void Start()
     {
@@ -43,7 +53,7 @@ public class SampleProcessor : MonoBehaviour
         {
             //determine the number of samples to consolidate into this bin
             int samplesPerBin = (int)(
-                Mathf.Pow(2, i) * Mathf.Pow(2, Sampler.GetArrayPow() - NumBins)
+                Mathf.Pow(2, i) * Mathf.Pow(2, Sampler.DataArrayPower - NumBins)
             );
 
             //each bin must have at least one sample
@@ -64,9 +74,9 @@ public class SampleProcessor : MonoBehaviour
         return SamplesPerBin[index];
     }
 
-    public void SampleAndProcess()
+    void SampleAndProcess()
     {
-        float[] samples = Sampler.GetData();
+        float[] samples = Sampler.SampledData;
 
         int sampleIndex = 0;
         int nextCap = 0;
@@ -93,10 +103,5 @@ public class SampleProcessor : MonoBehaviour
             Bins[binIndex] = binVal;
         }
         Updated.Invoke();
-    }
-
-    public float[] GetProcessedData()
-    {
-        return Bins;
     }
 }
