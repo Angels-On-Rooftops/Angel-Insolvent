@@ -54,6 +54,12 @@ public class CharacterMovement : MonoBehaviour
     float JumpHeight = 3;
 
     [SerializeField]
+    [Tooltip("On subsequent midair jumps, the jump height will increment based off of this property.\n\n" +
+        "For example, if the initial jump height is 5, the bonus is 5, and the number of jumps the character has is 3: " +
+        "On the first jump the character will jump 5 units, then on the double jump it will jump 10, then on the triple jump it will jump 15.")]
+    float JumpHeightBonus = 0;
+
+    [SerializeField]
     [Tooltip("After pressing the jump key in mid air, the character will jump immediately " +
         "if they hit the ground within this timeframe (in seconds).")]
     float JumpBufferTime = 0.1f;
@@ -68,19 +74,6 @@ public class CharacterMovement : MonoBehaviour
     [Tooltip("The maximum speed the character can fall at.")]
     float DownwardTerminalVelocity = 64;
 
-    [Space(10)]
-
-    [SerializeField]
-    [Tooltip("If enabled, to keep characters from floating when moving off ledges, they will snap " +
-        "downwards when the ground slope changes.")]
-    bool SnapToGround = true;
-
-    [SerializeField]
-    [Min(0)]
-    [Tooltip("Determines the maximum distance the controller will check " +
-        "for ground below the character before snapping it downward if SnapToGround is enabled.")]
-    float MaximumSnappingDistance = 0.2f;
-
     /**         END USER PROPERTIES                 **/
 
     /**         START EVENTS                        **/
@@ -93,17 +86,7 @@ public class CharacterMovement : MonoBehaviour
 
     /**         END EVENTS                          **/
 
-    /**         START CALCULATED PROPERTIES         **/
 
-    float JumpPower
-    {
-        get
-        {
-            return Mathf.Sqrt(2 * CharacterGravity() * JumpHeight);
-        }
-    }
-
-    /**         END CALCULATED PROPERTIES           **/
 
     [NonSerialized]
     public Vector3 GravityUpDirection = new(0, 1, 0);
@@ -112,14 +95,14 @@ public class CharacterMovement : MonoBehaviour
     public float VerticalSpeed = 0;
 
     Vector3 MovementDirection = new();
-    float DefaultWalkSpeed;
-
     MovementState State = MovementState.Airbourne;
     bool IsJumping = false;
     int ExtraJumpsRemaining;
     float LastTimeGrounded = 0;
     float dx = 0.01f;
     CharacterController controller;
+
+    const float SNAPPING_DISTANCE = 1;
 
     // the last platform the character landed on
     GameObject LastPlatform;
@@ -133,9 +116,27 @@ public class CharacterMovement : MonoBehaviour
     bool LateralMovementEnabled = true;
     bool RotationEnabled = true;
 
+    /**         START CALCULATED PROPERTIES         **/
+    float JumpPower
+    {
+        get
+        {
+            float height = JumpHeight + (Jumps - ExtraJumpsRemaining - 1) * JumpHeightBonus;
+            return Mathf.Sqrt(2 * CharacterGravity() * height);
+        }
+    }
+
+    bool IsRising
+    {
+        get
+        {
+            return VerticalSpeed > 0;
+        }
+    }
+    /**         END CALCULATED PROPERTIES           **/
+
     void Awake()
     {
-        DefaultWalkSpeed = WalkSpeed;
         controller = GetComponent<CharacterController>();
         ExtraJumpsRemaining = Jumps - 1;
     }
@@ -326,7 +327,7 @@ public class CharacterMovement : MonoBehaviour
     public bool IsOnGround()
     {
         bool didHit = Physics.CheckSphere(
-            BottomSphereCenter() - CharacterUpVector() * (/*2 * dx +*/ controller.skinWidth + dx),
+            BottomSphereCenter() - CharacterUpVector() * (controller.skinWidth + dx),
             controller.radius,
             ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
         );
@@ -336,12 +337,7 @@ public class CharacterMovement : MonoBehaviour
 
     bool IsHittingHead()
     {
-        return Mathf.Abs(Vector3.Dot(controller.velocity, CharacterUpVector())) < dx && VerticalSpeed > dx;
-    }
-
-    public bool IsFalling()
-    {
-        return VerticalSpeed < 0;
+        return Mathf.Abs(Vector3.Dot(controller.velocity, CharacterUpVector())) < dx && IsRising;
     }
 
     float TimeSinceGrounded()
@@ -356,7 +352,7 @@ public class CharacterMovement : MonoBehaviour
 
     void ApplyGravity()
     {
-        if (IsOnStableGround() && !IsJumping)
+        if (IsOnStableGround() /*&& !IsJumping*/)
         {
             VerticalSpeed = Mathf.Max(0, VerticalSpeed);
             return;
@@ -371,46 +367,28 @@ public class CharacterMovement : MonoBehaviour
         Vector3 moveVelocity = MovementVelocity(forwardFromCamera);
         Vector3 verticalVelocity = CharacterUpVector() * VerticalSpeed;
 
-        if (IsOnGround() && !IsOnStableGround())
+        // character is on a slope that's too steep, move them downwards
+        if (IsOnGround() && !IsOnStableGround() && GroundHitInfo(controller.height / 2f, out RaycastHit hit))
         {
-            bool didHit = GroundHitInfo(controller.height / 2f, out RaycastHit hit);
+            Physics.Raycast(
+                transform.position, hit.point - transform.position, out RaycastHit hit2, controller.height, ControlConstants.RAYCAST_MASK
+            );
 
-            if (didHit)
+            if (Vector3.Dot(hit2.normal, CharacterUpVector()) < 1 - dx && Vector3.Dot(hit2.normal, CharacterUpVector()) > dx)
             {
-                Physics.Raycast(
-                    transform.position, hit.point - transform.position, out RaycastHit hit2, controller.height, ControlConstants.RAYCAST_MASK
-                );
+                verticalVelocity = Vector3.Cross(Vector3.Cross(CharacterUpVector(), hit2.normal), hit2.normal) * -VerticalSpeed;
 
-                if (Vector3.Dot(hit2.normal, CharacterUpVector()) < 1 - dx && Vector3.Dot(hit2.normal, CharacterUpVector()) > dx)
-                {
-                    moveVelocity = Vector3.Cross(Vector3.Cross(CharacterUpVector(), (Vector3)hit2.normal), (Vector3)hit2.normal) * -VerticalSpeed;
-                }
             }
         }
 
         Vector3 combinedVelocity = verticalVelocity + moveVelocity;
-
-        if (IsJumping || !IsOnStableGround() || VerticalSpeed > dx)
-        {
-            controller.Move(combinedVelocity * Time.deltaTime);
-            return;
-        }
-
-        Vector3 normal = GroundNormal(controller.height).GetValueOrDefault(CharacterUpVector());
-
-        Vector3 velocityParallelToPlane = Vector3.Normalize(Vector3.ProjectOnPlane(combinedVelocity, normal)) * combinedVelocity.magnitude;
-
-        controller.Move(velocityParallelToPlane * Time.deltaTime);
+        controller.Move(combinedVelocity * Time.deltaTime);
+        return;
     }
 
     void UpdateState()
     {
-        bool isGroundWithinSnappingDistance = Physics.Raycast(
-            transform.position,
-            -CharacterUpVector(),
-            controller.height / 2 + controller.skinWidth + MaximumSnappingDistance,
-            ControlConstants.RAYCAST_MASK);
-
+        // land on ground
         if (State == MovementState.Airbourne && IsOnStableGround() && VerticalSpeed <= dx)
         {
             Landed?.Invoke();
@@ -423,30 +401,37 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
-        if (SnapToGround && State == MovementState.Grounded)
-        {
-            if (isGroundWithinSnappingDistance && VerticalSpeed <= 0)
-            {
-                SnapCharacterToGround();
-            }
-            else
-            {
-                State = MovementState.Airbourne;
-            }
+        bool isGroundWithinSnappingDistance = Physics.Raycast(
+            transform.position,
+            -CharacterUpVector(),
+            controller.height / 2 + controller.skinWidth + SNAPPING_DISTANCE,
+            ControlConstants.RAYCAST_MASK);
 
+        // when character lifts off
+        if (State == MovementState.Grounded && (!isGroundWithinSnappingDistance || IsRising))
+        {
+            State = MovementState.Airbourne;
             return;
         }
 
+        // snap to ground while walking
+        if (State == MovementState.Grounded)
+        {
+            SnapCharacterToGround();
+            return;
+        }
+
+        // when character falls from ledge
         if (!IsOnStableGround())
         {
             State = MovementState.Airbourne;
+            return;
         }
     }
 
     void ApplyRotation()
     {
         Vector3 characterUp = CharacterUpVector();
-
         transform.LookAt(transform.position + FacingDirection(), characterUp);
     }
 
@@ -460,31 +445,30 @@ public class CharacterMovement : MonoBehaviour
 
     void SnapCharacterToGround()
     {
-        bool didCapsuleHit = Physics.CapsuleCast(
+        bool isGroundWithinSnappingDistance = Physics.CapsuleCast(
             TopSphereCenter(), BottomSphereCenter(), controller.radius + controller.skinWidth - dx,
             -CharacterUpVector(),
-            out RaycastHit capsuleHit, MaximumSnappingDistance, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore);
+            out RaycastHit capsuleHit, SNAPPING_DISTANCE, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
+        );
 
-        bool isCapsuleOverGeometry = Physics.CheckCapsule(
-                TopSphereCenter(), BottomSphereCenter(), controller.radius + controller.skinWidth + dx, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
-            );
-
-        if (didCapsuleHit & !isCapsuleOverGeometry)
+        if (!isGroundWithinSnappingDistance)
         {
-            transform.position += capsuleHit.distance * -CharacterUpVector();
+            return;
         }
+
+        bool isOnGround = Physics.CheckCapsule(
+            TopSphereCenter(), BottomSphereCenter(), controller.radius + controller.skinWidth + dx, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
+        );
+
+        if (isOnGround)
+        {
+            return;
+        }
+
+        transform.position += capsuleHit.distance * -CharacterUpVector();
     }
 
-    public void OverrideWalkSpeed(float speed)
-    {
-        WalkSpeed = speed;
-    }
-
-    public void ResetWalkSpeed()
-    {
-        WalkSpeed = DefaultWalkSpeed;
-    }
-
+    #region Enable/Disable Features
     public void EnableVerticalMovement()
     {
         GravityEnabled = true;
@@ -520,6 +504,7 @@ public class CharacterMovement : MonoBehaviour
     {
         RotationEnabled = false;
     }
+    #endregion
 
     void Update()
     {
