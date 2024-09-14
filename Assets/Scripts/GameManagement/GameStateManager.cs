@@ -23,8 +23,8 @@ namespace GameStateManagement
                 DontDestroyOnLoad(gameObject);
             }
 
-            CurrentState = new MainMenuState();
-            CurrentState.EnterState();
+            //CurrentState = new MainMenuState();
+            //CurrentState.EnterState();
         }
 
         public void SetState(IGameState newState)

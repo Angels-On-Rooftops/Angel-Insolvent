@@ -85,7 +85,7 @@ namespace Inventory
         {
             foreach(var item in this.itemDictionary.Values)
             {
-                //serialize object
+                DataPersistenceManager.Instance.SaveData(item.Data);
             }
         }
 
