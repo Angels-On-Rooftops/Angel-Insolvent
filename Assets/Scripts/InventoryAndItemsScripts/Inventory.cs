@@ -85,7 +85,7 @@ namespace Inventory
         {
             foreach(var item in this.itemDictionary.Values)
             {
-                DataPersistenceManager.Instance.SaveData(item.Data);
+                DataPersistenceManager.Instance.SaveData(new SerializableInventoryItem(item.Data.itemName, item.StackSize));
             }
         }
 
@@ -95,6 +95,18 @@ namespace Inventory
             {
                 //deserialize object
             }
+        }
+    }
+
+    [Serializable]
+    public class SerializableInventoryItem
+    {
+        public string itemName;
+        public int stackSize;
+        public SerializableInventoryItem(string _itemName, int _stackSize)
+        {
+            this.itemName = _itemName;
+            this.stackSize = _stackSize;
         }
     }
 }

@@ -15,4 +15,3 @@ namespace Items
         public bool isEquippable;
     }
 }
-

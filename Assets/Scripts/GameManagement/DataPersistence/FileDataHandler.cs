@@ -23,35 +23,44 @@ public class FileDataHandler
 
     public void OpenFile()
     {
-        //open json file
         fullPath = Path.Combine(dataDirPath, dataFileName);
 
         try
         {
-            // create the directory the file will be written to if it doesn't already exist
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             fileStream = new FileStream(fullPath, FileMode.Create);
             fileWriter = new StreamWriter(fileStream, System.Text.Encoding.UTF8, 64, true);
         }
         catch (Exception e)
         {
-            Debug.LogError("Error occured when trying to save data to file: " + fullPath + "\n" + e);
+            Debug.LogError("Error occured when trying to open file: " + fullPath + "\n" + e);
         }
     }
 
     public void WriteObjectToJson(object data)
     {
-        //write data object to file (string, int, transform, etc.)
-        string dataToStore = JsonUtility.ToJson(data, true);
+        try
+        {
+            string dataToStore = JsonUtility.ToJson(data, true);
+            fileWriter.WriteLine(dataToStore);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error occured when trying to write to file: " + fullPath + "\n" + e);
+        }
 
-        // write the serialized data to the file
-        fileWriter.WriteLine(dataToStore);
     }
 
     public void CloseFile()
     {
-        //close json file
-        fileWriter.Close();
-        fileStream.Close();
+        try
+        {
+            fileWriter.Close();
+            fileStream.Close();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error occured when trying to close file: " + fullPath + "\n" + e);
+        }
     }
 }

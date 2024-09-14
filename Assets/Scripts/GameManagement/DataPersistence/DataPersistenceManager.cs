@@ -20,7 +20,7 @@ public class DataPersistenceManager
     DataPersistenceManager()
     {
         this.fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-        saveAction = new InputAction(binding: "<Keyboard>/f5");
+        saveAction = new InputAction(binding: "<Keyboard>/f5"); //should make this serializable somewhere for multiple platform
         saveAction.performed += SaveGame;
         saveAction.Enable();
     }
