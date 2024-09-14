@@ -54,12 +54,6 @@ public class CharacterMovement : MonoBehaviour
     float JumpHeight = 3;
 
     [SerializeField]
-    [Tooltip("On subsequent midair jumps, the jump height will increment based off of this property.\n\n" +
-        "For example, if the initial jump height is 5, the bonus is 5, and the number of jumps the character has is 3: " +
-        "On the first jump the character will jump 5 units, then on the double jump it will jump 10, then on the triple jump it will jump 15.")]
-    float JumpHeightBonus = 0;
-
-    [SerializeField]
     [Tooltip("After pressing the jump key in mid air, the character will jump immediately " +
         "if they hit the ground within this timeframe (in seconds).")]
     float JumpBufferTime = 0.1f;
@@ -105,8 +99,7 @@ public class CharacterMovement : MonoBehaviour
     {
         get
         {
-            float height = JumpHeight + (Jumps - JumpsRemaining) * JumpHeightBonus;
-            return Mathf.Sqrt(2 * CharacterGravity() * height);
+            return Mathf.Sqrt(2 * CharacterGravity() * JumpHeight);
         }
     }
 
@@ -114,7 +107,7 @@ public class CharacterMovement : MonoBehaviour
 
     [NonSerialized]
     public Vector3 GravityUpDirection = new(0, 1, 0);
-    
+
     [NonSerialized]
     public float VerticalSpeed = 0;
 
@@ -123,7 +116,7 @@ public class CharacterMovement : MonoBehaviour
 
     MovementState State = MovementState.Airbourne;
     bool IsJumping = false;
-    int JumpsRemaining;
+    int ExtraJumpsRemaining;
     float LastTimeGrounded = 0;
     float dx = 0.01f;
     CharacterController controller;
@@ -144,16 +137,22 @@ public class CharacterMovement : MonoBehaviour
     {
         DefaultWalkSpeed = WalkSpeed;
         controller = GetComponent<CharacterController>();
-        JumpsRemaining = Jumps;
+        ExtraJumpsRemaining = Jumps - 1;
     }
 
     void OnEnable()
     {
-        Walk.performed += DoWalk;
-        Jump.performed += DoJumpInput;
+        if (Walk is not null)
+        {
+            Walk.performed += DoWalk;
+            Walk.Enable();
+        }
 
-        Walk.Enable();
-        Jump.Enable();
+        if (Jump is not null)
+        {
+            Jump.performed += DoJumpInput;
+            Jump.Enable();
+        }
 
         GravityEnabled = true;
         StateChangeEnabled = true;
@@ -163,11 +162,17 @@ public class CharacterMovement : MonoBehaviour
 
     private void OnDisable()
     {
-        Walk.performed -= DoWalk;
-        Jump.performed -= DoJumpInput;
+        if (Walk is not null)
+        {
+            Walk.performed -= DoWalk;
+            Walk.Disable();
+        }
 
-        Walk.Disable();
-        Jump.Disable();
+        if (Jump is not null)
+        {
+            Jump.performed -= DoJumpInput;
+            Jump.Disable();
+        }
 
         GravityEnabled = false;
         StateChangeEnabled = false;
@@ -195,15 +200,20 @@ public class CharacterMovement : MonoBehaviour
 
     bool DoJump(bool isFromBuffer)
     {
-        if (JumpsRemaining > 1 || (TimeSinceGrounded() < CoyoteTime && !IsJumping))
+        bool CanJump = TimeSinceGrounded() <= CoyoteTime && !IsJumping;
+        if (!CanJump && ExtraJumpsRemaining > 0)
+        {
+            ExtraJumpsRemaining--;
+            CanJump = true;
+        }
+
+        if (CanJump)
         {
             VerticalSpeed = JumpPower;
 
             State = MovementState.Airbourne;
             IsJumping = true;
-            JumpsRemaining--;
-
-            Jumped?.Invoke(Jumps - JumpsRemaining);
+            Jumped?.Invoke(Jumps - ExtraJumpsRemaining);
 
             return true;
         }
@@ -216,7 +226,8 @@ public class CharacterMovement : MonoBehaviour
         return false;
     }
 
-    void DoJumpInput(CallbackContext _) {
+    void DoJumpInput(CallbackContext _)
+    {
         JumpRequested?.Invoke();
         DoJump(false);
     }
@@ -250,7 +261,7 @@ public class CharacterMovement : MonoBehaviour
 
         return moveVelocity.magnitude != 0 ? Vector3.Normalize(moveVelocity) : transform.forward;
     }
-    
+
     float CharacterGravity()
     {
         return Physics.gravity.magnitude * GravityMultiplier;
@@ -266,11 +277,6 @@ public class CharacterMovement : MonoBehaviour
         return transform.position - CharacterUpVector() * (controller.height / 2 - controller.radius);
     }
 
-    Vector3 FootPosition()
-    {
-        return transform.position - CharacterUpVector() * (controller.height / 2 + controller.skinWidth);
-    }
-
     public Vector3 CharacterUpVector()
     {
         return GravityUpDirection;
@@ -279,7 +285,7 @@ public class CharacterMovement : MonoBehaviour
     bool GroundHitInfo(float checkDistance, out RaycastHit hit)
     {
         return Physics.CapsuleCast(
-            BottomSphereCenter(), TopSphereCenter(), controller.radius-dx, -CharacterUpVector(),
+            BottomSphereCenter(), TopSphereCenter(), controller.radius - dx, -CharacterUpVector(),
             out hit, checkDistance,
             ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
         );
@@ -289,7 +295,7 @@ public class CharacterMovement : MonoBehaviour
     {
         bool didHit = GroundHitInfo(checkDistance, out RaycastHit hit);
 
-        return didHit switch 
+        return didHit switch
         {
             false => null,
             _ => hit.normal,
@@ -309,7 +315,7 @@ public class CharacterMovement : MonoBehaviour
 
     public bool IsOnStableGround()
     {
-        if (GroundAngle(controller.height/2f + dx) > controller.slopeLimit)
+        if (GroundAngle(controller.height / 2f + dx) > controller.slopeLimit)
         {
             return false;
         }
@@ -340,6 +346,11 @@ public class CharacterMovement : MonoBehaviour
 
     float TimeSinceGrounded()
     {
+        if (IsOnStableGround())
+        {
+            return 0;
+        }
+
         return Time.time - LastTimeGrounded;
     }
 
@@ -362,15 +373,15 @@ public class CharacterMovement : MonoBehaviour
 
         if (IsOnGround() && !IsOnStableGround())
         {
-            bool didHit = GroundHitInfo(controller.height/2f, out RaycastHit hit);
-            
+            bool didHit = GroundHitInfo(controller.height / 2f, out RaycastHit hit);
+
             if (didHit)
             {
                 Physics.Raycast(
                     transform.position, hit.point - transform.position, out RaycastHit hit2, controller.height, ControlConstants.RAYCAST_MASK
                 );
 
-                if (Vector3.Dot(hit2.normal, CharacterUpVector()) < 1-dx && Vector3.Dot(hit2.normal, CharacterUpVector()) > dx)
+                if (Vector3.Dot(hit2.normal, CharacterUpVector()) < 1 - dx && Vector3.Dot(hit2.normal, CharacterUpVector()) > dx)
                 {
                     moveVelocity = Vector3.Cross(Vector3.Cross(CharacterUpVector(), (Vector3)hit2.normal), (Vector3)hit2.normal) * -VerticalSpeed;
                 }
@@ -395,9 +406,9 @@ public class CharacterMovement : MonoBehaviour
     void UpdateState()
     {
         bool isGroundWithinSnappingDistance = Physics.Raycast(
-            transform.position, 
-            -CharacterUpVector(), 
-            controller.height / 2 + controller.skinWidth + MaximumSnappingDistance, 
+            transform.position,
+            -CharacterUpVector(),
+            controller.height / 2 + controller.skinWidth + MaximumSnappingDistance,
             ControlConstants.RAYCAST_MASK);
 
         if (State == MovementState.Airbourne && IsOnStableGround() && VerticalSpeed <= dx)
@@ -407,7 +418,7 @@ public class CharacterMovement : MonoBehaviour
             State = MovementState.Grounded;
 
             IsJumping = false;
-            JumpsRemaining = Jumps;
+            ExtraJumpsRemaining = Jumps - 1;
 
             return;
         }
@@ -441,7 +452,6 @@ public class CharacterMovement : MonoBehaviour
 
     void UpdateLastGrounded()
     {
-        //if (IsOnStableGround())
         if (State == MovementState.Grounded)
         {
             LastTimeGrounded = Time.time;
@@ -451,8 +461,8 @@ public class CharacterMovement : MonoBehaviour
     void SnapCharacterToGround()
     {
         bool didCapsuleHit = Physics.CapsuleCast(
-            TopSphereCenter(), BottomSphereCenter(), controller.radius + controller.skinWidth - dx, 
-            -CharacterUpVector(), 
+            TopSphereCenter(), BottomSphereCenter(), controller.radius + controller.skinWidth - dx,
+            -CharacterUpVector(),
             out RaycastHit capsuleHit, MaximumSnappingDistance, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore);
 
         bool isCapsuleOverGeometry = Physics.CheckCapsule(
