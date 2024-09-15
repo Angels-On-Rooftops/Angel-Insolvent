@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace midi2event
+namespace MIDI2EventSystem
 {
     public class Midi2Event
     {
@@ -22,11 +22,30 @@ namespace midi2event
 
         private double _deltaTimeToNextUpdate = 0;
 
+        //microseconds per quarter note
         private uint _usPerQuarter = 500000;
+
+        //conversion factor from microseconds to seconds
+        private readonly double US_TO_S = 1e-6;
         private bool _isPlaying = false;
         private readonly int TET = 12;
-        private readonly double US_TO_S = 1e-6;
         int lowestOctave;
+
+        public double SecPerBeat
+        {
+            get => _usPerQuarter * US_TO_S;
+        }
+
+        public double BeatPerSec
+        {
+            get => 1 / SecPerBeat;
+        }
+
+        //returns true if this system is currently playing
+        public bool IsPlaying
+        {
+            get => _isPlaying;
+        }
 
         public Midi2Event(string filePath, int lowestOctave = -1)
         {
@@ -201,22 +220,6 @@ namespace midi2event
             Start,
             Stop,
             End
-        }
-
-        public enum Notes
-        {
-            C = 0,
-            Cs = 1,
-            D = 2,
-            Ds = 3,
-            E = 4,
-            F = 5,
-            Fs = 6,
-            G = 7,
-            Gs = 8,
-            A = 9,
-            As = 10,
-            B = 11
         }
     }
 }
