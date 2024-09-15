@@ -6,7 +6,8 @@ public class UILookAtCam : MonoBehaviour
 {
     private void LateUpdate()
     {
-        transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
+        //transform.rotation = Quaternion.LookRotation(transform.position - Camera.main.transform.position);
+        transform.rotation = Camera.main.transform.rotation;
     }
 
 }

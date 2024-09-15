@@ -16,4 +16,14 @@ public class InteractableOverlayHelper : MonoBehaviour
         TextMeshProUGUI text = canvas.GetComponentInChildren<TextMeshProUGUI>();
         text.text = displayText;
     }
+
+    public void EnableCanvas()
+    {
+        this.canvas.gameObject.SetActive(true);
+    }
+
+    public void DisableCanvas()
+    {
+        this.canvas.gameObject.SetActive(false);
+    }
 }

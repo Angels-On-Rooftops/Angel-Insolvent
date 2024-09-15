@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4e1e9000a09838479125337a49637ba, type: 3}
+  m_Name: TestDialogue
+  m_EditorClassIdentifier: 
+  NodeLinks:
+  - BaseNodeGuID: 05d9a92e-7adf-4d8a-9a75-1b057577b27d
+    PortName: Next
+    TargetNodeGuID: f4c6763e-9c02-4e5c-8caa-bbc9e9e1fc03
+  - BaseNodeGuID: 2796f926-7874-4486-86b0-8499004948ae
+    PortName: Choice 00
+    TargetNodeGuID: f9f2e993-3118-4a1b-8657-1481cbe54557
+  - BaseNodeGuID: 2796f926-7874-4486-86b0-8499004948ae
+    PortName: Choice 01
+    TargetNodeGuID: 86b7feca-2b32-4064-afcb-b173e5112f65
+  - BaseNodeGuID: f4c6763e-9c02-4e5c-8caa-bbc9e9e1fc03
+    PortName: Choice 0
+    TargetNodeGuID: 2796f926-7874-4486-86b0-8499004948ae
+  - BaseNodeGuID: f4c6763e-9c02-4e5c-8caa-bbc9e9e1fc03
+    PortName: Choice 1
+    TargetNodeGuID: f77e0c0d-d5e4-4716-a8dd-a29a27d930e5
+  - BaseNodeGuID: f77e0c0d-d5e4-4716-a8dd-a29a27d930e5
+    PortName: Choice 10
+    TargetNodeGuID: bd7be63a-04e8-42d2-b361-428629d801a3
+  - BaseNodeGuID: f77e0c0d-d5e4-4716-a8dd-a29a27d930e5
+    PortName: Choice 11
+    TargetNodeGuID: d9d434fa-4ad7-4afa-909c-f39c29ac010b
+  - BaseNodeGuID: f77e0c0d-d5e4-4716-a8dd-a29a27d930e5
+    PortName: Choice 12
+    TargetNodeGuID: 57ed0645-8fe2-42fc-9857-e83242e19795
+  DialogueNodeData:
+  - NodeGuID: 2796f926-7874-4486-86b0-8499004948ae
+    DialogueText: Zero
+    position: {x: 719, y: 184}
+  - NodeGuID: f9f2e993-3118-4a1b-8657-1481cbe54557
+    DialogueText: Zero Zero
+    position: {x: 1087, y: 113}
+  - NodeGuID: 86b7feca-2b32-4064-afcb-b173e5112f65
+    DialogueText: Zero One
+    position: {x: 1087, y: 232}
+  - NodeGuID: bd7be63a-04e8-42d2-b361-428629d801a3
+    DialogueText: One Zero
+    position: {x: 1087, y: 352}
+  - NodeGuID: d9d434fa-4ad7-4afa-909c-f39c29ac010b
+    DialogueText: One One
+    position: {x: 1087, y: 461}
+  - NodeGuID: 57ed0645-8fe2-42fc-9857-e83242e19795
+    DialogueText: One Two
+    position: {x: 1087, y: 576}
+  - NodeGuID: f4c6763e-9c02-4e5c-8caa-bbc9e9e1fc03
+    DialogueText: First Question
+    position: {x: 346, y: 304}
+  - NodeGuID: f77e0c0d-d5e4-4716-a8dd-a29a27d930e5
+    DialogueText: One
+    position: {x: 719, y: 379}
