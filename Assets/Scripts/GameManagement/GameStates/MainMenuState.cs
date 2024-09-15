@@ -13,6 +13,7 @@ namespace GameStateManagement
             {
                 SceneManager.LoadScene("MainMenu");
             }
+            Debug.Log("entered main menu state");
         }
 
         public void ExitState()
