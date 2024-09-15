@@ -12,7 +12,6 @@ namespace Inventory
     public class InventorySystem : IPersistableData
     {
         private Dictionary<ItemData, InventoryItem> itemDictionary; //to search by ItemData faster
-        private string itemDataPath = "Assets/Resources/ItemData";
 
         /// <summary>
         /// Public property to make accessing Inventory info easier,
