@@ -12,7 +12,10 @@ public class DataPersistenceManager
     private static readonly object instanceLock = new object(); //thread-safe for co-routines
 
     private InputAction saveAction;
+    private InputAction loadAction; //only needed for testing
+
     public event Action onSaveTriggered;
+    public event Action onLoadTriggered;
 
     private FileDataHandler fileDataHandler;
     private string fileName = "AngelInsolventSaveFile.txt";
@@ -20,9 +23,13 @@ public class DataPersistenceManager
     DataPersistenceManager()
     {
         this.fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-        saveAction = new InputAction(binding: "<Keyboard>/f5"); //should make this serializable somewhere for multiple platform
+        saveAction = new InputAction(binding: "<Keyboard>/f5"); //should make this serializable somewhere for multiple platforms' inputs
         saveAction.performed += SaveGame;
         saveAction.Enable();
+
+        loadAction = new InputAction(binding: "<Keyboard>/f6");
+        loadAction.performed += LoadGame;
+        loadAction.Enable();
     }
 
     public static DataPersistenceManager Instance
@@ -40,11 +47,12 @@ public class DataPersistenceManager
         }
     }
 
+    //Save methods
     public void SaveGame(CallbackContext context)
     {
-        fileDataHandler.OpenFile();
+        fileDataHandler.OpenFileSave();
         onSaveTriggered?.Invoke();
-        fileDataHandler.CloseFile();
+        fileDataHandler.CloseFileSave();
     }
 
     public void SaveData(object data)
@@ -53,5 +61,18 @@ public class DataPersistenceManager
         {
             fileDataHandler.WriteObjectToJson(data);
         }
+    }
+
+    //Load methods
+    public void LoadGame(CallbackContext context)
+    {
+        fileDataHandler.OpenFileLoad();
+        onLoadTriggered?.Invoke();
+        fileDataHandler.CloseFileLoad();
+    }
+
+    public object LoadData(Type type)
+    {
+        return fileDataHandler.ReadObjectFromJson(type);
     }
 }

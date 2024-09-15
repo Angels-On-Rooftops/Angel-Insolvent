@@ -4,12 +4,15 @@ using UnityEngine;
 using Items;
 using Items.Collectables;
 using System;
+using static UnityEditor.Progress;
+using System.Linq;
 
 namespace Inventory
 {
     public class InventorySystem : IPersistableData
     {
         private Dictionary<ItemData, InventoryItem> itemDictionary; //to search by ItemData faster
+        private string itemDataPath = "Assets/Resources/ItemData";
 
         /// <summary>
         /// Public property to make accessing Inventory info easier,
@@ -83,18 +86,39 @@ namespace Inventory
 
         public void SaveData()
         {
+            List<SerializableInventoryItem> items = new List<SerializableInventoryItem>();
             foreach(var item in this.itemDictionary.Values)
             {
-                DataPersistenceManager.Instance.SaveData(new SerializableInventoryItem(item.Data.itemName, item.StackSize));
+                items.Add(new SerializableInventoryItem(item.Data.itemName, item.StackSize));
             }
-        }
 
+            DataPersistenceManager.Instance.SaveData(new SerializableInventory(items));
+        }
         public void LoadData()
         {
-            foreach (var item in this.itemDictionary.Values)
+            SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory)) as SerializableInventory;
+            ItemData[] allItems = Resources.LoadAll<ItemData>("");
+
+            foreach(var deserializedItem in deserializedInventory.Inventory)
             {
-                //deserialize object
+                IEnumerable<ItemData> itemToLoad = from itemData in allItems
+                                                   where itemData.itemName == deserializedItem.itemName
+                                                   select itemData;
+                if (itemToLoad.Any())
+                {
+                    this.Add(itemToLoad.FirstOrDefault(), deserializedItem.stackSize);
+                }
             }
+        }
+    }
+
+    [Serializable]
+    public class SerializableInventory
+    {
+        public List<SerializableInventoryItem> Inventory;
+        public SerializableInventory(List<SerializableInventoryItem> items)
+        {
+            Inventory = items;
         }
     }
 

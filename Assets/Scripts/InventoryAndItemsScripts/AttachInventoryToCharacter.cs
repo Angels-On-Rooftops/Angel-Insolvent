@@ -29,14 +29,16 @@ namespace Inventory
 
         private void OnEnable()
         {
-            //Subscribe save action
+            //Subscribe save/load actions
             DataPersistenceManager.Instance.onSaveTriggered += inventorySystem.SaveData;
+            DataPersistenceManager.Instance.onLoadTriggered += inventorySystem.LoadData;
         }
 
         private void OnDisable()
         {
-            //Unsubscribe save action
+            //Unsubscribe save/load actions
             DataPersistenceManager.Instance.onSaveTriggered -= inventorySystem.SaveData;
+            DataPersistenceManager.Instance.onLoadTriggered -= inventorySystem.LoadData;
         }
 
         /// <summary>
