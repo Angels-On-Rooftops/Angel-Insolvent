@@ -1,12 +1,20 @@
+using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class EscMenuController : MonoBehaviour
 {
-    public GameObject pauseMenuPanel;
-    public GameObject settingsMenuPanel;
+    [SerializeField] private InputAction pauseAction;
+
+    [SerializeField] private GameObject pauseMenuPanel;
+    [SerializeField] private GameObject settingsMenuPanel;
+
+    public GameObject getPauseMenuPanel() { return pauseMenuPanel; }
+    public GameObject getSettingsMenuPanel() { return settingsMenuPanel; }
 
     // Start is called before the first frame update
     void Start()
@@ -15,22 +23,32 @@ public class EscMenuController : MonoBehaviour
         settingsMenuPanel.SetActive(false);
     }
 
-    public void MenuToggle()
+    private void OnEnable()
     {
-        if(pauseMenuPanel.activeSelf)
+        pauseAction.performed += PauseToggle;
+        pauseAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        pauseAction.performed -= PauseToggle;
+        pauseAction.Disable();
+    }
+
+    public void PauseToggle(CallbackContext c)
+    {
+        if(GameStateManager.Instance.CurrentState is PlayingState)
         {
-            if (settingsMenuPanel.activeSelf)
-            {
-                CloseSettings();
-            }
-            pauseMenuPanel.SetActive(false);
-            Time.timeScale = 1f;
-        }
-        else
+            GameStateManager.Instance.SetState(new GameStateManagement.PauseState(this));
+        } else if(GameStateManager.Instance.CurrentState is not MainMenuState)
         {
-            pauseMenuPanel.SetActive(true);
-            Time.timeScale = 0f;
+            GameStateManager.Instance.SetState(new PlayingState());
         }
+    }
+
+    public void OnResumeButtonClick()
+    {
+        GameStateManager.Instance.SetState(new PlayingState());
     }
 
     public void OpenSettings()
@@ -45,8 +63,8 @@ public class EscMenuController : MonoBehaviour
         pauseMenuPanel.SetActive(true);
     }
 
-    public void Quit()
+    public void QuitToMainMenu()
     {
-        Application.Quit();
+        GameStateManager.Instance.SetState(new MainMenuState());
     }
 }

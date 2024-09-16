@@ -11,27 +11,30 @@ namespace Items
     [Serializable]
     public class InventoryItem
     {
-        public ItemData Data { get; private set; }
-
+        [SerializeField] ItemData data;
         [Tooltip("Amount of the item")]
-        public int StackSize { get; private set; }
+        [SerializeField] int stackSize;
+
+        public ItemData Data { get { return data; } }
+
+        public int StackSize { get { return stackSize; } }
 
         public InventoryItem(ItemData itemData, int amount = 1)
         {
-            this.Data = itemData;
+            this.data = itemData;
             AddToStack(amount);
         }
 
         public void AddToStack(int amount = 1)
         {
-            this.StackSize += amount;
+            this.stackSize += amount;
         }
 
         public void RemoveFromStack(int amount = 1)
         {
             if (this.StackSize > 0)
             {
-                this.StackSize -= amount;
+                this.stackSize -= amount;
             }
             else
             {

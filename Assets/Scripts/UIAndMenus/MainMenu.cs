@@ -1,3 +1,4 @@
+using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class MainMenu : MonoBehaviour
     }
     public void OnPlayButton()
     {
-        Debug.Log("Hit Play Button");
+        GameStateManager.Instance.SetState(new PlayingState("UI_testing"));
     }
 
     public void OnSettingsButton()
@@ -31,12 +32,5 @@ public class MainMenu : MonoBehaviour
     public void OnQuitButton()
     {
         Application.Quit();
-        Debug.Log("Hit Quit Button");
-    }
-
-    //Demo scene load functions
-    public void LoadPauseAndDialogueDemo()
-    {
-        SceneManager.LoadScene("UI_testing");
     }
 }
