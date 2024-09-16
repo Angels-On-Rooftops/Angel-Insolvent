@@ -23,6 +23,7 @@ namespace GameStateManagement
                 DontDestroyOnLoad(gameObject);
             }
 
+
             if (GameManager.launchToMainMenu)
             {
                 CurrentState = new MainMenuState();
