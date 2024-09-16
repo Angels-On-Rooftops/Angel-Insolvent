@@ -95,6 +95,9 @@ namespace Inventory
         }
         public void LoadData()
         {
+            //Clean out dictionary of unsaved data for a clean load
+            this.ItemDictionary.Clear();
+
             SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory)) as SerializableInventory;
             ItemData[] allItems = Resources.LoadAll<ItemData>("");
 
@@ -105,7 +108,7 @@ namespace Inventory
                                                    select itemData;
                 if (itemToLoad.Any())
                 {
-                    this.Add(itemToLoad.FirstOrDefault(), deserializedItem.stackSize);
+                    PlayerInventory.Instance.Add(itemToLoad.FirstOrDefault(), deserializedItem.stackSize);
                 }
             }
         }

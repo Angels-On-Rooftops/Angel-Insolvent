@@ -50,9 +50,18 @@ public class DataPersistenceManager
     //Save methods
     public void SaveGame(CallbackContext context)
     {
-        fileDataHandler.OpenFileSave();
-        onSaveTriggered?.Invoke();
-        fileDataHandler.CloseFileSave();
+        try
+        {
+            fileDataHandler.OpenFileSave();
+            onSaveTriggered?.Invoke();
+            fileDataHandler.CloseFileSave();
+
+            Debug.Log("Game saved");
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Error during game save: " + e.Message);
+        }
     }
 
     public void SaveData(object data)
@@ -66,9 +75,18 @@ public class DataPersistenceManager
     //Load methods
     public void LoadGame(CallbackContext context)
     {
-        fileDataHandler.OpenFileLoad();
-        onLoadTriggered?.Invoke();
-        fileDataHandler.CloseFileLoad();
+        try
+        {
+            fileDataHandler.OpenFileLoad();
+            onLoadTriggered?.Invoke();
+            fileDataHandler.CloseFileLoad();
+
+            Debug.Log("Game loaded");
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Error during game load: " + e.Message);
+        }
     }
 
     public object LoadData(Type type)

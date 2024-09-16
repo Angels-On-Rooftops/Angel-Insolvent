@@ -41,6 +41,12 @@ namespace Inventory
             DataPersistenceManager.Instance.onLoadTriggered -= inventorySystem.LoadData;
         }
 
+        private void Start()
+        {
+            //Load inventory
+            DataPersistenceManager.Instance.LoadGame(new UnityEngine.InputSystem.InputAction.CallbackContext());
+        }
+
         /// <summary>
         /// Only use this Property after Awake()
         /// </summary>
