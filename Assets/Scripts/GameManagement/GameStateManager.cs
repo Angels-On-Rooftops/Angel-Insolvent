@@ -13,19 +13,27 @@ namespace GameStateManagement
         private void Awake()
         {
             //Only one instance can exist
-            if(Instance != null && Instance != this)
+            if (Instance != null && Instance != this)
             {
+                Debug.Log("Multiple instances of GameStateManager detected, destroying this one");
                 Destroy(gameObject);
-            } 
+            }
             else
             {
                 Instance = this;
                 DontDestroyOnLoad(gameObject);
             }
 
-            //COMMENTED OUT FOR TESTING OTHER STUFF
-            //CurrentState = new MainMenuState();
-            //CurrentState.EnterState();
+
+            if (GameManager.launchToMainMenu)
+            {
+                CurrentState = new MainMenuState();
+                CurrentState.EnterState();
+            } else
+            {
+                CurrentState = new PlayingState();
+                CurrentState.EnterState();
+            }
         }
 
         public void SetState(IGameState newState)

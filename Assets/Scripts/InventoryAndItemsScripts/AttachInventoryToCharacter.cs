@@ -27,6 +27,26 @@ namespace Inventory
             }
         }
 
+        private void OnEnable()
+        {
+            //Subscribe save/load actions
+            DataPersistenceManager.Instance.onSaveTriggered += inventorySystem.SaveData;
+            DataPersistenceManager.Instance.onLoadTriggered += inventorySystem.LoadData;
+        }
+
+        private void OnDisable()
+        {
+            //Unsubscribe save/load actions
+            DataPersistenceManager.Instance.onSaveTriggered -= inventorySystem.SaveData;
+            DataPersistenceManager.Instance.onLoadTriggered -= inventorySystem.LoadData;
+        }
+
+        private void Start()
+        {
+            //Load inventory
+            DataPersistenceManager.Instance.LoadGame(new UnityEngine.InputSystem.InputAction.CallbackContext());
+        }
+
         /// <summary>
         /// Only use this Property after Awake()
         /// </summary>
