@@ -99,16 +99,20 @@ namespace Inventory
             this.ItemDictionary.Clear();
 
             SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory)) as SerializableInventory;
-            ItemData[] allItems = Resources.LoadAll<ItemData>("");
 
-            foreach(var deserializedItem in deserializedInventory.Inventory)
+            if(deserializedInventory != null)
             {
-                IEnumerable<ItemData> itemToLoad = from itemData in allItems
-                                                   where itemData.itemName == deserializedItem.itemName
-                                                   select itemData;
-                if (itemToLoad.Any())
+                ItemData[] allItems = Resources.LoadAll<ItemData>("");
+
+                foreach (var deserializedItem in deserializedInventory.Inventory)
                 {
-                    PlayerInventory.Instance.Add(itemToLoad.FirstOrDefault(), deserializedItem.stackSize);
+                    IEnumerable<ItemData> itemToLoad = from itemData in allItems
+                                                       where itemData.itemName == deserializedItem.itemName
+                                                       select itemData;
+                    if (itemToLoad.Any())
+                    {
+                        PlayerInventory.Instance.Add(itemToLoad.FirstOrDefault(), deserializedItem.stackSize);
+                    }
                 }
             }
         }

@@ -45,7 +45,6 @@ public class FileDataHandler
 
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             fileStream = new FileStream(fullPath, FileMode.Open);
             fileReader = new StreamReader(fileStream, System.Text.Encoding.UTF8, false, 64, true);
         }

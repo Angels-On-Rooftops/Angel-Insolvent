@@ -15,6 +15,7 @@ namespace GameStateManagement
             //Only one instance can exist
             if (Instance != null && Instance != this)
             {
+                Debug.Log("Multiple instances of GameStateManager detected, destroying this one");
                 Destroy(gameObject);
             }
             else

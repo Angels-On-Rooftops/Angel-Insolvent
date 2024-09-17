@@ -11,6 +11,7 @@ public class DataPersistenceManager
     private static DataPersistenceManager instance = null;
     private static readonly object instanceLock = new object(); //thread-safe for co-routines
 
+    private GameManagementActions dataPersistenceActions;
     private InputAction saveAction;
     private InputAction loadAction; //only needed for testing
 
@@ -23,13 +24,22 @@ public class DataPersistenceManager
     DataPersistenceManager()
     {
         this.fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-        saveAction = new InputAction(binding: "<Keyboard>/f5"); //should make this serializable somewhere for multiple platforms' inputs
+
+        dataPersistenceActions = new GameManagementActions();
+        
+        saveAction = dataPersistenceActions.Actions.SaveGame;
         saveAction.performed += SaveGame;
         saveAction.Enable();
 
-        loadAction = new InputAction(binding: "<Keyboard>/f6");
+        loadAction = dataPersistenceActions.Actions.LoadGame;
         loadAction.performed += LoadGame;
         loadAction.Enable();
+    }
+
+    ~DataPersistenceManager()
+    {
+        saveAction.performed -= SaveGame;
+        loadAction.performed -= LoadGame;
     }
 
     public static DataPersistenceManager Instance
