@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool launchToMainMenu = true; //CHANGE THIS DEPENDING ON WHETHER YOU WANT
+    public static bool launchToMainMenu = false; //CHANGE THIS DEPENDING ON WHETHER YOU WANT
                                                  //TO LAUNCH TO MAIN MENU OR TO YOUR CURRENT SCENE
     public static GameObject escMenu;
 
