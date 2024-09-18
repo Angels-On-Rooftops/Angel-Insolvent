@@ -3,8 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+enum AdvancedMovementState
+{
+    None,
+    Rolling,
+    Dive,
+    LongJump,
+}
+
 [RequireComponent(typeof(CharacterMovement))]
-public class Roll : MonoBehaviour
+public class AdvancedMovement : MonoBehaviour
 {
     [SerializeField]
     InputAction Keybind;
@@ -34,7 +43,7 @@ public class Roll : MonoBehaviour
         Keybind.performed += DoRollInput;
         Keybind.Enable();
 
-        movement.JumpRequested += StopRoll;
+        movement.Landed += StopRoll;
     }
 
     void OnDisable()
@@ -42,7 +51,7 @@ public class Roll : MonoBehaviour
         Keybind.performed -= DoRollInput;
         Keybind.Disable();
 
-        movement.JumpRequested -= StopRoll;
+        movement.Landed -= StopRoll;
     }
 
     bool CanRoll()
@@ -75,7 +84,8 @@ public class Roll : MonoBehaviour
         }
 
         IsRolling = true;
-        movement.WalkSpeed += Boost;
+        movement.WalkSpeed = 30;
+        movement.JumpHeight = 3;
         RollingCollider.gameObject.SetActive(true);
         StandingCollider.gameObject.SetActive(false);
     }
@@ -87,7 +97,8 @@ public class Roll : MonoBehaviour
             return;
         }
 
-        movement.WalkSpeed -= Boost;
+        movement.WalkSpeed = 16;
+        movement.JumpHeight = 6;
         IsRolling = false;
         RollingCollider.gameObject.SetActive(false);
         StandingCollider.gameObject.SetActive(true);

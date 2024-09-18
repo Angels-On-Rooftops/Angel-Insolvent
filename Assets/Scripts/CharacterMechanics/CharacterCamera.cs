@@ -155,7 +155,7 @@ public class CharacterCamera : MonoBehaviour
     {
         bool didHit = Physics.Raycast(
             Focus(), t.position - Focus(),
-            out RaycastHit hit, ZoomLevel, ControlConstants.RAYCAST_MASK
+            out RaycastHit hit, ZoomLevel, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
         );
 
         if (didHit)

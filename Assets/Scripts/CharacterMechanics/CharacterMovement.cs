@@ -35,7 +35,7 @@ public class CharacterMovement : MonoBehaviour
     [Min(0)]
     [Tooltip("Determines how fast the character falls relative to everything else in the scene. " +
         "A higher multiplier will result in a character that lifts off faster and falls faster.")]
-    float GravityMultiplier = 8;
+    public float GravityMultiplier = 8;
 
     [Space(10)]
 
@@ -51,7 +51,7 @@ public class CharacterMovement : MonoBehaviour
     [Min(0)]
     [Tooltip("The maximum height of the character's jump in units. If gravity is changed, " +
         "the initial velocity of the jump will change accordingly to give the same jump height.")]
-    float JumpHeight = 3;
+    public float JumpHeight = 3;
 
     [SerializeField]
     [Tooltip("On subsequent midair jumps, the jump height will increment based off of this property.\n\n" +
@@ -371,7 +371,7 @@ public class CharacterMovement : MonoBehaviour
         if (IsOnGround() && !IsOnStableGround() && GroundHitInfo(controller.height / 2f, out RaycastHit hit))
         {
             Physics.Raycast(
-                transform.position, hit.point - transform.position, out RaycastHit hit2, controller.height, ControlConstants.RAYCAST_MASK
+                transform.position, hit.point - transform.position, out RaycastHit hit2, controller.height, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
             );
 
             if (Vector3.Dot(hit2.normal, CharacterUpVector()) < 1 - dx && Vector3.Dot(hit2.normal, CharacterUpVector()) > dx)
