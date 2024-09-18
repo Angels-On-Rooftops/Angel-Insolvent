@@ -20,6 +20,8 @@ public class EscMenuController : MonoBehaviour
     [SerializeField]
     private GameObject savePromptPanel;
 
+    [SerializeField] public AudioSource audioSource {  get; private set; }
+
     public GameObject getPauseMenuPanel()
     {
         return pauseMenuPanel;
@@ -57,6 +59,7 @@ public class EscMenuController : MonoBehaviour
 
     public void PauseToggle(CallbackContext c)
     {
+        audioSource = FindFirstObjectByType<AudioSource>();
         if (GameStateManager.Instance.CurrentState is PlayingState)
         {
             GameStateManager.Instance.SetState(new GameStateManagement.PauseState(this));

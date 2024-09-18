@@ -19,7 +19,7 @@ public class SettingsController : MonoBehaviour
     List<Resolution> resolutions;
 
     [SerializeField]
-    AudioSource audioSource;
+    public AudioSource audioSource { get; set; }
 
     [SerializeField]
     UnityEvent doneBehavior;
@@ -101,7 +101,6 @@ public class SettingsController : MonoBehaviour
         doneLabel.text = "Done";
 
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
-        SetResolution(resolutions.IndexOf(Screen.currentResolution));
     }
 
     private void SwitchSettingsCategory(Button categoryButton)
@@ -127,7 +126,8 @@ public class SettingsController : MonoBehaviour
         for (int i = 0; i < resolutions.Count(); i++)
         {
             string resolutionOption =
-                resolutions.ElementAt(i).width + " x " + resolutions.ElementAt(i).height;
+                resolutions.ElementAt(i).width + " x " + resolutions.ElementAt(i).height 
+                + " @ " + resolutions.ElementAt(i).refreshRateRatio;
             resolutionOptions.Add(resolutionOption);
             if (
                 resolutions.ElementAt(i).width == Screen.currentResolution.width
@@ -177,7 +177,11 @@ public class SettingsController : MonoBehaviour
 
     public void SetVolume(float vol)
     {
-        audioSource.volume = vol;
+        audioSource = this.transform.parent.parent.GetComponent<EscMenuController>().audioSource;
+        if(audioSource != null)
+        {
+            audioSource.volume = vol;
+        }
     }
 
     public void SetResolution(int index)
