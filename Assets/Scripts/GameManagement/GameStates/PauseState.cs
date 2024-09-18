@@ -16,7 +16,7 @@ namespace GameStateManagement
         public void EnterState()
         {
             EscMenuController.getPauseMenuPanel().SetActive(true);
-            //Time.timeScale = 0f;
+            Time.timeScale = 0f;
             EscMenuController.audioSource.Pause();
         }
 
