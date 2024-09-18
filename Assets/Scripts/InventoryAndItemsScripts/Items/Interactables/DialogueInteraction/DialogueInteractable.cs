@@ -8,13 +8,17 @@ namespace Items.Interactables.Dialogue
     //This class should eventually be updated to better match how the rest of the UI is set up
     public class DialogueInteractable : MonoBehaviour, IInteractable
     {
-        [SerializeField] private GameObject UIDialoguePrefab;
+        [SerializeField]
+        private GameObject UIDialoguePrefab;
 
         private bool isActive = false;
         private GameObject instantiatedUIPrefab;
         private InteractableOverlayHelper interactableOverlay;
 
-        public bool DestroyAfterInteracting { get { return false; } }
+        public bool DestroyAfterInteracting
+        {
+            get { return false; }
+        }
 
         void Awake()
         {
@@ -42,10 +46,14 @@ namespace Items.Interactables.Dialogue
             if (this.isActive)
             {
                 //Creates prefab in the center
-                this.instantiatedUIPrefab = Instantiate(this.UIDialoguePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                this.instantiatedUIPrefab = Instantiate(
+                    this.UIDialoguePrefab,
+                    new Vector3(0, 0, 0),
+                    Quaternion.identity
+                );
 
                 //Pause game (should later replace with game's pause system)
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
             }
             else
             {

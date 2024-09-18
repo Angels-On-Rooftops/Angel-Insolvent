@@ -4,7 +4,6 @@ using UnityEngine;
 using Items;
 using Items.Collectables;
 using System;
-using static UnityEditor.Progress;
 using System.Linq;
 
 namespace Inventory
@@ -17,7 +16,10 @@ namespace Inventory
         /// Public property to make accessing Inventory info easier,
         /// but DO NOT modify Dictionary entries outside of the InventorySystem class
         /// </summary>
-        public Dictionary<ItemData, InventoryItem> ItemDictionary { get { return itemDictionary; } }
+        public Dictionary<ItemData, InventoryItem> ItemDictionary
+        {
+            get { return itemDictionary; }
+        }
 
         public InventorySystem()
         {
@@ -45,7 +47,7 @@ namespace Inventory
             else
             {
                 InventoryItem newItem = new InventoryItem(itemData, amount);
-                this.itemDictionary.Add(itemData, newItem);  
+                this.itemDictionary.Add(itemData, newItem);
             }
         }
 
@@ -57,7 +59,7 @@ namespace Inventory
             }
             else
             {
-                this.itemDictionary.Add(item.Data, item);  
+                this.itemDictionary.Add(item.Data, item);
             }
         }
 
@@ -86,32 +88,39 @@ namespace Inventory
         public void SaveData()
         {
             List<SerializableInventoryItem> items = new List<SerializableInventoryItem>();
-            foreach(var item in this.itemDictionary.Values)
+            foreach (var item in this.itemDictionary.Values)
             {
                 items.Add(new SerializableInventoryItem(item.Data.itemName, item.StackSize));
             }
 
             DataPersistenceManager.Instance.SaveData(new SerializableInventory(items));
         }
+
         public void LoadData()
         {
             //Clean out dictionary of unsaved data for a clean load
             this.ItemDictionary.Clear();
 
-            SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory)) as SerializableInventory;
+            SerializableInventory deserializedInventory =
+                DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory))
+                as SerializableInventory;
 
-            if(deserializedInventory != null)
+            if (deserializedInventory != null)
             {
                 ItemData[] allItems = Resources.LoadAll<ItemData>("");
 
                 foreach (var deserializedItem in deserializedInventory.Inventory)
                 {
-                    IEnumerable<ItemData> itemToLoad = from itemData in allItems
-                                                       where itemData.itemName == deserializedItem.itemName
-                                                       select itemData;
+                    IEnumerable<ItemData> itemToLoad =
+                        from itemData in allItems
+                        where itemData.itemName == deserializedItem.itemName
+                        select itemData;
                     if (itemToLoad.Any())
                     {
-                        PlayerInventory.Instance.Add(itemToLoad.FirstOrDefault(), deserializedItem.stackSize);
+                        PlayerInventory.Instance.Add(
+                            itemToLoad.FirstOrDefault(),
+                            deserializedItem.stackSize
+                        );
                     }
                 }
             }
@@ -122,6 +131,7 @@ namespace Inventory
     public class SerializableInventory
     {
         public List<SerializableInventoryItem> Inventory;
+
         public SerializableInventory(List<SerializableInventoryItem> items)
         {
             Inventory = items;
@@ -133,6 +143,7 @@ namespace Inventory
     {
         public string itemName;
         public int stackSize;
+
         public SerializableInventoryItem(string _itemName, int _stackSize)
         {
             this.itemName = _itemName;

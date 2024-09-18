@@ -16,12 +16,12 @@ namespace GameStateManagement
         public void EnterState()
         {
             EscMenuController.getPauseMenuPanel().SetActive(true);
-            Time.timeScale = 0f;
+            //Time.timeScale = 0f;
         }
 
         public void ExitState()
         {
-            if(EscMenuController.getSettingsMenuPanel().activeSelf)
+            if (EscMenuController.getSettingsMenuPanel().activeSelf)
             {
                 EscMenuController.CloseSettings();
             }

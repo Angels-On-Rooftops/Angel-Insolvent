@@ -47,6 +47,7 @@ public class MIDI2EventUnity : MonoBehaviour
 
     void Awake()
     {
+        chartPath = Application.streamingAssetsPath + "/" + chartPath;
         eventPlayer = new(chartPath, lowestOctave);
         audioSource.clip.LoadAudioData();
         OnPlay += () => { };

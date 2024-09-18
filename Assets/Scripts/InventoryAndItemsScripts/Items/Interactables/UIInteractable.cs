@@ -8,13 +8,17 @@ namespace Items.Interactables
     //This class should eventually be updated to better match how the rest of the UI is set up
     public class UIInteractable : MonoBehaviour, IInteractable
     {
-        [SerializeField] private GameObject UIPrefab;
+        [SerializeField]
+        private GameObject UIPrefab;
 
         private bool isActive = false;
         private GameObject instantiatedUIPrefab;
         private InteractableOverlayHelper interactableOverlay;
 
-        public bool DestroyAfterInteracting { get { return false; } }
+        public bool DestroyAfterInteracting
+        {
+            get { return false; }
+        }
 
         void Awake()
         {
@@ -25,7 +29,11 @@ namespace Items.Interactables
             }
 
             //Creates prefab in the center
-            this.instantiatedUIPrefab = Instantiate(this.UIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            this.instantiatedUIPrefab = Instantiate(
+                this.UIPrefab,
+                new Vector3(0, 0, 0),
+                Quaternion.identity
+            );
             this.instantiatedUIPrefab.SetActive(false);
         }
 
@@ -48,7 +56,7 @@ namespace Items.Interactables
                 this.instantiatedUIPrefab?.SetActive(true);
 
                 //Pause game (should later replace with game's pause system)
-                Time.timeScale = 0;
+                //Time.timeScale = 0;
             }
             else
             {
