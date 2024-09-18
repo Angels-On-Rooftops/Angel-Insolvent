@@ -116,12 +116,18 @@ public class SettingsController : MonoBehaviour
         var resolutionDropdown = resolutionUIElement as TMPro.TMP_Dropdown;
         resolutionDropdown.ClearOptions();
         List<string> resolutionOptions = new List<string>();
-        var resolutionsEnum = Screen.resolutions.Select(resolution => new Resolution { width = resolution.width, height = resolution.height }).Distinct();
+        var resolutionsEnum = Screen.resolutions
+            .Select(
+                resolution =>
+                    new Resolution { width = resolution.width, height = resolution.height }
+            )
+            .Distinct();
         resolutions = resolutionsEnum.ToList();
         int currentResolutionIndex = 0;
         for (int i = 0; i < resolutions.Count(); i++)
         {
-            string resolutionOption = resolutions.ElementAt(i).width + " x " + resolutions.ElementAt(i).height;
+            string resolutionOption =
+                resolutions.ElementAt(i).width + " x " + resolutions.ElementAt(i).height;
             resolutionOptions.Add(resolutionOption);
             if (
                 resolutions.ElementAt(i).width == Screen.currentResolution.width
@@ -246,7 +252,8 @@ public class SettingsController : MonoBehaviour
             {
                 dropdown.options.Clear();
                 config.customSetup?.Invoke(dropdown);
-            } else
+            }
+            else
             {
                 Debug.Log("Dropdown prefab is not of type TMPro.TMP_Dropdown on " + config.label);
             }
@@ -254,13 +261,14 @@ public class SettingsController : MonoBehaviour
 
         private void SetupSlider(Slider slider)
         {
-            if(slider.GetType() == typeof(Slider))
+            if (slider.GetType() == typeof(Slider))
             {
                 slider.minValue = 0;
                 slider.maxValue = 1;
                 slider.value = 0.5f;
                 config.customSetup?.Invoke(slider);
-            } else
+            }
+            else
             {
                 Debug.Log("Slider prefab is not of type Slider on " + config.label);
             }
@@ -268,11 +276,12 @@ public class SettingsController : MonoBehaviour
 
         private void SetupToggle(Toggle toggle)
         {
-            if(toggle.GetType() == typeof(Toggle))
+            if (toggle.GetType() == typeof(Toggle))
             {
                 toggle.isOn = true;
                 config.customSetup?.Invoke(toggle);
-            } else
+            }
+            else
             {
                 Debug.Log("Toggle prefab is not of type Toggle on " + config.label);
             }

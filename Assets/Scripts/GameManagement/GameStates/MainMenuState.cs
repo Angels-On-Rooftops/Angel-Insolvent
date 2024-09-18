@@ -9,9 +9,9 @@ namespace GameStateManagement
     {
         public void EnterState()
         {
-            if(SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Main Menu"))
+            if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("MainMenu"))
             {
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene("MainMenu New");
             }
             Debug.Log("entered main menu state");
         }
