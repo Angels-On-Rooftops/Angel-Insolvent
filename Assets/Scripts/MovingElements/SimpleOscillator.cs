@@ -69,7 +69,7 @@ public class SimpleOscillator : MonoBehaviour
             Mathf.SmoothStep(extremeNeg.z, extremePos.z, currentPos)
         );
         //move by difference between current and next position
-        transform.position += (nextPos - lastPos);
+        transform.Translate(nextPos - lastPos);
         lastPos = nextPos;
         //check for direction inversion
         if (currentPos % 1 == 0)

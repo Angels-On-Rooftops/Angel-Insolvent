@@ -19,7 +19,7 @@ public class MainMenu : MonoBehaviour
 
     public void OnPlayButton()
     {
-        GameStateManager.Instance.SetState(new PlayingState("InventoryTestScene"));
+        GameStateManager.Instance.SetState(new PlayingState("Timebox2"));
     }
 
     public void OnSettingsButton()

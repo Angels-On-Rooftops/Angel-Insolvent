@@ -21,6 +21,9 @@ public class MIDI2EventUnity : MonoBehaviour
     [SerializeField]
     int lowestOctave = -1;
 
+    float startDelay = 0.25f;
+    float timer;
+
     Midi2Event eventPlayer;
 
     public Action OnPlay { get; set; }
@@ -53,6 +56,21 @@ public class MIDI2EventUnity : MonoBehaviour
     //update the event system every frame
     void Update()
     {
+        //FOR TIMEBOX 2
+        if (startDelay > timer)
+        {
+            timer += Time.deltaTime;
+            return;
+        }
+        if (!IsPlaying)
+        {
+            Debug.Log("entering");
+            Back();
+            Play();
+            Debug.Log(timer);
+            Debug.Log("play update");
+        }
+
         eventPlayer.Update(Time.deltaTime);
     }
 
@@ -70,6 +88,11 @@ public class MIDI2EventUnity : MonoBehaviour
         eventPlayer.Stop();
         audioSource.Stop();
         OnStop.Invoke();
+    }
+
+    public void Back()
+    {
+        eventPlayer.Back();
     }
 
     /*

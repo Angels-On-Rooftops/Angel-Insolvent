@@ -14,7 +14,8 @@ namespace Inventory
         private static PlayerInventory instance = null;
         private static readonly object instanceLock = new object(); //thread-safe for co-routines
 
-        PlayerInventory() : base() { }
+        PlayerInventory()
+            : base() { }
 
         public static PlayerInventory Instance
         {
@@ -37,9 +38,10 @@ namespace Inventory
         public override void Add(ItemData itemData, int amount = 1)
         {
             base.Add(itemData, amount);
-
+            Debug.Log("hi");
             if (OnInventoryUpdate != null)
             {
+                Debug.Log("hi2");
                 OnInventoryUpdate();
             }
         }
@@ -48,7 +50,7 @@ namespace Inventory
         {
             this.Add(item.Data, item.StackSize);
         }
-            
+
         public override void Remove(ItemData itemData, int amount = 1)
         {
             base.Remove(itemData, amount);
@@ -112,4 +114,3 @@ namespace Inventory
         }
     }
 }
-

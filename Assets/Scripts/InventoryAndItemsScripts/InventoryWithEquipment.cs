@@ -17,20 +17,30 @@ namespace Inventory
         /// Public property to make accessing Equipment info easier,
         /// but DO NOT modify entries outside of the InventoryWithEquipment class
         /// </summary>
-        public List<ItemData> EquipmentList { get { return equipmentList; } }
+        public List<ItemData> EquipmentList
+        {
+            get { return equipmentList; }
+        }
 
         /// <summary>
         /// null if nothing is currently equipped
         /// </summary>
-        public ItemData CurrentlyEquippedItem { get { return currentlyEquippedItem; } }
+        public ItemData CurrentlyEquippedItem
+        {
+            get { return currentlyEquippedItem; }
+        }
 
         /// <summary>
         /// Index of the currently equipped item in the EquipmentList
         /// (-1 if nothing is currently equipped)
         /// </summary>
-        public int CurrentlyEquippedItemIndex { get { return currentlyEquippedItemIndex; } }
+        public int CurrentlyEquippedItemIndex
+        {
+            get { return currentlyEquippedItemIndex; }
+        }
 
-        public InventoryWithEquipment() : base()
+        public InventoryWithEquipment()
+            : base()
         {
             this.equipmentList = new List<ItemData>();
         }
@@ -60,13 +70,17 @@ namespace Inventory
         /// </summary>
         public void EquipNext()
         {
+            Debug.Log("tried to set equip");
             if (this.equipmentList.Count == 0)
             {
+                Debug.Log("no equipment?");
                 return;
             }
-            
-            if (this.currentlyEquippedItemIndex == -1
-                    || this.currentlyEquippedItemIndex == (this.equipmentList.Count - 1))
+
+            if (
+                this.currentlyEquippedItemIndex == -1
+                || this.currentlyEquippedItemIndex == (this.equipmentList.Count - 1)
+            )
             {
                 // there is nothing currently equipped,
                 //  or the currently equipped item is the last one in the equipmentList,
@@ -76,7 +90,7 @@ namespace Inventory
             else
             {
                 EquipItem(this.currentlyEquippedItemIndex + 1);
-            } 
+            }
         }
 
         public override string PrintInventory()
@@ -92,7 +106,11 @@ namespace Inventory
 
             if (this.currentlyEquippedItem != null)
             {
-                inventoryStr += this.currentlyEquippedItem.itemName + " (Index: " + this.currentlyEquippedItemIndex + ")\n";
+                inventoryStr +=
+                    this.currentlyEquippedItem.itemName
+                    + " (Index: "
+                    + this.currentlyEquippedItemIndex
+                    + ")\n";
             }
             else
             {
@@ -109,7 +127,7 @@ namespace Inventory
             {
                 this.equipmentList.Add(itemData);
             }
-            
+
             base.Add(itemData, amount);
         }
 
@@ -126,7 +144,7 @@ namespace Inventory
                 this.equipmentList.Remove(itemData);
             }
 
-            base.Remove(itemData, amount); 
+            base.Remove(itemData, amount);
         }
 
         public override void Remove(InventoryItem item)
