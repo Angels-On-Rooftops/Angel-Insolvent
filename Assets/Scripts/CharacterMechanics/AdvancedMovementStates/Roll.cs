@@ -40,31 +40,16 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
     public void TransitionedTo()
     {
-        pushedJumpButton = false;
-
-        StateMaid.GiveEvent<Action>(
-            () => pushedJumpButton = true,
-            func => Movement.JumpRequested += func,
-            func => Movement.JumpRequested -= func
-        );
-
-        pushedActionButton = false;
-
-        StateMaid.GiveEvent<Action>(
-            () => pushedActionButton = true,
-            func => AdvancedMovement.ActionRequested += func,
-            func => AdvancedMovement.ActionRequested -= func
-        );
-
         timeStarted = Time.time;
 
-        hitWall = false;
+        pushedJumpButton = false;
+        StateMaid.GiveEvent(Movement, "JumpRequested", () => pushedJumpButton = true);
 
-        StateMaid.GiveEvent<Action>(
-            () => hitWall = true,
-            func => Movement.RanIntoWall += func,
-            func => Movement.RanIntoWall -= func
-        );
+        pushedActionButton = false;
+        StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
+
+        hitWall = false;
+        StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = false);
     }
 
     public void TransitioningFrom()

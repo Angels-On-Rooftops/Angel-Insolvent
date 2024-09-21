@@ -33,11 +33,7 @@ public class AdvancedMovement : MonoBehaviour
 
     void OnEnable()
     {
-        StateMaid.GiveEvent<Action>(
-            () => ActionRequested?.Invoke(),
-            func => ActionKeybind.performed += (_ => func()),
-            func => ActionKeybind.performed -= (_ => func())
-        );
+        StateMaid.GiveEvent(ActionKeybind, "performed", (InputAction.CallbackContext c) => ActionRequested?.Invoke());
 
         ActionKeybind.Enable();
         StateMaid.GiveTask(() => ActionKeybind.Disable());

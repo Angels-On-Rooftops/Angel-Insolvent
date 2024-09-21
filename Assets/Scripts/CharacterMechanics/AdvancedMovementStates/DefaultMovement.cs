@@ -20,12 +20,7 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
     public void TransitionedTo()
     {
         pushedActionButton = false;
-
-        StateMaid.GiveEvent<Action>(
-            () => pushedActionButton = true,
-            func => AdvancedMovement.ActionRequested += func,
-            func => AdvancedMovement.ActionRequested -= func
-        );
+        StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
     }
 
     public void TransitioningFrom()
