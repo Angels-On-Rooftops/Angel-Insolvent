@@ -83,6 +83,7 @@ public class CharacterMovement : MonoBehaviour
     public event Action<int> Jumped;
     public event Action JumpRequested;
     public event Action Landed;
+    public event Action RanIntoWall; // TODO
 
     /**         END EVENTS                          **/
 

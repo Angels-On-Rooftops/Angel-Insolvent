@@ -7,16 +7,17 @@ public enum AdvancedMovementState
 {
     None,
     Rolling,
-    Dive,
-    LongJump,
+    Diving,
+    LongJumping,
 }
 
 
-public abstract class IAdvancedMovementState : MonoBehaviour
+public interface IAdvancedMovementStateSpec
 {
-    float MovementSpeed;
-    float JumpHeight;
-    Collider Collider;
+    public Dictionary<AdvancedMovementState, bool> Transitions { get; }
+    public Dictionary<string, object> MovementProperties { get; }
 
-    Dictionary<Action, AdvancedMovementState> TransitionEvents;
+    public void TransitionedTo();
+
+    public void TransitioningFrom();
 }
