@@ -3,26 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
-enum AdvancedMovementState
-{
-    None,
-    Rolling,
-    Dive,
-    LongJump,
-}
-
 [RequireComponent(typeof(CharacterMovement))]
 public class AdvancedMovement : MonoBehaviour
 {
     [SerializeField]
-    InputAction Keybind;
+    InputAction ActionKeybind;
 
     [SerializeField]
     float Length = 1;
 
     [SerializeField]
-    float Boost = 12;
+    float RollingSpeed = 12;
 
     [SerializeField]
     Collider StandingCollider;
@@ -32,6 +23,8 @@ public class AdvancedMovement : MonoBehaviour
 
     CharacterMovement movement;
     bool IsRolling;
+
+    public AdvancedMovementState CurrentState = AdvancedMovementState.None;
 
     void Awake()
     {
