@@ -67,6 +67,22 @@ public class DialogueGraph : EditorWindow
         toolbar.Add(nodeCreateButton);
 
 
+        //new Checker node button
+        var checkerNodeCreateButton = new Button(clickEvent: () => { _graphView.CreateCheckerNode(); });
+        checkerNodeCreateButton.text = "Create Checker Node";
+        toolbar.Add(checkerNodeCreateButton);
+
+        //new Event node button
+        var eventNodeCreateButton = new Button(clickEvent: () => { _graphView.CreateEventNode(); });
+        eventNodeCreateButton.text = "Create Event Node";
+        toolbar.Add(eventNodeCreateButton);
+
+        //new Character node button
+        var characterNodeCreateButton = new Button(clickEvent: () => { _graphView.CreateCharacterNode(); });
+        characterNodeCreateButton.text = "Create Character Node";
+        toolbar.Add(characterNodeCreateButton);
+
+
         rootVisualElement.Add(toolbar);
         }
 
