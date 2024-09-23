@@ -13,7 +13,9 @@ public class Maid
     // C# events are not first class so this is the best we can do for now
     //
     // example usage:
-    // maid.GiveEvent(MyClass, "EventInMyClass", () => Debug.Log("Event in MyClass ran!")); 
+    // maid.GiveEvent(MyObject, "EventInMyObject", () => Debug.Log("Event in MyObject ran!"));
+    //
+    // Which is binds it like MyObject.EventInMyObject += () => Debug.Log("Event in MyObject ran!);
     private void GiveEventDelegate<T>(T eventHolder, string eventName, Delegate funcToBind)
     {
         Assert.IsTrue(
@@ -35,11 +37,52 @@ public class Maid
         });
     }
 
+    // events are not first class, so we have to index it through the Reflection api
     public void GiveEvent<T>(T eventHolder, string eventName, Action funcToBind)
     {
         GiveEventDelegate(eventHolder, eventName, funcToBind);
     }
 
+    private Action GetFinalizer<T>(T task)
+    {
+        return task switch
+        {
+            Action action => action,
+            GameObject gameObject => () => UnityEngine.Object.Destroy(gameObject),
+            Maid maid => () => maid.Cleanup(),
+            _ => throw new NotImplementedException($"Maid is unable to cleanup object of type {task.GetType()}"),
+        };
+    }
+
+    private T ProcessTask<T>(T task)
+    {
+        ToRunOnCleanup.Add(GetFinalizer(task));
+        return task;
+    }
+
+    public T GiveTask<T>(T task)
+    {
+        return ProcessTask(task);
+    }
+
+    // just here so that c# can infer that () => {} is an action
+    public Action GiveTask(Action task)
+    {
+        return ProcessTask(task);
+    }
+
+    // Completes each task the maid has, call in destructors
+    public void Cleanup()
+    {
+        foreach (Action task in ToRunOnCleanup)
+        {
+            task();
+        }
+
+        ToRunOnCleanup = new();
+    }
+
+    #region extra handlers for events with parameters 
     public void GiveEvent<T, A>(T eventHolder, string eventName, Action<A> funcToBind)
     {
         GiveEventDelegate(eventHolder, eventName, funcToBind);
@@ -59,22 +102,5 @@ public class Maid
     {
         GiveEventDelegate(eventHolder, eventName, funcToBind);
     }
-
-    public Action GiveTask(Action task)
-    {
-        ToRunOnCleanup.Add(task);
-
-        return task;
-    }
-
-    // Completes each task the maid has, call in destructors
-    public void Cleanup()
-    {
-        foreach (Action task in ToRunOnCleanup)
-        {
-            task();
-        }
-
-        ToRunOnCleanup = new();
-    }
+    #endregion
 }
