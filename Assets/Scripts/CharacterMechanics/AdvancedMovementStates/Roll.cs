@@ -61,4 +61,9 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     {
         return Time.time - timeStarted >= RollDuration;
     }
+
+    void LateUpdate()
+    {
+        pushedActionButton = false;
+    }
 }
