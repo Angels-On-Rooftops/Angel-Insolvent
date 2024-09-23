@@ -5,7 +5,7 @@ using UnityEngine.Assertions;
 
 public class Maid
 {
-    readonly List<Action> ToRunOnCleanup = new();
+    List<Action> ToRunOnCleanup = new();
 
     // add an event to the maid's list, the event will be
     // unsubscribed when Cleanup() is called
@@ -13,16 +13,7 @@ public class Maid
     // C# events are not first class so this is the best we can do for now
     //
     // example usage:
-    // GiveEvent<Action>(
-    //   () => Debug.Log("Event Ran!"),
-    //   func => event += func,
-    //   func => event -= func
-    // );
-    //public void GiveEvent<T>(T funcToBind, Action<T> subscription, Action<T> unsubscription)
-    //{
-    //    subscription(funcToBind);
-    //    ToRunOnCleanup.Add(() => unsubscription(funcToBind));
-    //}
+    // maid.GiveEvent(MyClass, "EventInMyClass", () => Debug.Log("Event in MyClass ran!")); 
     private void GiveEventDelegate<T>(T eventHolder, string eventName, Delegate funcToBind)
     {
         Assert.IsTrue(
@@ -32,10 +23,16 @@ public class Maid
 
         Assert.IsTrue(
             eventHolder.GetType().GetEvent(eventName).EventHandlerType.Equals(funcToBind.GetType()), 
-            $"Event {eventName} can not be bound to action of type {funcToBind.GetType()}"
+            $"Event {eventName} is not compatible with type {funcToBind.GetType()}"
         );
 
         eventHolder.GetType().GetEvent(eventName).AddEventHandler(eventHolder, funcToBind);
+
+        // pass to the maid to unbind the event when cleaning
+        ToRunOnCleanup.Add(() =>
+        {
+            eventHolder.GetType().GetEvent(eventName).RemoveEventHandler(eventHolder, funcToBind);
+        });
     }
 
     public void GiveEvent<T>(T eventHolder, string eventName, Action funcToBind)
@@ -77,5 +74,7 @@ public class Maid
         {
             task();
         }
+
+        ToRunOnCleanup = new();
     }
 }
