@@ -15,18 +15,17 @@ public class AdvancedMovement : MonoBehaviour
     public AdvancedMovementState CurrentState = AdvancedMovementState.None;
     public event Action<AdvancedMovementState, AdvancedMovementState> StateChanged;
 
-    Dictionary<AdvancedMovementState, IAdvancedMovementStateSpec> States
+    Dictionary<AdvancedMovementState, IAdvancedMovementStateSpec> States => new()
     {
-        get => new()
-            {
-                { AdvancedMovementState.None, GetComponent<DefaultMovement>() },
-                { AdvancedMovementState.Rolling, GetComponent<Roll>() },
-                { AdvancedMovementState.LongJumping, GetComponent<LongJump>() },
-                { AdvancedMovementState.Diving, GetComponent<Dive>() },
-            };
-    }
+        { AdvancedMovementState.None, GetComponent<DefaultMovement>() },
+        { AdvancedMovementState.Rolling, GetComponent<Roll>() },
+        { AdvancedMovementState.LongJumping, GetComponent<LongJump>() },
+        { AdvancedMovementState.Diving, GetComponent<Dive>() },
+    };
+    
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
+    CharacterController Controller => GetComponent<CharacterController>();
     readonly Maid StateMaid = new();
 
     Dictionary<string, object> PreCurrentStateMovementProperties = new();
@@ -119,5 +118,21 @@ public class AdvancedMovement : MonoBehaviour
         }
 
         return oldProps;
+    }
+
+    // enables the passed collider and disables the default movement collider
+    // returns a method that will undo the change when ran
+    public Action SetColliderHeight(float newHeight)
+    {
+        float oldHeight = Controller.height;
+        Vector3 oldCenter = Controller.center;
+
+        Controller.height = newHeight;
+        Controller.center += Vector3.up * (newHeight - oldHeight) / 2;
+        return () => 
+        {
+            Controller.height = oldHeight;
+            Controller.center = oldCenter;
+        };
     }
 }

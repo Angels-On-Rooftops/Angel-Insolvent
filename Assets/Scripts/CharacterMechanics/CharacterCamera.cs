@@ -74,12 +74,18 @@ public class CharacterCamera : MonoBehaviour
     InputAction Zoom;
 
 
+    Vector2 RawOrbitDelta;
+    string OrbitInput;
+
     Vector3 DirectionFromFocus = -Vector3.forward;
     Vector3 CurrentOrbitRotation = Vector3.zero;
     const float Y_LIMIT = 80;
 
-    //TODO clean up
-    GameObject emptyGO;
+    public Transform NextTransform { get; private set; }
+
+    Maid maid = new();
+
+    Camera Camera => GetComponent<Camera>();
 
 
     // Start is called before the first frame update
@@ -87,47 +93,24 @@ public class CharacterCamera : MonoBehaviour
     {
         CurrentOrbitRotation = transform.rotation.eulerAngles;
 
-        // TODO clean up
-        emptyGO = new();
-        emptyGO.name = "CameraHelper";
+        NextTransform = maid.GiveTask(new GameObject()).transform;
+        NextTransform.name = "CameraHelper";
 
-        Rotate.performed += (InputAction.CallbackContext context) =>
-        {
-            if (!CanOrbit)
+        maid.GiveEvent(Rotate, "performed", (InputAction.CallbackContext context) => OrbitInput = context.control.device.description.deviceClass);
+
+        maid.GiveEvent(Zoom, "performed", (InputAction.CallbackContext context) =>
             {
-                Cursor.lockState = CursorLockMode.None;
-                return;
+                if (!CanZoom)
+                {
+                    return;
+                }
+
+                ZoomLevel = Mathf.Clamp(
+                    ZoomLevel - Vector3.Normalize(context.ReadValue<Vector2>()).y * ZoomSensitivity,
+                    MinZoom, MaxZoom
+                );
             }
-
-            Cursor.lockState = CursorLockMode.Locked;
-
-            Camera cam = GetComponent<Camera>();
-            Vector2 delta = new(-context.ReadValue<Vector2>().y, context.ReadValue<Vector2>().x);
-
-            if (context.control.device.description.deviceClass == "Mouse")
-            {
-                delta = MouseRotationSensitivity * Vector2.Scale(delta, new Vector2(1f / cam.pixelHeight, 1f / cam.pixelWidth));
-            } 
-            else
-            {
-                delta *= GamepadRotationSensitivity;
-            }
-
-            AddRotationDelta(360 * delta);
-        };
-
-        Zoom.performed += (InputAction.CallbackContext context) =>
-        {
-            if (!CanZoom)
-            {
-                return;
-            }
-
-            ZoomLevel = Mathf.Clamp(
-                ZoomLevel - Vector3.Normalize(context.ReadValue<Vector2>()).y * ZoomSensitivity,
-                MinZoom, MaxZoom
-            );
-        };
+        );
 
         Rotate.Enable();
         Zoom.Enable();
@@ -135,7 +118,24 @@ public class CharacterCamera : MonoBehaviour
 
     private void OnDisable()
     {
-        Destroy(emptyGO);
+        maid.Cleanup();
+    }
+
+    Vector2 GetRotationDeltaForFrame()
+    {
+        if (!CanOrbit)
+        {
+            return Vector2.zero;
+        }
+
+        if (OrbitInput == "Mouse")
+        {
+            Vector2 mouseDelta = new(-Rotate.ReadValue<Vector2>().y, Rotate.ReadValue<Vector2>().x);
+            return MouseRotationSensitivity * Vector2.Scale(mouseDelta, new Vector2(1f / Camera.pixelHeight, 1f / Camera.pixelWidth)) * Time.deltaTime * 100;
+        }
+
+        Vector2 controllerDelta = new(-Rotate.ReadValue<Vector2>().y, Rotate.ReadValue<Vector2>().x);
+        return controllerDelta * GamepadRotationSensitivity * Time.deltaTime;
     }
 
     void AddRotationDelta(Vector3 delta)
@@ -170,35 +170,39 @@ public class CharacterCamera : MonoBehaviour
         return FocusOn.position + FocusOn.rotation * FocusOffset;
     }
 
-    public Transform GetNextCameraTransform()
+    public Transform UpdateNextTransform()
     {
-        // TODO clean this up so we get the transform from somewhere externally
-        Transform newTransform = emptyGO.transform;
-
-        newTransform.position = Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
+        NextTransform.position = Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
             
         if (MitigateClipping)
         {
-            SnapForwardToAvoidClipping(newTransform);
+            SnapForwardToAvoidClipping(NextTransform);
         }
 
-        newTransform.LookAt(Focus(), Vector3.up);
+        NextTransform.LookAt(Focus(), Vector3.up);
 
-        return newTransform;
+        return NextTransform;
+    }
+
+    void UpdateLockState()
+    {
+        Cursor.lockState = CanOrbit ? CursorLockMode.Locked : CursorLockMode.None;
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        Transform nextTransform = GetNextCameraTransform();
+        UpdateLockState();
+        AddRotationDelta(GetRotationDeltaForFrame() * 360);
+        UpdateNextTransform();
 
-        Vector3 nextPosition = nextTransform.position;
+        Vector3 nextPosition = NextTransform.position;
 
         if (LimitingVolume != null)
         {
             nextPosition = LimitingVolume.ClosestPoint(nextPosition);
         }
 
-        transform.SetPositionAndRotation(nextPosition, nextTransform.rotation);
+        transform.SetPositionAndRotation(nextPosition, NextTransform.rotation);
     }
 }

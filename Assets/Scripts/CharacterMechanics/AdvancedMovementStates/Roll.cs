@@ -5,16 +5,16 @@ using UnityEngine;
 public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 {
     [SerializeField]
-    float RollingSpeed = 24;
+    public float RollingSpeed = 24;
 
     [SerializeField]
-    float RollDuration = 1;
+    public float RollDuration = 1;
 
     [SerializeField]
-    float JumpOutHeight = 2;
+    public float JumpOutHeight = 2;
 
     [SerializeField]
-    Collider RollingCollider;
+    float ColliderHeight = 1;
 
     public Dictionary<AdvancedMovementState, bool> Transitions => new()
     {
@@ -27,6 +27,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     {
         { "WalkSpeed", RollingSpeed },
         { "JumpHeight", JumpOutHeight },
+        //{ "MiddleWare", }
     };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
@@ -50,6 +51,8 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
         hitWall = false;
         StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = false);
+
+        StateMaid.GiveTask(AdvancedMovement.SetColliderHeight(ColliderHeight));
     }
 
     public void TransitioningFrom()

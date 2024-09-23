@@ -4,16 +4,41 @@ using UnityEngine;
 
 public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
 {
-    public Dictionary<AdvancedMovementState, bool> Transitions => throw new System.NotImplementedException();
-    public Dictionary<string, object> MovementProperties => throw new System.NotImplementedException();
+    [SerializeField]
+    int PushOffSpeed = 24;
+
+    public Dictionary<AdvancedMovementState, bool> Transitions => new()
+    {
+        { AdvancedMovementState.None, hitWall || landed },
+        { AdvancedMovementState.Diving, pushedActionButton },
+
+    };
+    public Dictionary<string, object> MovementProperties => new()
+    {
+        { "WalkSpeed", PushOffSpeed },
+        { "JumpHeight", GetComponent<Roll>().JumpOutHeight },
+    };
+
+    CharacterMovement Movement => GetComponent<CharacterMovement>();
+    AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
+
+    bool hitWall, landed, pushedActionButton;
+    readonly Maid StateMaid = new();
 
     public void TransitionedTo()
     {
-        throw new System.NotImplementedException();
+        pushedActionButton = false;
+        StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
+
+        landed = false;
+        StateMaid.GiveEvent(Movement, "Landed", () => landed = true);
+
+        hitWall = false;
+        StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);
     }
 
     public void TransitioningFrom()
     {
-        throw new System.NotImplementedException();
+        StateMaid.Cleanup();
     }
 }

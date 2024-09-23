@@ -13,8 +13,7 @@ public enum MovementState
 [RequireComponent(typeof(CharacterController))]
 public class CharacterMovement : MonoBehaviour
 {
-    /**         START USER PROPERTIES           **/
-
+    #region Inspector Properties
     [SerializeField]
     [Tooltip("The camera that the character's movement should be based off of. " +
         "Player movement is relative to this camera.")]
@@ -45,7 +44,7 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField]
     [Tooltip("The maximum amount of jumps the character has before they touch the ground again.")]
-    int Jumps = 1;
+    public int Jumps = 1;
 
     [SerializeField]
     [Min(0)]
@@ -53,41 +52,36 @@ public class CharacterMovement : MonoBehaviour
         "the initial velocity of the jump will change accordingly to give the same jump height.")]
     public float JumpHeight = 3;
 
-    [SerializeField]
+    [NonSerialized]
     [Tooltip("On subsequent midair jumps, the jump height will increment based off of this property.\n\n" +
         "For example, if the initial jump height is 5, the bonus is 5, and the number of jumps the character has is 3: " +
         "On the first jump the character will jump 5 units, then on the double jump it will jump 10, then on the triple jump it will jump 15.")]
-    float JumpHeightBonus = 0;
+    public float JumpHeightBonus = 0;
 
     [SerializeField]
     [Tooltip("After pressing the jump key in mid air, the character will jump immediately " +
         "if they hit the ground within this timeframe (in seconds).")]
-    float JumpBufferTime = 0.1f;
+    public float JumpBufferTime = 0.1f;
 
     [SerializeField]
     [Tooltip("After leaving a ledge, if the player presses the jump key within " +
         "this timeframe, they will jump in midair. This is useful for when the " +
         "player wants to jump at the edge of a platform.")]
-    float CoyoteTime = 0.1f;
+    public float CoyoteTime = 0.1f;
 
     [SerializeField]
     [Tooltip("The maximum speed the character can fall at.")]
-    float DownwardTerminalVelocity = 64;
+    public float DownwardTerminalVelocity = 64;
+    #endregion
 
-    /**         END USER PROPERTIES                 **/
-
-    /**         START EVENTS                        **/
-
+    #region Events
     public event Action StartedWalking;
     public event Action StoppedWalking;
     public event Action<int> Jumped;
     public event Action JumpRequested;
     public event Action Landed;
     public event Action RanIntoWall; // TODO
-
-    /**         END EVENTS                          **/
-
-
+    #endregion
 
     [NonSerialized]
     public Vector3 GravityUpDirection = new(0, 1, 0);
@@ -101,7 +95,7 @@ public class CharacterMovement : MonoBehaviour
     int ExtraJumpsRemaining;
     float LastTimeGrounded = 0;
     float dx = 0.01f;
-    CharacterController controller;
+    CharacterController controller => GetComponent<CharacterController>();
 
     const float SNAPPING_DISTANCE = 1;
 
@@ -117,28 +111,21 @@ public class CharacterMovement : MonoBehaviour
     bool LateralMovementEnabled = true;
     bool RotationEnabled = true;
 
-    /**         START CALCULATED PROPERTIES         **/
-    float JumpPower
-    {
-        get
-        {
+    #region Calculated Properties
+    float JumpPower  {
+        get {
             float height = JumpHeight + (Jumps - ExtraJumpsRemaining - 1) * JumpHeightBonus;
             return Mathf.Sqrt(2 * CharacterGravity() * height);
         }
     }
 
-    bool IsRising
-    {
-        get
-        {
-            return VerticalSpeed > 0;
-        }
-    }
-    /**         END CALCULATED PROPERTIES           **/
+    bool IsRising => VerticalSpeed > 0;
+
+    Vector3 controllerPosition => transform.position + controller.center;
+    #endregion Properties
 
     void Awake()
     {
-        controller = GetComponent<CharacterController>();
         ExtraJumpsRemaining = Jumps - 1;
     }
 
@@ -242,7 +229,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (Camera.TryGetComponent(out CharacterCamera PlayerCamera) && PlayerCamera.enabled)
         {
-            forward = PlayerCamera.GetNextCameraTransform().forward;
+            forward = PlayerCamera.NextTransform.forward;
         }
         else
         {
@@ -271,12 +258,12 @@ public class CharacterMovement : MonoBehaviour
 
     public Vector3 TopSphereCenter()
     {
-        return transform.position + CharacterUpVector() * (controller.height / 2 - controller.radius);
+        return controllerPosition + CharacterUpVector() * (controller.height / 2 - controller.radius);
     }
 
     public Vector3 BottomSphereCenter()
     {
-        return transform.position - CharacterUpVector() * (controller.height / 2 - controller.radius);
+        return controllerPosition - CharacterUpVector() * (controller.height / 2 - controller.radius);
     }
 
     public Vector3 CharacterUpVector()
@@ -372,7 +359,10 @@ public class CharacterMovement : MonoBehaviour
         if (IsOnGround() && !IsOnStableGround() && GroundHitInfo(controller.height / 2f, out RaycastHit hit))
         {
             Physics.Raycast(
-                transform.position, hit.point - transform.position, out RaycastHit hit2, controller.height, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
+                controllerPosition, 
+                hit.point - controllerPosition, 
+                out RaycastHit hit2, controller.height, 
+                ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
             );
 
             if (Vector3.Dot(hit2.normal, CharacterUpVector()) < 1 - dx && Vector3.Dot(hit2.normal, CharacterUpVector()) > dx)
@@ -403,7 +393,7 @@ public class CharacterMovement : MonoBehaviour
         }
 
         bool isGroundWithinSnappingDistance = Physics.Raycast(
-            transform.position,
+            controllerPosition,
             -CharacterUpVector(),
             controller.height / 2 + controller.skinWidth + SNAPPING_DISTANCE,
             ControlConstants.RAYCAST_MASK);
