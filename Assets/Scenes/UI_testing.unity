@@ -241,8 +241,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeff9046c6694cf4cb14748e1f7cee66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popup: {fileID: 562720788}
+  radius: 0
   canvas: {fileID: 2014762511}
+  Interact:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 27aa09b5-fbc3-4e5c-bb16-2959c0635af0
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!1 &97000382
 GameObject:
   m_ObjectHideFlags: 0
@@ -1933,6 +1942,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45ecb208697d5a42986627175341c13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseAction:
+    m_Name: Pause
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: c10fce50-a352-4d87-b3cb-7d64850f37a8
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: da4845a0-3fdf-47ab-8451-69b7b0cdb81b
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause
+      m_Flags: 0
+    m_Flags: 0
   pauseMenuPanel: {fileID: 1565444788}
   settingsMenuPanel: {fileID: 567691413}
 --- !u!114 &1344861137
@@ -1962,8 +1988,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementController: {fileID: 1344861137}
-  escMenuController: {fileID: 1344861136}
-  interactController: {fileID: 54978727}
 --- !u!4 &1344861139
 Transform:
   m_ObjectHideFlags: 0
