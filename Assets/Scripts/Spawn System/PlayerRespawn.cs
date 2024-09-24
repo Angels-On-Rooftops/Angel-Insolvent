@@ -1,23 +1,40 @@
+using Inventory;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 //attach to player
-public class PlayerRespawn : MonoBehaviour
+[Serializable]
+public class PlayerRespawn : MonoBehaviour, IPersistableData
 {
     public Vector3 respawnPoint;
 
     [SerializeField]
-    Checkpoint checkPoint;
+    private Checkpoint checkPoint;
 
     [SerializeField]
-    bool CanRevisitCheckpoints = true;
+    private bool CanRevisitCheckpoints = true;
 
     // Start is called before the first frame update
     void Start()
     {
         respawnPoint = checkPoint.Postion;
         respawnPlayer();
+    }
+
+    private void OnEnable()
+    {
+        //Subscribe save/load actions
+        DataPersistenceManager.Instance.onSaveTriggered += SaveData;
+        DataPersistenceManager.Instance.onLoadTriggered += LoadData;
+    }
+
+    private void OnDisable()
+    {
+        //Unsubscribe save/load actions
+        DataPersistenceManager.Instance.onSaveTriggered -= SaveData;
+        DataPersistenceManager.Instance.onLoadTriggered -= LoadData;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -39,5 +56,25 @@ public class PlayerRespawn : MonoBehaviour
     public void respawnPlayer()
     {
         this.transform.position = respawnPoint;
+    }
+
+    public void SaveData()
+    {
+        DataPersistenceManager.Instance.SaveData(new SerializablePlayerRespawn(this.respawnPoint));
+    }
+
+    public void LoadData()
+    {
+        SerializablePlayerRespawn deserializedRespawn = DataPersistenceManager.Instance.LoadData("respawnPoint", typeof(SerializablePlayerRespawn)) as SerializablePlayerRespawn;
+    }
+}
+
+[Serializable]
+public class SerializablePlayerRespawn
+{
+    public Vector3 respawnPoint;
+    public SerializablePlayerRespawn(Vector3 respawnPoint)
+    {
+        this.respawnPoint = respawnPoint;
     }
 }

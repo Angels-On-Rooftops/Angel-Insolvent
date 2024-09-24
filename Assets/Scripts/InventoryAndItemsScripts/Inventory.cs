@@ -98,7 +98,7 @@ namespace Inventory
             //Clean out dictionary of unsaved data for a clean load
             this.ItemDictionary.Clear();
 
-            SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory)) as SerializableInventory;
+            SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData("Inventory", typeof(SerializableInventory)) as SerializableInventory;
 
             if(deserializedInventory != null)
             {
