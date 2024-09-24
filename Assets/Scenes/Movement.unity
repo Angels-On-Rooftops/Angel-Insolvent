@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.3225347, g: 0.34208474, b: 0.4528302, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -1536,7 +1536,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Zoom.m_SingletonActionBindings.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Rotate.m_SingletonActionBindings.Array.size
@@ -1545,6 +1545,18 @@ PrefabInstance:
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Zoom.m_SingletonActionBindings.Array.data[0].m_Id
       value: 3d3f1b67-979b-40ed-837c-b97b5bf78fea
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 38e961e8-2236-48d2-ba7c-2831769052b4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[2].m_Id
+      value: 843094b0-8d13-427f-a343-65bcd6f84757
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[3].m_Id
+      value: 24f95187-1267-42e3-8876-20a00bea91b6
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Rotate.m_SingletonActionBindings.Array.data[0].m_Id
@@ -1563,6 +1575,42 @@ PrefabInstance:
       value: <Mouse>/scroll
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[1].m_Name
+      value: Triggers
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[1].m_Path
+      value: 1DAxis
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[2].m_Name
+      value: negative
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[2].m_Path
+      value: <Gamepad>/leftTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[3].m_Name
+      value: positive
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[3].m_Path
+      value: <Gamepad>/rightTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[1].m_Flags
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[2].m_Flags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[3].m_Flags
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Rotate.m_SingletonActionBindings.Array.data[0].m_Path
       value: <Mouse>/delta
       objectReference: {fileID: 0}
@@ -1572,6 +1620,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Zoom.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Zoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Zoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[2].m_Action
+      value: Zoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[3].m_Action
       value: Zoom
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
@@ -1587,8 +1647,16 @@ PrefabInstance:
       value: Rotate
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[1].m_Processors
+      value: Normalize(min=-5,max=5),Scale(factor=999999)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Rotate.m_SingletonActionBindings.Array.data[1].m_Processors
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      propertyPath: Zoom.m_SingletonActionBindings.Array.data[1].m_Interactions
+      value: Press
       objectReference: {fileID: 0}
     - target: {fileID: 2782100391672626316, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: Rotate.m_SingletonActionBindings.Array.data[1].m_Interactions

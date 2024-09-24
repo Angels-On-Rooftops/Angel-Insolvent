@@ -46,6 +46,9 @@ public class CharacterCamera : MonoBehaviour
     [Tooltip("The longest distance the camera can be from the focus.")]
     public float MaxZoom = 30f;
 
+    [SerializeField]
+    public float ControllerZoomIncrement = 5f;
+
     [Space(10)]
 
     [SerializeField]
@@ -105,8 +108,12 @@ public class CharacterCamera : MonoBehaviour
                     return;
                 }
 
+                float zoomDelta = context.ReadValueAsObject() is Vector2 
+                    ? context.ReadValue<Vector2>().normalized.y 
+                    : Mathf.Sign(context.ReadValue<float>()) * ControllerZoomIncrement;
+
                 ZoomLevel = Mathf.Clamp(
-                    ZoomLevel - Vector3.Normalize(context.ReadValue<Vector2>()).y * ZoomSensitivity,
+                    ZoomLevel - zoomDelta * ZoomSensitivity,
                     MinZoom, MaxZoom
                 );
             }
