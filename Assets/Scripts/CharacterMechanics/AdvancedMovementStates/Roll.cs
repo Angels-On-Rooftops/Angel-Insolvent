@@ -20,7 +20,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     {
         { AdvancedMovementState.LongJumping, pushedJumpButton },
         { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
-        { AdvancedMovementState.None, IsRollOver() || hitWall },
+        { AdvancedMovementState.None, (IsRollOver() && Movement.IsOnGround()) || hitWall },
     };
 
     public Dictionary<string, object> MovementProperties => new()
@@ -28,6 +28,8 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         { "WalkSpeed", RollingSpeed },
         { "JumpHeight", JumpOutHeight },
         { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
+        { "Jumps", 2 },
+        { "ExtraJumpsRemaining", 1 },
     };
 
     public Vector3 RollingDirection = Vector3.zero;

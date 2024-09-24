@@ -96,7 +96,7 @@ public class CharacterMovement : MonoBehaviour
 
     MovementState State = MovementState.Airbourne;
     bool IsJumping = false;
-    int ExtraJumpsRemaining;
+    [NonSerialized] public int ExtraJumpsRemaining;
     float LastTimeGrounded = 0;
     float dx = 0.01f;
     CharacterController controller => GetComponent<CharacterController>();
@@ -198,6 +198,8 @@ public class CharacterMovement : MonoBehaviour
             ExtraJumpsRemaining--;
             CanJump = true;
         }
+
+        Debug.Log(CanJump);
 
         if (CanJump && JumpHeight != 0)
         {
