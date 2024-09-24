@@ -9,6 +9,7 @@ namespace Items.Interactables
     public class UIInteractable : MonoBehaviour, IInteractable
     {
         [SerializeField] protected GameObject UIPrefab;
+        [SerializeField] private GameObject player;
 
         protected bool isActive = false;
         protected GameObject instantiatedUIPrefab;
@@ -72,6 +73,7 @@ namespace Items.Interactables
             //Pause game (should later replace with game's pause system)
             Time.timeScale = 0;
             //set character controller not active
+            //this.player.GetComponent<CharacterController>().enabled = false;
         }
 
         protected void UnFreezeCharacterMovement()
@@ -79,6 +81,7 @@ namespace Items.Interactables
             //Pause game (should later replace with game's pause system)
             Time.timeScale = 1;
             //set character controller active
+            //this.player.GetComponent<CharacterController>().enabled = true;
         }
     }
 }

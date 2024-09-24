@@ -10,7 +10,7 @@ namespace Inventory
     /// Can check the PlayerInventory based on SerializedFields.
     /// (Only fill out relevant SerializedFields--ones that are not edited will be ignored)
     /// </summary>
-    public class InventoryChecker : MonoBehaviour
+    public class InventoryChecker : MonoBehaviour, IChecker
     {
         [Tooltip("ItemData for equipment that needs to be currently equipped")]
         [SerializeField] ItemData mustHaveEquipped;
@@ -112,6 +112,11 @@ namespace Inventory
 
             return this.mustHaveEquippedAtLeastOneOfTheseItems.Contains
                             (PlayerInventory.Instance.CurrentlyEquippedItem);
+        }
+
+        public bool MeetsCriteria()
+        {
+            return InventoryStateMeetsCriteria();
         }
     }
 }

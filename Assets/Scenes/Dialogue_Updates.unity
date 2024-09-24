@@ -167,10 +167,9 @@ GameObject:
   - component: {fileID: 82550906}
   - component: {fileID: 82550912}
   - component: {fileID: 82550911}
-  - component: {fileID: 82550910}
-  - component: {fileID: 82550909}
   - component: {fileID: 82550908}
   - component: {fileID: 82550913}
+  - component: {fileID: 82550914}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -206,56 +205,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   usePlayerInventory: 1
---- !u!54 &82550909
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82550905}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
---- !u!136 &82550910
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82550905}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &82550911
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -335,6 +284,32 @@ MonoBehaviour:
       m_Action: Interact
       m_Flags: 0
     m_Flags: 0
+--- !u!143 &82550914
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82550905}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &83380594
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,6 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIPrefab: {fileID: 1898114188681818198, guid: d9597a0bebcc3c34b9f2570eccd39169, type: 3}
+  player: {fileID: 0}
 --- !u!1 &358070969
 GameObject:
   m_ObjectHideFlags: 0
@@ -4941,7 +4917,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 143800c1391aca14ea211b2682ca30da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIDialoguePrefab: {fileID: 3629804214026305994, guid: b64a06e6366062c42ba1832342a8bd27, type: 3}
+  UIPrefab: {fileID: 3629804214026305994, guid: b64a06e6366062c42ba1832342a8bd27, type: 3}
+  player: {fileID: 0}
 --- !u!1 &2006541606
 GameObject:
   m_ObjectHideFlags: 0
