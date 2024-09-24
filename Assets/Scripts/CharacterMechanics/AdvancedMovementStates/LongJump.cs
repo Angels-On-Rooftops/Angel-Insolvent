@@ -9,7 +9,7 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
 
     public Dictionary<AdvancedMovementState, bool> Transitions => new()
     {
-        { AdvancedMovementState.None, hitWall || landed },
+        { AdvancedMovementState.None, hitWall || Movement.IsOnStableGround() },
         { AdvancedMovementState.Diving, pushedActionButton },
 
     };
@@ -17,6 +17,7 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     {
         { "WalkSpeed", PushOffSpeed },
         { "JumpHeight", GetComponent<Roll>().JumpOutHeight },
+        { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
     };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
@@ -29,9 +30,6 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     {
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
-
-        landed = false;
-        StateMaid.GiveEvent(Movement, "Landed", () => landed = true);
 
         hitWall = false;
         StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);

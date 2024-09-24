@@ -16,14 +16,15 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
 
     public Dictionary<AdvancedMovementState, bool> Transitions => new()
     {
-        { AdvancedMovementState.Rolling, landed },
+        { AdvancedMovementState.Rolling, Movement.IsOnStableGround() },
         { AdvancedMovementState.None, hitWall },
     };
     public Dictionary<string, object> MovementProperties => new()
     {
         { "GravityMultiplier", FallAcceleration },
         { "WalkSpeed", AdjustSpeed },
-        { "DownwardTerminalVelocity", TerminalVelocity }
+        { "DownwardTerminalVelocity", TerminalVelocity },
+        { "JumpHeight", 0 }
     };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
@@ -35,9 +36,6 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
 
     public void TransitionedTo()
     {
-        landed = false;
-        StateMaid.GiveEvent(Movement, "Landed", () => landed = true);
-
         hitWall = false;
         StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);
     }

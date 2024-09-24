@@ -27,8 +27,10 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     {
         { "WalkSpeed", RollingSpeed },
         { "JumpHeight", JumpOutHeight },
-        //{ "MiddleWare", }
+        { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
     };
+
+    public Vector3 RollingDirection = Vector3.zero;
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
@@ -41,6 +43,9 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
     public void TransitionedTo()
     {
+        // zero the rolling vector so we know to take it from the movement controller
+        RollingDirection = Vector3.zero;
+
         timeStarted = Time.time;
 
         pushedJumpButton = false;

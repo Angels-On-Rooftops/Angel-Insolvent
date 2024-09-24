@@ -89,7 +89,11 @@ public class CharacterMovement : MonoBehaviour
     [NonSerialized]
     public float VerticalSpeed = 0;
 
-    Vector3 MovementDirection = new();
+    public Vector3 RawMovementVector = new();
+    public Vector3 RawFacingDirection = new();
+    public Func<Vector3, float, Vector3> MovementVectorMiddleware = (v, dt) => v;
+    public Vector3 MovementVector = new();
+
     MovementState State = MovementState.Airbourne;
     bool IsJumping = false;
     int ExtraJumpsRemaining;
@@ -110,6 +114,8 @@ public class CharacterMovement : MonoBehaviour
     bool StateChangeEnabled = true;
     bool LateralMovementEnabled = true;
     bool RotationEnabled = true;
+
+    readonly Maid maid = new();
 
     #region Calculated Properties
     float JumpPower  {
@@ -133,13 +139,14 @@ public class CharacterMovement : MonoBehaviour
     {
         if (Walk is not null)
         {
+            maid.GiveEvent(Walk, "performed", (CallbackContext c) => DoWalk(c));
             Walk.performed += DoWalk;
             Walk.Enable();
         }
 
         if (Jump is not null)
         {
-            Jump.performed += DoJumpInput;
+            maid.GiveEvent(Jump, "performed", (CallbackContext c) => DoJumpInput(c));
             Jump.Enable();
         }
 
@@ -147,44 +154,40 @@ public class CharacterMovement : MonoBehaviour
         StateChangeEnabled = true;
         LateralMovementEnabled = true;
         RotationEnabled = true;
+
+        maid.GiveTask(() =>
+        {
+            GravityEnabled = false;
+            StateChangeEnabled = false;
+            LateralMovementEnabled = false;
+            RotationEnabled = false;
+        });
     }
 
     private void OnDisable()
     {
-        if (Walk is not null)
-        {
-            Walk.performed -= DoWalk;
-            Walk.Disable();
-        }
-
-        if (Jump is not null)
-        {
-            Jump.performed -= DoJumpInput;
-            Jump.Disable();
-        }
-
-        GravityEnabled = false;
-        StateChangeEnabled = false;
-        LateralMovementEnabled = false;
-        RotationEnabled = false;
+        maid.Cleanup();
     }
 
     void DoWalk(CallbackContext c)
     {
-        Vector3 oldMovementDirection = MovementDirection;
-
         Vector2 move2d = c.ReadValue<Vector2>();
-        MovementDirection = new Vector3(move2d.x, 0, move2d.y);
+        RawMovementVector = new Vector3(move2d.x, 0, move2d.y);
 
-        if (oldMovementDirection.magnitude == 0 && MovementDirection.magnitude != 0)
+        if (RawMovementVector.magnitude > 0)
         {
-            StartedWalking?.Invoke();
+            RawFacingDirection = RawMovementVector.normalized;
         }
 
-        if (MovementDirection.magnitude == 0 && oldMovementDirection.magnitude != 0)
-        {
-            StoppedWalking?.Invoke();
-        }
+        //if (oldMovementDirection.magnitude == 0 && MovementDirection.magnitude != 0)
+        //{
+        //    StartedWalking?.Invoke();
+        //}
+
+        //if (MovementDirection.magnitude == 0 && oldMovementDirection.magnitude != 0)
+        //{
+        //    StoppedWalking?.Invoke();
+        //}
     }
 
     bool DoJump(bool isFromBuffer)
@@ -196,7 +199,7 @@ public class CharacterMovement : MonoBehaviour
             CanJump = true;
         }
 
-        if (CanJump)
+        if (CanJump && JumpHeight != 0)
         {
             VerticalSpeed = JumpPower;
 
@@ -241,10 +244,10 @@ public class CharacterMovement : MonoBehaviour
 
     Vector3 MovementVelocity(Vector3 forwardVector)
     {
-        return Quaternion.LookRotation(-forwardVector, Vector3.up) * MovementDirection * WalkSpeed;
+        return Quaternion.LookRotation(-forwardVector, Vector3.up) * MovementVector * WalkSpeed;
     }
 
-    Vector3 FacingDirection()
+    public Vector3 FacingDirection()
     {
         Vector3 moveVelocity = MovementVelocity(ForwardMovementDirectionFromCamera());
 
@@ -347,6 +350,11 @@ public class CharacterMovement : MonoBehaviour
         }
 
         VerticalSpeed -= CharacterGravity() * Time.deltaTime;
+    }
+
+    void UpdateMovementVector()
+    {
+        MovementVector = MovementVectorMiddleware(RawMovementVector, Time.deltaTime);
     }
 
     void ApplyMovementVelocity()
@@ -506,6 +514,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (LateralMovementEnabled)
         {
+            UpdateMovementVector();
             ApplyMovementVelocity();
 
             // for transferred momentum:
