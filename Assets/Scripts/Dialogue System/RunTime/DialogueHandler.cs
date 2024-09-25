@@ -163,10 +163,6 @@ public class DialogueHandler : MonoBehaviour
             {
                 UpdateCurrentNode(childNode.PortName);
             }
-            else
-            {
-                Debug.LogError("Checker Node Port Name format should be either \"" + checkerSubStrPass + "[Checker Index]\" or \"" + checkerSubStrFail + "[Checker Index]\"");
-            }
         }
     }
 

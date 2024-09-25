@@ -68,8 +68,14 @@ MonoBehaviour:
     PortName: Choice 0
     TargetNodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
   - BaseNodeGuID: a24f363d-67eb-4bf9-bf23-c27b6b0b6e89
-    PortName: '[Insert Character speaking next]'
-    TargetNodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
+    PortName: New Character Yay!
+    TargetNodeGuID: b331ce7a-b448-41eb-8731-14bd08d244c5
+  - BaseNodeGuID: b331ce7a-b448-41eb-8731-14bd08d244c5
+    PortName: 'Pass: 1'
+    TargetNodeGuID: d69011db-ecb0-4cf1-90c9-137a9f0b0a66
+  - BaseNodeGuID: b331ce7a-b448-41eb-8731-14bd08d244c5
+    PortName: 'Fail: 1'
+    TargetNodeGuID: a8b31c9a-b0b0-49b9-893b-b72707e0c31a
   DialogueNodeData:
   - NodeGuID: 2796f926-7874-4486-86b0-8499004948ae
     DialogueText: Zero
@@ -101,9 +107,6 @@ MonoBehaviour:
   - NodeGuID: 86b7feca-2b32-4064-afcb-b173e5112f65
     DialogueText: Zero One
     position: {x: 1335, y: 331}
-  - NodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
-    DialogueText: CHECKER_NODE
-    position: {x: 1624, y: 230}
   - NodeGuID: b1a209af-ff7c-4514-b459-c67659121c5b
     DialogueText: EVENT_TRIGGER_NODE
     position: {x: 1731, y: 398}
@@ -116,3 +119,15 @@ MonoBehaviour:
   - NodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
     DialogueText: Dialogue Node
     position: {x: 2533, y: 451}
+  - NodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
+    DialogueText: CHECKER_NODE
+    position: {x: 1624, y: 230}
+  - NodeGuID: b331ce7a-b448-41eb-8731-14bd08d244c5
+    DialogueText: CHECKER_NODE
+    position: {x: 2160, y: 596}
+  - NodeGuID: d69011db-ecb0-4cf1-90c9-137a9f0b0a66
+    DialogueText: Check #1 Passed
+    position: {x: 2680, y: 596}
+  - NodeGuID: a8b31c9a-b0b0-49b9-893b-b72707e0c31a
+    DialogueText: Check #1 Failed
+    position: {x: 2680, y: 725}

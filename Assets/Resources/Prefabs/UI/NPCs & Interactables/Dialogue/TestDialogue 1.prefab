@@ -108,6 +108,7 @@ Transform:
   - {fileID: 3936841896205855837}
   - {fileID: 2431838775531135960}
   - {fileID: 5173806833009990411}
+  - {fileID: 6199866537135083273}
   m_Father: {fileID: 7036356424185349872}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -132,6 +133,7 @@ MonoBehaviour:
   currentCharacterSpeakingNameText: {fileID: 5936003848710252199}
   checkers:
   - {fileID: 5571883233497402304}
+  - {fileID: 1857345455927563966}
   events:
   - m_PersistentCalls:
       m_Calls:
@@ -206,6 +208,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogueHandler: {fileID: 3096800684783024087}
+--- !u!1 &1857345455927563966
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6199866537135083273}
+  - component: {fileID: 4990550915171388397}
+  m_Layer: 0
+  m_Name: InventoryChecker (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6199866537135083273
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857345455927563966}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1842905204687416777}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4990550915171388397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857345455927563966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e158b0d1ac8a8b46a309677a8bb7721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mustHaveEquipped: {fileID: 11400000, guid: 356a9c6b02161db43b9ff3cd296f83b0, type: 2}
+  mustNotHaveEquipped: {fileID: 0}
+  mustHaveTheseItems: []
+  mustHaveAtLeastOneOfTheseItems: []
+  mustHaveEquippedAtLeastOneOfTheseItems: []
 --- !u!1 &2518343639088208094
 GameObject:
   m_ObjectHideFlags: 0
