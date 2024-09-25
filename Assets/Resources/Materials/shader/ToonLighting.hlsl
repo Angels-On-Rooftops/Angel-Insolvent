@@ -9,21 +9,26 @@ struct ToonLightingParams
     float smoothness;
 };
 
-#ifndef SHADERGRAPH_PREVIEW
-float3 CalculateDiffuse(ToonLightingParams params, Light light)
+float GetSmoothnessPower(float smoothness)
 {
-    float diffuseScalar = dot(params.normal, light.direction);
-    
-    return light.color * diffuseScalar;
-
+    return exp2(8 * smoothness + 1);
 }
 
-float3 CalculateSpecular(ToonLightingParams params, Light light)
+#ifndef SHADERGRAPH_PREVIEW
+float3 CalculateOneLight(ToonLightingParams params, Light light)
 {
-    float3 reflectionVector = -reflect(light.direction, params.normal);
-    float dotProduct = dot(reflectionVector, params.viewDir);
-    float3 specular = pow(dotProduct, params.smoothness);
-    return specular;
+    //diffuse
+    float diffuse = saturate(dot(params.normal, light.direction));
+    
+    //Blinn-Phong
+    float3 middle = normalize(params.viewDir + light.direction);
+    float3 specularDotProduct = dot(middle, params.normal);
+    float3 smoothedSpecularDot = pow(specularDotProduct, GetSmoothnessPower(params.smoothness));
+    float3 specular = smoothedSpecularDot * diffuse;
+    
+    //contribution from light
+    return params.albedo * light.color * (diffuse + specular * diffuse);
+
 }
 #endif
 
@@ -31,15 +36,19 @@ float3 CalculateLighting(ToonLightingParams params)
 {
     #ifdef SHADERGRAPH_PREVIEW
     //approximate lighting for node preview
-    return dot(float3(0.5,0.5,0), params.normal) * params.albedo;
+    float3 lightDir = float3(0.5,0.5,0);
+    
+    float3 diffuse = dot(lightDir, params.normal);
+    
+    float3 middle = normalize(params.viewDir + lightDir);
+    float3 specularDotProduct = saturate(dot(middle, params.normal));
+    float3 smoothedSpecularDot = pow(specularDotProduct, GetSmoothnessPower(params.smoothness));
+    float3 specular = smoothedSpecularDot * diffuse;
+    
+    return params.albedo * (diffuse+specular);
     #else
-    float3 result = 0;
     
-    result += CalculateDiffuse(params, GetMainLight());
-    //result += CalculateSpecular(params, GetMainLight());
-    result *= params.albedo;
-    
-    return result;
+    return CalculateOneLight(params, GetMainLight());
     #endif
 }
 
@@ -48,8 +57,8 @@ void ToonLighting_float(float3 Albedo, float3 Normal, float3 ViewDir, float3 Smo
     ToonLightingParams params;
     
     params.albedo = Albedo;
-    params.normal = Normal;
-    params.viewDir = ViewDir;
+    params.normal = normalize(Normal);
+    params.viewDir = normalize(ViewDir);
     params.smoothness = Smoothness;
     
     Color = CalculateLighting(params);
