@@ -18,7 +18,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
     public Dictionary<AdvancedMovementState, bool> Transitions => new()
     {
-        { AdvancedMovementState.LongJumping, pushedJumpButton },
+        { AdvancedMovementState.LongJumping, jumped },
         { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
         { AdvancedMovementState.None, (IsRollOver() && Movement.IsOnGround()) || hitWall },
     };
@@ -38,7 +38,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
     readonly Maid StateMaid = new();
 
-    bool pushedJumpButton = false;
+    bool jumped = false;
     bool pushedActionButton = false;
     float timeStarted;
     bool hitWall = false;
@@ -50,8 +50,8 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
         timeStarted = Time.time;
 
-        pushedJumpButton = false;
-        StateMaid.GiveEvent(Movement, "JumpRequested", () => pushedJumpButton = true);
+        jumped = false;
+        StateMaid.GiveEvent(Movement, "Jumped", (int _) => jumped = true);
 
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);

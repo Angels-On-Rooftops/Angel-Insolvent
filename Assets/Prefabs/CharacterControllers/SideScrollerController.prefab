@@ -128,12 +128,12 @@ MonoBehaviour:
     m_Flags: 0
   Jumps: 1
   JumpHeight: 4
-  JumpHeightBonus: 0
   JumpBufferTime: 0.1
   CoyoteTime: 0.1
   DownwardTerminalVelocity: 64
-  SnapToGround: 1
-  MaximumSnappingDistance: 0.2
+  RawMovementVector: {x: 0, y: 0, z: 0}
+  RawFacingDirection: {x: 0, y: 0, z: 0}
+  MovementVector: {x: 0, y: 0, z: 0}
 --- !u!1 &2782100390171983023
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,13 +410,32 @@ MonoBehaviour:
   CanOrbit: 0
   CanZoom: 0
   LimitingVolume: {fileID: 0}
-  Zoom: 20
+  ZoomLevel: 20
   MinZoom: 2
   MaxZoom: 30
+  ControllerZoomIncrement: 5
   MouseRotationSensitivity: 1
   GamepadRotationSensitivity: 1
   ZoomSensitivity: 1
   MitigateClipping: 0
+  Rotate:
+    m_Name: Rotate
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 4def015e-fc7a-480c-8640-5fed31058e96
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  Zoom:
+    m_Name: Zoom
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e8eee90d-3e94-49d5-abb7-7cb108eab8ce
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
 --- !u!1 &3928805061896147249
 GameObject:
   m_ObjectHideFlags: 0
