@@ -16,13 +16,6 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     [SerializeField]
     private bool CanRevisitCheckpoints = true;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        respawnPoint = checkPoint.Postion;
-        respawnPlayer();
-    }
-
     private void OnEnable()
     {
         //Subscribe save/load actions
@@ -66,6 +59,8 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     public void LoadData()
     {
         SerializablePlayerRespawn deserializedRespawn = DataPersistenceManager.Instance.LoadData("respawnPoint", typeof(SerializablePlayerRespawn)) as SerializablePlayerRespawn;
+        respawnPoint = deserializedRespawn.respawnPoint;
+        respawnPlayer();
     }
 }
 
