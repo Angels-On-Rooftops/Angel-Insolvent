@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.Events;
 
 public class DialogueHandler : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class DialogueHandler : MonoBehaviour
 
     [Tooltip("GameObjects with Component that implements IChecker (Index order must match indices in Graph)")]
     [SerializeField] private GameObject[] checkers;
+
+    [SerializeField] private UnityEvent[] events;
 
     private const int checkerSubStrEndIndex = 6;
     private const string checkerSubStrPass = "Pass: ";
@@ -87,12 +90,24 @@ public class DialogueHandler : MonoBehaviour
         GetCurrentScreen();
     }
 
-    private void UpdateCurrentNode(string nextPortName)
+    /// <summary>
+    /// returns false if the node was not updated
+    /// </summary>
+    private bool UpdateCurrentNode(string nextPortName)
     {
-        NodeLinkData nextNodeLinkData = this.dialogueContainer.NodeLinks.First(node => node.PortName == nextPortName);
-        this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.First(node => node.NodeGuID == nextNodeLinkData.TargetNodeGuID);
+        NodeLinkData nextNodeLinkData = this.dialogueContainer.NodeLinks.FirstOrDefault(node => node.PortName == nextPortName);
+        if (nextNodeLinkData == null)
+        {
+            return false;
+        }
+        this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == nextNodeLinkData.TargetNodeGuID);
+        if (this.currentDialogueNodeData == null)
+        {
+            return false;
+        }
 
         HandleSpecialNodes();
+        return true;
     }
 
     /// <summary>
@@ -107,7 +122,7 @@ public class DialogueHandler : MonoBehaviour
         }
         else if (this.currentDialogueNodeData.DialogueText == DialogueConstants.EventNodeName)
         {
-
+            HandleEventNode();
         }
         else if (this.currentDialogueNodeData.DialogueText == DialogueConstants.CharacterNodeName)
         {
@@ -142,6 +157,34 @@ public class DialogueHandler : MonoBehaviour
             else
             {
                 Debug.LogError("Checker Node Port Name format should be either \"" + checkerSubStrPass + "[Checker Index]\" or \"" + checkerSubStrFail + "[Checker Index]\"");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Invoke each event that matches the index of a port of this Node;
+    /// then go down the path of the first port that is connected to another Node
+    /// </summary>
+    private void HandleEventNode()
+    {
+        List<NodeLinkData> childNodes = GetChildrenNodeLinkData();
+        foreach (NodeLinkData childNode in childNodes)
+        {
+            if (!Int32.TryParse(childNode.PortName, out int index))
+            {
+                Debug.LogError("Event Node Port Name format should be [Event Index]");
+                continue;
+            }
+
+            this.events[index]?.Invoke();
+        }
+
+        foreach (NodeLinkData childNode in childNodes)
+        {
+            bool updated = UpdateCurrentNode(childNode.PortName);
+            if (updated)
+            {
+                return;
             }
         }
     }

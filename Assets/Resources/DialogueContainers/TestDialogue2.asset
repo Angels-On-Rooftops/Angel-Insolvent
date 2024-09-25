@@ -58,6 +58,15 @@ MonoBehaviour:
   - BaseNodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
     PortName: 'Fail: 0'
     TargetNodeGuID: 85748b08-09af-4b04-ab5e-5165fe79bb2b
+  - BaseNodeGuID: b1a209af-ff7c-4514-b459-c67659121c5b
+    PortName: 0
+    TargetNodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
+  - BaseNodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
+    PortName: Choice 0
+    TargetNodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
+  - BaseNodeGuID: b1a209af-ff7c-4514-b459-c67659121c5b
+    PortName: 1
+    TargetNodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
   DialogueNodeData:
   - NodeGuID: 2796f926-7874-4486-86b0-8499004948ae
     DialogueText: Zero
@@ -98,3 +107,9 @@ MonoBehaviour:
   - NodeGuID: a24f363d-67eb-4bf9-bf23-c27b6b0b6e89
     DialogueText: NEW_CHARACTER_SPEAKING_NODE
     position: {x: 1713, y: 538}
+  - NodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
+    DialogueText: After Event
+    position: {x: 2184, y: 451}
+  - NodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
+    DialogueText: Dialogue Node
+    position: {x: 2533, y: 451}
