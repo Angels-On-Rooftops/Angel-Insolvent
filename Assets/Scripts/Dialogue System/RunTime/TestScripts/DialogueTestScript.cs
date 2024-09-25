@@ -5,6 +5,8 @@ using UnityEngine;
 public class DialogueTestScript : MonoBehaviour
 {
     
+    [SerializeField] private DialogueHandler dialogueHandler;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -25,5 +27,20 @@ public class DialogueTestScript : MonoBehaviour
     public void PrintNum2()
     {
         Debug.Log(2);
+    }
+
+    void OnEnable()
+    {
+        this.dialogueHandler.NewCharacterName += TestCharacterEvent;
+    }
+
+    void OnDisable()
+    {
+        this.dialogueHandler.NewCharacterName -= TestCharacterEvent;
+    }
+
+    void TestCharacterEvent(string newName)
+    {
+        Debug.Log("New Character name: " + newName);
     }
 }

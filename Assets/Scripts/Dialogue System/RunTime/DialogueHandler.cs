@@ -17,10 +17,19 @@ public class DialogueHandler : MonoBehaviour
     [SerializeField] private Vector2 buttonDisplacement;
     [SerializeField] private GameObject parentCanvas;
 
+    [Tooltip("Text should have the first character's name")]
+    [SerializeField] private TMP_Text currentCharacterSpeakingNameText;
+
     [Tooltip("GameObjects with Component that implements IChecker (Index order must match indices in Graph)")]
     [SerializeField] private GameObject[] checkers;
 
     [SerializeField] private UnityEvent[] events;
+
+    /// <summary>
+    /// Event is triggered when a new character node is reached.
+    /// The string inside the port of the node (which is assumed to be the new character's name) is passed in.
+    /// </summary>
+    public event Action<string> NewCharacterName;
 
     private const int checkerSubStrEndIndex = 6;
     private const string checkerSubStrPass = "Pass: ";
@@ -126,7 +135,7 @@ public class DialogueHandler : MonoBehaviour
         }
         else if (this.currentDialogueNodeData.DialogueText == DialogueConstants.CharacterNodeName)
         {
-
+            HandleCharacterNode();
         }
         // else, do nothing (this.currentDialogueNodeData is a regular dialogue node)
     }
@@ -187,5 +196,24 @@ public class DialogueHandler : MonoBehaviour
                 return;
             }
         }
+    }
+
+    private void HandleCharacterNode()
+    {
+        List<NodeLinkData> childNodes = GetChildrenNodeLinkData();
+        if (childNodes.Count != 1)
+        {
+            Debug.LogError("Character Node should only have one port");
+        }
+        string newCharacterSpeakingName = childNodes[0].PortName;
+
+        this.currentCharacterSpeakingNameText.text = newCharacterSpeakingName;
+
+        if (NewCharacterName != null)
+        {
+            NewCharacterName(newCharacterSpeakingName);
+        }
+
+        UpdateCurrentNode(newCharacterSpeakingName);
     }
 }
