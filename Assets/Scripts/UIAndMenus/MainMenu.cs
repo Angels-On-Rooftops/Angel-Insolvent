@@ -31,6 +31,6 @@ public class MainMenu : MonoBehaviour
     }
     public void OnQuitButton()
     {
-        Application.Quit();
+        if (!Application.isEditor) System.Diagnostics.Process.GetCurrentProcess().Kill();
     }
 }

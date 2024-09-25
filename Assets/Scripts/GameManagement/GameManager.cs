@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
                                                  //TO LAUNCH TO MAIN MENU OR TO YOUR CURRENT SCENE
     public static GameObject escMenu;
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnBeforeSplashScreen()
     {
         GameObject gameObject = Instantiate(new GameObject("GameManager"));
