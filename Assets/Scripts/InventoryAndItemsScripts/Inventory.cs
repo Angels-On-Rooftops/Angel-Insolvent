@@ -88,7 +88,7 @@ namespace Inventory
             List<SerializableInventoryItem> items = new List<SerializableInventoryItem>();
             foreach(var item in this.itemDictionary.Values)
             {
-                items.Add(new SerializableInventoryItem(item.Data.itemName, item.StackSize));
+                items.Add(new SerializableInventoryItem(item.Data.itemName, item.StackSize, item.Data.isRespawnable));
             }
 
             DataPersistenceManager.Instance.SaveData(new SerializableInventory(items));
@@ -133,10 +133,12 @@ namespace Inventory
     {
         public string itemName;
         public int stackSize;
-        public SerializableInventoryItem(string _itemName, int _stackSize)
+        public bool isRespawnable;
+        public SerializableInventoryItem(string _itemName, int _stackSize, bool isRespawnable)
         {
             this.itemName = _itemName;
             this.stackSize = _stackSize;
+            this.isRespawnable = isRespawnable;
         }
     }
 }
