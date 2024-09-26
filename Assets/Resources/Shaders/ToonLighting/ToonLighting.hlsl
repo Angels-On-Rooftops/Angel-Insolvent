@@ -1,6 +1,10 @@
 #ifndef TOON_LIGHTING_COMPILED
 #define TOON_LIGHTING_COMPILED
 
+#pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+#pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+#pragma multi_compile _ SHADOWS_SHADOWMASK
+
 struct ToonLightingParams
 {
     //surface

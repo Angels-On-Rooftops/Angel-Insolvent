@@ -12,7 +12,6 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - SHADOWS_SHADOWMASK
   - _ADDITIONAL_LIGHTS
   - _ADDITIONAL_LIGHT_SHADOWS
   - _LIGHTMAP_SHADOW_MIXING
@@ -20,6 +19,8 @@ Material:
   - _SHADOWS_SOFT
   m_InvalidKeywords:
   - LIGHTMAP_SHADOW_MIXING
+  - SHADOWS_SHADOWMASK
+  - _SHADOWSSHADOWMASK
   - _SHADOWS_SHADOWMASK
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -126,6 +127,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _SHADOWSSHADOWMASK: 1
     - _SHADOWS_SHADOWMASK: 1
     - _SHADOWS_SOFT: 1
     - _Smoothness: 0
