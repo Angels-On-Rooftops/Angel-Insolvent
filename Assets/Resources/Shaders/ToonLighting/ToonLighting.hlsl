@@ -9,6 +9,7 @@ struct ToonLightingParams
     float smoothness;
     float ambientOcclusion;
     float3 bakedLighting;
+    float4 shadowMask;
     
     //relational info
     float3 viewDir;
@@ -60,7 +61,7 @@ float3 CalculateLighting(ToonLightingParams params)
         return params.albedo * (diffuse+specular);
     #else
     
-        Light mainLight = GetMainLight(params.shadowCoordinate, params.fragWorldPos, 1);
+        Light mainLight = GetMainLight(params.shadowCoordinate, params.fragWorldPos, params.shadowMask);
     
         //make sure no lights are considered twice, baked vs realtime
         MixRealtimeAndBakedGI(mainLight, params.normal, params.bakedLighting);
@@ -73,7 +74,7 @@ float3 CalculateLighting(ToonLightingParams params)
             uint additionalLightsCount = GetAdditionalLightsCount();
             for (uint i = 0; i < additionalLightsCount; i++)
             {
-                Light light = GetAdditionalLight(i, params.fragWorldPos, 1);
+                Light light = GetAdditionalLight(i, params.fragWorldPos, params.shadowMask);
                 color += CalculateOneLight(params, light);
             }
             
@@ -109,6 +110,16 @@ float3 GetBakedLighting(float3 normal, float3 lightmapUV, float3 sphericalHarmon
     #endif
 }
 
+float4 GetShadowMask(float3 lightmapUV)
+{
+    //don't consider baked shadows in shadergraph preview
+    #ifdef SHADERGRAPH_PREVIEW
+            return 0;
+    #else
+        return SAMPLE_SHADOWMASK(lightmapUV);
+    #endif
+}
+
 //This function exists to allow this script to be used as a node in Unity's ShaderGraph
 void ToonLighting_float(
     float3 Albedo, 
@@ -131,6 +142,7 @@ void ToonLighting_float(
     params.ambientOcclusion = AmbientOcclusion;
     params.shadowCoordinate = GetShadowCoordinate(WorldPos);
     params.bakedLighting = GetBakedLighting(Normal, LightmapUV, SphericalHarmonics);
+    params.shadowMask = GetShadowMask(LightmapUV);
     
     Color = CalculateLighting(params);
 }

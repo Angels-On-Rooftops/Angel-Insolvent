@@ -7,11 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: Toon Lighting
   m_Shader: {fileID: -6465566751694194690, guid: de856869e203a854186c387ffd4c6541, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
+  - SHADOWS_SHADOWMASK
   - _ADDITIONAL_LIGHTS
   - _ADDITIONAL_LIGHT_SHADOWS
   - _LIGHTMAP_SHADOW_MIXING
@@ -19,6 +20,7 @@ Material:
   - _SHADOWS_SOFT
   m_InvalidKeywords:
   - LIGHTMAP_SHADOW_MIXING
+  - _SHADOWS_SHADOWMASK
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -92,13 +94,14 @@ Material:
     m_Ints: []
     m_Floats:
     - LIGHTMAP_SHADOW_MIXING: 1
+    - SHADOWS_SHADOWMASK: 1
     - Vector1_10e113db14c447c6bb8398214fd009dd: 1
     - Vector1_d97e88d67de147bbacedd13c9c8f621e: 1
     - _ADDITIONAL_LIGHTS: 1
     - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Ambient_Occlusion: 0
+    - _Ambient_Occlusion: 0.5
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -123,6 +126,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _SHADOWS_SHADOWMASK: 1
     - _SHADOWS_SOFT: 1
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
