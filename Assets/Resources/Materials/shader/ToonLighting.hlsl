@@ -29,10 +29,11 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     float3 middle = normalize(params.viewDir + light.direction);
     float3 specularDotProduct = dot(middle, params.normal);
     float3 smoothedSpecularDot = pow(specularDotProduct, GetSmoothnessPower(params.smoothness));
-    float3 specular = smoothedSpecularDot * diffuse;
+    float3 specular = saturate(smoothedSpecularDot) * diffuse;
     
     //contribution from light
-    return params.albedo * light.color * light.shadowAttenuation * (diffuse + specular * diffuse);
+    return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * (diffuse + specular);
+    return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * (diffuse);
 
 }
 #endif
@@ -52,8 +53,21 @@ float3 CalculateLighting(ToonLightingParams params)
     
         return params.albedo * (diffuse+specular);
     #else
+        float3 color = 0;
+        //calculate main light info
+        color += CalculateOneLight(params, GetMainLight(params.shadowCoordinate, params.fragWorldPos, 1));
     
-        return CalculateOneLight(params, GetMainLight(params.shadowCoordinate, params.fragWorldPos, 1));
+        //calculate info for additional lights if allowed
+        #ifdef _ADDITIONAL_LIGHTS
+            uint additionalLightsCount = GetAdditionalLightsCount();
+            for (uint i = 0; i < additionalLightsCount; i++)
+            {
+                Light light = GetAdditionalLight(i, params.fragWorldPos, 1);
+                color += CalculateOneLight(params, light);
+            }
+            
+        #endif
+        return color;
     #endif
 }
 
