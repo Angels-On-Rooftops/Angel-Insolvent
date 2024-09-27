@@ -27,10 +27,18 @@ public class InventoryController : MonoBehaviour
 
     void OpenInventory(CallbackContext c)
     {
-        // make sure something else isn't already pausing the game
-        if (!PauseSystem.isPaused) {
-            inventory.SetActive(!inventory.activeSelf);
-            PauseSystem.PauseGame();
+        if (inventory.activeSelf)
+        {
+            inventory.SetActive(false);
+            PauseSystem.ResumeGame();
+        } 
+        else
+        {
+            // make sure something else isn't already pausing the game
+            if (!PauseSystem.isPaused) {
+                inventory.SetActive(true);
+                PauseSystem.PauseGame();
+            }
         }
     }
 }
