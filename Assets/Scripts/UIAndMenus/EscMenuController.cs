@@ -35,17 +35,22 @@ public class EscMenuController : MonoBehaviour
     {
         if(pauseMenuPanel.activeSelf || settingsMenuPanel.activeSelf)
         {
+            // Resume game
             if (settingsMenuPanel.activeSelf)
             {
                 CloseSettings();
             }
             pauseMenuPanel.SetActive(false);
-            Time.timeScale = 1f;
+            PauseSystem.ResumeGame();
         }
         else
         {
-            pauseMenuPanel.SetActive(true);
-            Time.timeScale = 0f;
+            // check if something else is pausing the game.
+            // if not, then open pause menu
+            if (!PauseSystem.isPaused) { 
+                pauseMenuPanel.SetActive(true);
+                PauseSystem.PauseGame();
+            } // otherwise do nothing
         }
     }
 
