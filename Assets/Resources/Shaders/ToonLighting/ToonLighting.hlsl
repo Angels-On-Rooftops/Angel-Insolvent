@@ -10,7 +10,9 @@ struct ToonLightingParams
     //surface
     float3 albedo;
     float3 normal;
+    float shininess;
     float smoothness;
+    float rimThreshhold;
     float ambientOcclusion;
     float3 bakedLighting;
     float4 shadowMask;
@@ -21,10 +23,10 @@ struct ToonLightingParams
     float4 shadowCoordinate;
 };
 
-float GetSmoothnessPower(float smoothness)
+float GetShininessPower(float shininess)
 {
-    //arbitrary function to get a nice-looking map from 0-1 to used smoothness values
-    return exp2(8 * smoothness + 1);
+    //arbitrary function to get a nice-looking map from 0-1 to used shininess values
+    return exp2(8 * shininess + 1);
 }
 
 #ifndef SHADERGRAPH_PREVIEW
@@ -36,11 +38,15 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     //specular: Blinn-Phong
     float3 middle = normalize(params.viewDir + light.direction);
     float3 specularDotProduct = dot(middle, params.normal);
-    float3 smoothedSpecularDot = pow(specularDotProduct, GetSmoothnessPower(params.smoothness));
-    float3 specular = saturate(smoothedSpecularDot) * diffuse;
+    float3 smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.shininess));
+    float3 specular = saturate(smoothedSpecularDot) * diffuse * params.smoothness;
+    
+    //rim lighting
+    float3 rimBase = 1 - dot(params.viewDir, params.normal);
+    float3 rim = rimBase * pow(diffuse, GetShininessPower(params.rimThreshhold));
     
     //contribution from light
-    return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * (diffuse + specular);
+    return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * (diffuse + max(specular, rim));
 }
 
 float3 CalculateGlobalIllumination(ToonLightingParams params)
@@ -59,7 +65,7 @@ float3 CalculateLighting(ToonLightingParams params)
     
         float3 middle = normalize(params.viewDir + lightDir);
         float3 specularDotProduct = saturate(dot(middle, params.normal));
-        float3 smoothedSpecularDot = pow(specularDotProduct, GetSmoothnessPower(params.smoothness));
+        float3 smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.smoothness));
         float3 specular = smoothedSpecularDot * diffuse;
     
         return params.albedo * (diffuse+specular);
@@ -130,6 +136,8 @@ void ToonLighting_float(
     float3 Normal, 
     float3 ViewDir, 
     float Smoothness, 
+    float Shininess,
+    float RimThreshhold,
     float3 WorldPos,
     float AmbientOcclusion,
     float3 LightmapUV,
@@ -142,6 +150,8 @@ void ToonLighting_float(
     params.normal = normalize(Normal);
     params.viewDir = normalize(ViewDir);
     params.smoothness = Smoothness;
+    params.shininess = Shininess;
+    params.rimThreshhold = RimThreshhold;
     params.fragWorldPos = WorldPos;
     params.ambientOcclusion = AmbientOcclusion;
     params.shadowCoordinate = GetShadowCoordinate(WorldPos);
