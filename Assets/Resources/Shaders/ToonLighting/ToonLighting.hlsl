@@ -34,14 +34,9 @@ float GetShininessPower(float shininess)
     return exp2(8 * shininess + 1);
 }
 
-float Posterize(float value, float steps, bool useCeil)
+float Posterize(float value, float steps)
 {
-    [branch]
-    if (useCeil)
-    {
-        return ceil(value * steps) * (1 / steps);
-    }
-    return floor(value * steps) * (1 / steps);
+    return floor((value + (0.5 / steps)) * steps) * (1 / steps);
 }
 
 #ifndef SHADERGRAPH_PREVIEW
@@ -64,9 +59,9 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     [branch]
     if (params.isToon)
     {
-        //posterize lighting contributions
-        diffuse = Posterize(diffuse, params.diffuseSteps, true);
-        specular = Posterize(specular, params.specularSteps+1, false);
+        //posterize lighting contributions (add step
+        diffuse = Posterize(diffuse, params.diffuseSteps) *0.9;
+        specular = Posterize(specular, params.specularSteps);
     }
     
     float combinedContributions = (diffuse + specular + rim);
