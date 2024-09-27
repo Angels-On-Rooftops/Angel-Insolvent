@@ -4,6 +4,8 @@ using UnityEngine;
 using Items;
 using Items.Collectables;
 using System;
+using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 namespace Inventory
 {
