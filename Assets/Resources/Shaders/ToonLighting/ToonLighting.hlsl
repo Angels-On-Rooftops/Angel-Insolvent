@@ -51,20 +51,15 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     float smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.shininess));
     float specular = saturate(smoothedSpecularDot) * diffuse * params.smoothness;
     
-    //rim lighting
-    float3 rimBase = saturate(1 - dot(params.viewDir, params.normal));
-    float3 rim = rimBase * pow(diffuse, GetShininessPower(params.rimThreshhold))*params.smoothness;
-    rim = 0;
-    
     [branch]
     if (params.isToon)
     {
         //posterize lighting contributions (add step
-        diffuse = Posterize(diffuse, params.diffuseSteps) *0.9;
+        diffuse = Posterize(diffuse, params.diffuseSteps);
         specular = Posterize(specular, params.specularSteps);
     }
     
-    float combinedContributions = (diffuse + specular + rim);
+    float combinedContributions = (diffuse + specular);
     return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * combinedContributions;
 }
 
