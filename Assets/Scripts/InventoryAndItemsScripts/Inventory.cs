@@ -43,7 +43,7 @@ namespace Inventory
             else
             {
                 InventoryItem newItem = new InventoryItem(itemData, amount);
-                this.itemDictionary.Add(itemData, newItem);  
+                this.itemDictionary.Add(itemData, newItem);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Inventory
             }
             else
             {
-                this.itemDictionary.Add(item.Data, item);  
+                this.itemDictionary.Add(item.Data, item);
             }
         }
 
