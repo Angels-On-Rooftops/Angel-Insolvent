@@ -21,12 +21,27 @@ struct ToonLightingParams
     float3 viewDir;
     float3 fragWorldPos;
     float4 shadowCoordinate;
+    
+    //toon info
+    bool isToon;
+    float diffuseSteps;
+    float specularSteps;
 };
 
 float GetShininessPower(float shininess)
 {
     //arbitrary function to get a nice-looking map from 0-1 to used shininess values
     return exp2(8 * shininess + 1);
+}
+
+float Posterize(float value, float steps, bool useCeil)
+{
+    [branch]
+    if (useCeil)
+    {
+        return ceil(value * steps) * (1 / steps);
+    }
+    return floor(value * steps) * (1 / steps);
 }
 
 #ifndef SHADERGRAPH_PREVIEW
@@ -37,16 +52,25 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     
     //specular: Blinn-Phong
     float3 middle = normalize(params.viewDir + light.direction);
-    float3 specularDotProduct = dot(middle, params.normal);
-    float3 smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.shininess));
-    float3 specular = saturate(smoothedSpecularDot) * diffuse * params.smoothness;
+    float specularDotProduct = dot(middle, params.normal);
+    float smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.shininess));
+    float specular = saturate(smoothedSpecularDot) * diffuse * params.smoothness;
     
     //rim lighting
-    float3 rimBase = 1 - dot(params.viewDir, params.normal);
-    float3 rim = rimBase * pow(diffuse, GetShininessPower(params.rimThreshhold));
+    float3 rimBase = saturate(1 - dot(params.viewDir, params.normal));
+    float3 rim = rimBase * pow(diffuse, GetShininessPower(params.rimThreshhold))*params.smoothness;
+    rim = 0;
     
-    //contribution from light
-    return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * (diffuse + max(specular, rim));
+    [branch]
+    if (params.isToon)
+    {
+        //posterize lighting contributions
+        diffuse = Posterize(diffuse, params.diffuseSteps, true);
+        specular = Posterize(specular, params.specularSteps+1, false);
+    }
+    
+    float combinedContributions = (diffuse + specular + rim);
+    return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * combinedContributions;
 }
 
 float3 CalculateGlobalIllumination(ToonLightingParams params)
@@ -142,6 +166,9 @@ void ToonLighting_float(
     float AmbientOcclusion,
     float3 LightmapUV,
     float3 SphericalHarmonics,
+    bool IsToon,
+    float DiffuseSteps,
+    float SpecularSteps,
     out float3 Color
 ){ 
     ToonLightingParams params;
@@ -157,6 +184,9 @@ void ToonLighting_float(
     params.shadowCoordinate = GetShadowCoordinate(WorldPos);
     params.bakedLighting = GetBakedLighting(Normal, LightmapUV, SphericalHarmonics);
     params.shadowMask = GetShadowMask(LightmapUV);
+    params.isToon = IsToon;
+    params.diffuseSteps = DiffuseSteps;
+    params.specularSteps = SpecularSteps;
     
     Color = CalculateLighting(params);
 }
