@@ -17,6 +17,10 @@ public class InventoryController : MonoBehaviour
     [Tooltip("The keybind that controls opening and closing the inventory.")]
     InputAction InventoryAction;
 
+    [SerializeField]
+    [Tooltip("The keybind for interacting with items in the inventory.")]
+    InputAction SelectItem;
+
     // Keybinds that control navigating the items within the inventory.
     [SerializeField]
     [Tooltip("The keybind that controls moving left in the inventory.")]
@@ -71,6 +75,8 @@ public class InventoryController : MonoBehaviour
     {
         InventoryAction.performed += OpenInventory;
         InventoryAction.Enable();
+        SelectItem.performed += EquipItem;
+        SelectItem.Enable();
 
         // Navigating inventory
         NavLeft.performed += NavInvLeft;
@@ -89,6 +95,8 @@ public class InventoryController : MonoBehaviour
     {
         InventoryAction.performed -= OpenInventory;
         InventoryAction.Disable();
+        SelectItem.performed -= EquipItem;
+        SelectItem.Disable();
 
         // Navigating inventory
         NavLeft.performed -= NavInvLeft;
@@ -116,6 +124,14 @@ public class InventoryController : MonoBehaviour
                 inventory.SetActive(true);
                 PauseSystem.PauseGame();
             }
+        }
+    }
+
+    void EquipItem(CallbackContext c)
+    {
+        if (inventory.activeSelf && itemsInInventory[inventoryIndex] != null)
+        {
+            pInv.EquipItem(itemsInInventory[inventoryIndex]);
         }
     }
 
@@ -190,12 +206,6 @@ public class InventoryController : MonoBehaviour
                 var slot = inventorySlots[itemsInInventory.Count-1];
                 var img = item.Key.sprite;
                 slot.GetComponent<UnityEngine.UI.Image>().sprite = img;
-
-
-                // var title = itemDesc.transform.GetChild(0).gameObject;
-                // title.GetComponent<TextMeshProUGUI>().text = item.Key.itemName;
-                // var desc = itemDesc.transform.GetChild(1).gameObject;
-                // desc.GetComponent<TextMeshProUGUI>().text = item.Key.itemDesc;
             }
         }
 
