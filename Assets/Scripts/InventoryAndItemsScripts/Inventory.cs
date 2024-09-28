@@ -6,10 +6,12 @@ using Items.Collectables;
 using System;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
+using static UnityEditor.Progress;
+using System.Linq;
 
 namespace Inventory
 {
-    public class InventorySystem
+    public class InventorySystem : IPersistableData
     {
         private Dictionary<ItemData, InventoryItem> itemDictionary; //to search by ItemData faster
 
@@ -81,6 +83,62 @@ namespace Inventory
         public virtual void Remove(InventoryItem item)
         {
             this.Remove(item.Data, item.StackSize);
+        }
+
+        public void SaveData()
+        {
+            List<SerializableInventoryItem> items = new List<SerializableInventoryItem>();
+            foreach(var item in this.itemDictionary.Values)
+            {
+                items.Add(new SerializableInventoryItem(item.Data.itemName, item.StackSize));
+            }
+
+            DataPersistenceManager.Instance.SaveData(new SerializableInventory(items));
+        }
+        public void LoadData()
+        {
+            //Clean out dictionary of unsaved data for a clean load
+            this.ItemDictionary.Clear();
+
+            SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory)) as SerializableInventory;
+
+            if(deserializedInventory != null)
+            {
+                ItemData[] allItems = Resources.LoadAll<ItemData>("");
+
+                foreach (var deserializedItem in deserializedInventory.Inventory)
+                {
+                    IEnumerable<ItemData> itemToLoad = from itemData in allItems
+                                                       where itemData.itemName == deserializedItem.itemName
+                                                       select itemData;
+                    if (itemToLoad.Any())
+                    {
+                        PlayerInventory.Instance.Add(itemToLoad.FirstOrDefault(), deserializedItem.stackSize);
+                    }
+                }
+            }
+        }
+    }
+
+    [Serializable]
+    public class SerializableInventory
+    {
+        public List<SerializableInventoryItem> Inventory;
+        public SerializableInventory(List<SerializableInventoryItem> items)
+        {
+            Inventory = items;
+        }
+    }
+
+    [Serializable]
+    public class SerializableInventoryItem
+    {
+        public string itemName;
+        public int stackSize;
+        public SerializableInventoryItem(string _itemName, int _stackSize)
+        {
+            this.itemName = _itemName;
+            this.stackSize = _stackSize;
         }
     }
 }

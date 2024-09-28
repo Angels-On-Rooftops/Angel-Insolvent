@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace midi2event
+namespace MIDI2EventSystem
 {
     internal class NoteOffEvent : MTrkEvent
     {

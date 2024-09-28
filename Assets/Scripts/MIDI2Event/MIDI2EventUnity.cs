@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using midi2event;
-using static midi2event.Midi2Event;
+using MIDI2EventSystem;
+using static MIDI2EventSystem.Midi2Event;
 using System;
 
 //a wrapper class to make interfacing with the midi2event easier in the unity editor
@@ -23,10 +23,31 @@ public class MIDI2EventUnity : MonoBehaviour
 
     Midi2Event eventPlayer;
 
+    public Action OnPlay { get; set; }
+    public Action OnStop { get; set; }
+
+    public float SecPerBeat
+    {
+        get => (float)eventPlayer.SecPerBeat;
+    }
+
+    public float BeatPerSec
+    {
+        get => (float)eventPlayer.BeatPerSec;
+    }
+
+    //returns whether the system is currently playing
+    public bool IsPlaying
+    {
+        get => eventPlayer.IsPlaying;
+    }
+
     void Awake()
     {
         eventPlayer = new(chartPath, lowestOctave);
         audioSource.clip.LoadAudioData();
+        OnPlay += () => { };
+        OnStop += () => { };
     }
 
     //update the event system every frame
@@ -40,6 +61,7 @@ public class MIDI2EventUnity : MonoBehaviour
     {
         eventPlayer.Play();
         audioSource.Play();
+        OnPlay.Invoke();
     }
 
     //stops the audio and chart from playing and resets them to the beginning
@@ -47,6 +69,7 @@ public class MIDI2EventUnity : MonoBehaviour
     {
         eventPlayer.Stop();
         audioSource.Stop();
+        OnStop.Invoke();
     }
 
     /*

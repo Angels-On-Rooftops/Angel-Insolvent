@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection.Emit;
 using TMPro;
 using Unity.VisualScripting.FullSerializer;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
@@ -72,7 +71,6 @@ public class SettingsController : MonoBehaviour
         var doneLabel = doneButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
         doneLabel.text = "Done";
 
-
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
     }
 
@@ -92,7 +90,8 @@ public class SettingsController : MonoBehaviour
         int currentResolutionIndex = 0;
         for (int i = 0; i < resolutions.Length; i++)
         {
-            string resolutionOption = resolutions[i].width + " x " + resolutions[i].height;
+            string resolutionOption = resolutions.ElementAt(i).width + " x " + resolutions.ElementAt(i).height
+                + " @ " + resolutions.ElementAt(i).refreshRateRatio;
             resolutionOptions.Add(resolutionOption);
             if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
             {
@@ -124,7 +123,11 @@ public class SettingsController : MonoBehaviour
 
     public void SetVolume(float vol)
     {
-        audioSource.volume = vol;
+        AudioSource audioSource = this.transform.parent.parent.GetComponent<EscMenuController>().audioSource;
+        if (audioSource != null)
+        {
+            audioSource.volume = vol;
+        }
     }
 
     public void SetResolution(int index)

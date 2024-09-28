@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
 
-namespace midi2event
+namespace MIDI2EventSystem
 {
     internal class MidiReader
     {

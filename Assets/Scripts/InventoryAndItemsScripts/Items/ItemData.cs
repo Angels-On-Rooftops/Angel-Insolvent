@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 namespace Items
 {
     [CreateAssetMenu(fileName = "ItemData", menuName = "ScriptableObjects/ItemData", order = 1)]
+    [Serializable]
     public class ItemData : ScriptableObject
     {
         public string itemName;
@@ -14,4 +16,3 @@ namespace Items
         public bool isEquippable;
     }
 }
-

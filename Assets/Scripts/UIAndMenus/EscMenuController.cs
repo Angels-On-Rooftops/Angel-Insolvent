@@ -1,3 +1,4 @@
+using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -9,49 +10,51 @@ public class EscMenuController : MonoBehaviour
 {
     [SerializeField] private InputAction pauseAction;
 
-    public GameObject pauseMenuPanel;
-    public GameObject settingsMenuPanel;
+    [SerializeField] private GameObject pauseMenuPanel;
+    [SerializeField] private GameObject settingsMenuPanel;
+    [SerializeField] private GameObject savePromptPanel;
+
+    [SerializeField] public AudioSource audioSource { get; private set; }
+
+    public GameObject getPauseMenuPanel() { return pauseMenuPanel; }
+    public GameObject getSettingsMenuPanel() { return settingsMenuPanel; }
+    public GameObject getSavePromptPanel() { return savePromptPanel; }
 
     // Start is called before the first frame update
     void Start()
     {
         pauseMenuPanel.SetActive(false);
         settingsMenuPanel.SetActive(false);
+        savePromptPanel.SetActive(false);
     }
 
     private void OnEnable()
     {
-        pauseAction.performed += MenuToggle;
+        pauseAction.performed += PauseToggle;
         pauseAction.Enable();
     }
 
     private void OnDisable()
     {
-        pauseAction.performed -= MenuToggle;
+        pauseAction.performed -= PauseToggle;
         pauseAction.Disable();
     }
 
-    public void MenuToggle(CallbackContext c)
+    public void PauseToggle(CallbackContext c)
     {
-        if(pauseMenuPanel.activeSelf || settingsMenuPanel.activeSelf)
+        audioSource = FindFirstObjectByType<AudioSource>();
+        if (GameStateManager.Instance.CurrentState is PlayingState)
         {
-            // Resume game
-            if (settingsMenuPanel.activeSelf)
-            {
-                CloseSettings();
-            }
-            pauseMenuPanel.SetActive(false);
-            PauseSystem.ResumeGame();
-        }
-        else
+            GameStateManager.Instance.SetState(new GameStateManagement.PauseState(this));
+        } else if(GameStateManager.Instance.CurrentState is not MainMenuState)
         {
-            // check if something else is pausing the game.
-            // if not, then open pause menu
-            if (!PauseSystem.isPaused) { 
-                pauseMenuPanel.SetActive(true);
-                PauseSystem.PauseGame();
-            } // otherwise do nothing
+            GameStateManager.Instance.SetState(new PlayingState());
         }
+    }
+
+    public void OnResumeButtonClick()
+    {
+        GameStateManager.Instance.SetState(new PlayingState());
     }
 
     public void OnResumeButtonClick()
@@ -71,8 +74,8 @@ public class EscMenuController : MonoBehaviour
         pauseMenuPanel.SetActive(true);
     }
 
-    public void Quit()
+    public void QuitToMainMenu()
     {
-        Application.Quit();
+        savePromptPanel.SetActive(true);
     }
 }
