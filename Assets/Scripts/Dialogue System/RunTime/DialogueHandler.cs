@@ -195,7 +195,12 @@ public class DialogueHandler : MonoBehaviour
 
     void OnMoveForward(CallbackContext c)
     {
-        if (this.moveForwardOnInput)
+        //if should moveForwardOnInput and
+        //if after a full performance of the action (ex. both a press and release of a button)
+        //to handle the case where the same input was used to trigger the creation 
+        //as to move forward and the first node is a node that should moveForwardOnInput
+        //(ex. NPC dialogue where the first node does not require the player make a choice)
+        if (this.moveForwardOnInput && c.performed)
         {
             //Update the current node to the one to move forward to (the next one)
             this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == this.moveForwardToPortID);

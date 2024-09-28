@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4e1e9000a09838479125337a49637ba, type: 3}
+  m_Name: PopUpDemo
+  m_EditorClassIdentifier: 
+  NodeLinks:
+  - BaseNodeGuID: 4d5017ee-fc69-4c74-a577-45c1e0d5a0a3
+    PortName: Next
+    TargetNodeGuID: fe02bf19-a75d-4e3b-9623-5eb5c9d641ba
+  - BaseNodeGuID: fe02bf19-a75d-4e3b-9623-5eb5c9d641ba
+    PortName: Coda
+    TargetNodeGuID: b3f12ba6-1a9d-4cd6-a9a9-ebd6027af814
+  - BaseNodeGuID: b3f12ba6-1a9d-4cd6-a9a9-ebd6027af814
+    PortName: 'Time (sec): 4'
+    TargetNodeGuID: 3119cfb7-e9d7-4e47-98f4-85b6cdb1a1ed
+  - BaseNodeGuID: 3119cfb7-e9d7-4e47-98f4-85b6cdb1a1ed
+    PortName: Opus
+    TargetNodeGuID: 34dbad37-02b0-4fc9-9057-6682beafe17b
+  - BaseNodeGuID: 34dbad37-02b0-4fc9-9057-6682beafe17b
+    PortName: 'Time (sec): 4.5'
+    TargetNodeGuID: 2263e369-e3fb-40e2-ae3c-5f697d241c29
+  DialogueNodeData:
+  - NodeGuID: b3f12ba6-1a9d-4cd6-a9a9-ebd6027af814
+    DialogueText: Hey, can they see what I'm saying now?
+    position: {x: 585, y: 200}
+  - NodeGuID: fe02bf19-a75d-4e3b-9623-5eb5c9d641ba
+    DialogueText: NEW_CHARACTER_SPEAKING_NODE
+    position: {x: 197, y: 200}
+  - NodeGuID: 3119cfb7-e9d7-4e47-98f4-85b6cdb1a1ed
+    DialogueText: NEW_CHARACTER_SPEAKING_NODE
+    position: {x: 975, y: 200}
+  - NodeGuID: 34dbad37-02b0-4fc9-9057-6682beafe17b
+    DialogueText: Yes, they should be receiving these messages now.
+    position: {x: 1353, y: 200}
+  - NodeGuID: 2263e369-e3fb-40e2-ae3c-5f697d241c29
+    DialogueText: END_NODE
+    position: {x: 1828, y: 200}

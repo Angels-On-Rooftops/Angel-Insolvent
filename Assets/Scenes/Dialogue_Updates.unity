@@ -632,7 +632,6 @@ Transform:
   - {fileID: 362316391}
   - {fileID: 1177774036}
   - {fileID: 305064243}
-  - {fileID: 2027907197}
   - {fileID: 1717011213}
   - {fileID: 82550906}
   - {fileID: 1966126498}
@@ -995,6 +994,7 @@ GameObject:
   m_Component:
   - component: {fileID: 368010157}
   - component: {fileID: 368010158}
+  - component: {fileID: 368010159}
   m_Layer: 0
   m_Name: TestScript
   m_TagString: Untagged
@@ -1037,6 +1037,21 @@ MonoBehaviour:
   redMaterial: {fileID: 2100000, guid: d46be1259186a6f4f932966a4615c9ed, type: 2}
   greenMaterial: {fileID: 2100000, guid: d6514b2cb2258cb4ea5281abd99f8b1f, type: 2}
   blueMaterial: {fileID: 2100000, guid: ec44406766a1a9546a5a46d8e5b4f0aa, type: 2}
+--- !u!114 &368010159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368010156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b047e3d7880416742840db5927b9fae5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popUpUIPrefab: {fileID: 3629804214026305994, guid: e1c5dadb49da8a24f9ba4a564ef942b1, type: 3}
+  timeBeforeCallPopUp: 10
+  repeatPopUp: 1
 --- !u!4 &372492682 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1737815743821918986, guid: c16787f6a1480db4e90d5f3877ffb7ad, type: 3}
@@ -4917,8 +4932,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 143800c1391aca14ea211b2682ca30da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIPrefab: {fileID: 3629804214026305994, guid: b64a06e6366062c42ba1832342a8bd27, type: 3}
-  player: {fileID: 0}
+  UIPrefab: {fileID: 3629804214026305994, guid: 3a0c484439580534ea719cbc72e1d3e5, type: 3}
+  player: {fileID: 82550905}
 --- !u!1 &2006541606
 GameObject:
   m_ObjectHideFlags: 0
@@ -5058,37 +5073,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3848495301077386676, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
   m_PrefabInstance: {fileID: 718757559}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2027907196
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2027907197}
-  m_Layer: 0
-  m_Name: TestScript2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2027907197
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2027907196}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 111890054}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2047890019
 GameObject:
   m_ObjectHideFlags: 0
