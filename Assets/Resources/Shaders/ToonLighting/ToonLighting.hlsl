@@ -48,7 +48,7 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     //specular: Blinn-Phong
     float3 middle = normalize(params.viewDir + light.direction);
     float specularDotProduct = dot(middle, params.normal);
-    float smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.shininess));
+    float smoothedSpecularDot = pow(abs(specularDotProduct), GetShininessPower(params.shininess));
     float specular = saturate(smoothedSpecularDot) * diffuse * params.smoothness;
     
     [branch]
