@@ -12,7 +12,6 @@ struct ToonLightingParams
     float3 normal;
     float shininess;
     float smoothness;
-    float rimThreshhold;
     float ambientOcclusion;
     float3 bakedLighting;
     float4 shadowMask;
@@ -37,7 +36,7 @@ float GetShininessPower(float shininess)
 float Posterize(float value, float steps)
 {
     //posterize with offset to account for floor cutting off too much by default
-    return floor((value + (0.5 / steps)) * steps) * (1 / steps);
+    return saturate(floor((value + (0.5 / steps)) * steps) * (1 / steps));
 }
 
 #ifndef SHADERGRAPH_PREVIEW
@@ -62,7 +61,7 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
 
     //calc light total
     float combinedContributions = (diffuse + specular);
-    return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * combinedContributions;
+    return params.albedo * light.color * light.shadowAttenuation * combinedContributions;
 }
 
 float3 CalculateGlobalIllumination(ToonLightingParams params)
@@ -163,7 +162,6 @@ void ToonLighting_float(
     float3 ViewDir, 
     float Smoothness, 
     float Shininess,
-    float RimThreshhold,
     float3 WorldPos,
     float AmbientOcclusion,
     float3 LightmapUV,
@@ -180,7 +178,6 @@ void ToonLighting_float(
     params.viewDir = normalize(ViewDir);
     params.smoothness = Smoothness;
     params.shininess = Shininess;
-    params.rimThreshhold = RimThreshhold;
     params.fragWorldPos = WorldPos;
     params.ambientOcclusion = AmbientOcclusion;
     params.shadowCoordinate = GetShadowCoordinate(WorldPos);
