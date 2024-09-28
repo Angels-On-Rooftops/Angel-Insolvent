@@ -82,22 +82,24 @@ public class DialogueHandler : MonoBehaviour
 
     private void Update()
     {
-        if (this.useTimer)
+        if (!this.useTimer)
         {
-            float timeSpentOnCurrentNode = Time.unscaledTime - this.timeEnteredCurrentNode;
-            //Debug.Log("timeSpentOnCurrentNode: " + timeSpentOnCurrentNode);
-            
-            if (timeSpentOnCurrentNode >= this.timeToStayOnCurrentNode)
-            {
-                //Update the current node to the one to move forward to (the next one)
-                this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == this.moveForwardToPortID);
+            return;
+        }
 
-                this.useTimer = false;
-                this.moveForwardToPortID = null;
+        float timeSpentOnCurrentNode = Time.unscaledTime - this.timeEnteredCurrentNode;
+        //Debug.Log("timeSpentOnCurrentNode: " + timeSpentOnCurrentNode);
 
-                HandleSpecialNodes();
-                GetCurrentScreen();
-            }     
+        if (timeSpentOnCurrentNode >= this.timeToStayOnCurrentNode)
+        {
+            //Update the current node to the one to move forward to (the next one)
+            this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == this.moveForwardToPortID);
+
+            this.useTimer = false;
+            this.moveForwardToPortID = null;
+
+            HandleSpecialNodes();
+            GetCurrentScreen();
         }
     }
 

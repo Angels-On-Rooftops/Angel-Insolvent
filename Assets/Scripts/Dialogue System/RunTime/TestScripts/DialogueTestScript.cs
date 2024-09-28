@@ -15,12 +15,6 @@ public class DialogueTestScript : MonoBehaviour
         testText.text = "The dialogue will update this using a Unity Event method call.";
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void TestEventMethod1()
     {
         testText.text = "This is from the 1st Unity Event method call!";

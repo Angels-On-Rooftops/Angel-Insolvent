@@ -105,14 +105,8 @@ public class DialogueGraphView : GraphView
 
         var outputPortCount = dialogueNode.outputContainer.Query("connector").ToList().Count;
         string choicePortName;
-        if (defaultPortName == null)
-        {
-            choicePortName = string.IsNullOrEmpty(overriddenPortName) ? $"Choice {outputPortCount}" : overriddenPortName;
-        }
-        else
-        {
-            choicePortName = string.IsNullOrEmpty(overriddenPortName) ? defaultPortName : overriddenPortName;
-        }
+        defaultPortName ??= $"Choice {outputPortCount}";
+        choicePortName = string.IsNullOrEmpty(overriddenPortName) ? defaultPortName : overriddenPortName;
 
         //character reponse
         var textField = new TextField {

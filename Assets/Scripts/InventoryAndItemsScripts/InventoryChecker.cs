@@ -118,10 +118,5 @@ namespace Inventory
         {
             return InventoryStateMeetsCriteria();
         }
-
-        public void TestSub()
-        {
-
-        }
     }
 }

@@ -11,12 +11,6 @@ public class PopUpDemoTestScript : MonoBehaviour
     private float timePassed = 0;
     private bool mayCreatePopUp = true;
     private GameObject instantiatedPopUp;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()

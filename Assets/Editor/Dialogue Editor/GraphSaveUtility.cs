@@ -102,28 +102,16 @@ public class GraphSaveUtility
 
     private void CreateNodes() {
         foreach(var nodeData in _containerCache.DialogueNodeData) {
-            DialogueNode tempNode;
-            if (nodeData.DialogueText == DialogueConstants.CheckerNodeName)
+            DialogueNode tempNode = nodeData.DialogueText switch
             {
-                tempNode = _targetGraphView.CreateCheckerDialogueNode();
-            }
-            else if (nodeData.DialogueText == DialogueConstants.EventNodeName)
-            {
-                tempNode = _targetGraphView.CreateEventTriggerNode();
-            }
-            else if (nodeData.DialogueText == DialogueConstants.CharacterNodeName)
-            {
-                tempNode = _targetGraphView.CreateNewCharacterSpeakingNode();
-            }
-            else if (nodeData.DialogueText == DialogueConstants.EndNodeName)
-            {
-                tempNode = _targetGraphView.CreateEndHereNode();
-            }
-            else
-            {
-                tempNode = _targetGraphView.CreateDialogueNode(nodeData.DialogueText);
-            }   
-            
+                DialogueConstants.CheckerNodeName => _targetGraphView.CreateCheckerDialogueNode(),
+                DialogueConstants.EventNodeName => _targetGraphView.CreateEventTriggerNode(),
+                DialogueConstants.CharacterNodeName => _targetGraphView.CreateNewCharacterSpeakingNode(),
+                DialogueConstants.EndNodeName => _targetGraphView.CreateEndHereNode(),
+                _ => _targetGraphView.CreateDialogueNode(nodeData.DialogueText)
+            };
+
+
             tempNode.GUID = nodeData.NodeGuID;
             _targetGraphView.AddElement(tempNode);
 
