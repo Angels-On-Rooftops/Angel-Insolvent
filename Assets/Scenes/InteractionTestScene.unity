@@ -3132,6 +3132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -3216,6 +3217,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: 19.346, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1001 &718757559
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5112,6 +5136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 973723104}
   - component: {fileID: 973723103}
+  - component: {fileID: 973723105}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5138,7 +5163,15 @@ MonoBehaviour:
     m_Id: 48dd5814-892b-469a-aa83-439a4a42acbd
     m_Processors: 
     m_Interactions: 
-    m_SingletonActionBindings: []
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: fb9dda51-7fa9-4691-a9cf-ad207733dce5
+      m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Pause
+      m_Flags: 0
     m_Flags: 0
   pauseMenuPanel: {fileID: 1902772402}
   settingsMenuPanel: {fileID: 602099940}
@@ -5157,6 +5190,121 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &973723105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 973723102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b590417ebab32c543a615bd720d86b99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InventoryAction:
+    m_Name: Inventory
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 9c0dbff5-7694-4c9c-98fc-8b299f488f12
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 69808899-cde8-47c8-b3bd-08f9fa87b378
+      m_Path: <Keyboard>/tab
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Inventory
+      m_Flags: 0
+    m_Flags: 0
+  SelectItem:
+    m_Name: Select Item
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: fc5f9e93-e6e7-4451-9197-5570ec9cccb1
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: c5bdfa8f-2514-486e-9248-2626bad11dd6
+      m_Path: <Keyboard>/e
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Select Item
+      m_Flags: 0
+    m_Flags: 0
+  NavLeft:
+    m_Name: Nav Left
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 2562dee4-141d-4b30-a382-58fec74a7773
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 51c99441-83c0-439a-b015-b48c9d99de63
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Nav Left
+      m_Flags: 0
+    m_Flags: 0
+  NavRight:
+    m_Name: Nav Right
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b3d71f50-4c75-46ac-9c10-8563b08d0698
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: ade9d993-477f-45ff-8852-31a4a74af9fb
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Nav Right
+      m_Flags: 0
+    m_Flags: 0
+  NavUp:
+    m_Name: Nav Up
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 7c8cbdbd-f35e-4469-add3-98ae4f73f3be
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 3299b59f-3db5-4520-b9a1-bf3f1cfe34f2
+      m_Path: <Keyboard>/w
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Nav Up
+      m_Flags: 0
+    m_Flags: 0
+  NavDown:
+    m_Name: Nav Down
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: ed038b0c-8d5c-4006-8072-d0c911c4fc50
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 08d33694-7f6b-4e0e-bf60-a93bcfaefbf6
+      m_Path: <Keyboard>/s
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Nav Down
+      m_Flags: 0
+    m_Flags: 0
+  inventory: {fileID: 468676846}
 --- !u!1 &976159668
 GameObject:
   m_ObjectHideFlags: 0

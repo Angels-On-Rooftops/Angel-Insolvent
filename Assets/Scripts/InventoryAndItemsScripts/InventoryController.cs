@@ -1,3 +1,4 @@
+using GameStateManagement;
 using Inventory;
 using Items;
 using System;
@@ -51,6 +52,8 @@ public class InventoryController : MonoBehaviour
     private List<ItemData> itemsInInventory; // list of items currently held in inventory
     private int inventoryIndex = 0;
     private UnityEngine.UI.Image selectedSlot;
+
+    public GameObject GetInventoryPanel() { return inventory; }
 
     private void Start()
     {
@@ -114,15 +117,13 @@ public class InventoryController : MonoBehaviour
     {
         if (inventory.activeSelf)
         {
-            inventory.SetActive(false);
-            PauseSystem.ResumeGame();
-        } 
+            GameStateManager.Instance.SetState(new PlayingState());
+        }
         else
         {
             // make sure something else isn't already pausing the game
-            if (!PauseSystem.isPaused) {
-                inventory.SetActive(true);
-                PauseSystem.PauseGame();
+            if (GameStateManager.Instance.CurrentState is not PauseState) {
+                GameStateManager.Instance.SetState(new GameStateManagement.InventoryState(this));
             }
         }
     }
@@ -187,11 +188,6 @@ public class InventoryController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            Debug.Log(pInv.PrintInventory());
-        }
-
         List<ItemData> keysToRemove = new List<ItemData>();
         foreach (var item in pInv.ItemDictionary)
         {
