@@ -37,9 +37,13 @@ public class DialogueHandler : MonoBehaviour
     /// </summary>
     public event Action<string> NewCharacterName;
 
+    public event Action EndDialogueNodeReached;
+
     private const int checkerSubStrEndIndex = 6;
     private const string checkerSubStrPass = "Pass: ";
     private const string checkerSubStrFail = "Fail: ";
+    private const int timerSubStrEndIndex = 12;
+    private const string timerSubStr = "Time (sec): ";
 
     //private NodeLinkData currentNodeLinkData;
     private DialogueNodeData currentDialogueNodeData;
@@ -47,6 +51,10 @@ public class DialogueHandler : MonoBehaviour
     private List<GameObject> currentButtons = new List<GameObject>();
 
     private string moveForwardToPortID = null;
+    private bool moveForwardOnInput = false;
+    private float timeToStayOnCurrentNode;
+    private bool useTimer = false;
+    private float timeEnteredCurrentNode;
 
     private void OnEnable()
     {
@@ -72,6 +80,27 @@ public class DialogueHandler : MonoBehaviour
         GetCurrentScreen();
     }
 
+    private void Update()
+    {
+        if (this.useTimer)
+        {
+            float timeSpentOnCurrentNode = Time.unscaledTime - this.timeEnteredCurrentNode;
+            //Debug.Log("timeSpentOnCurrentNode: " + timeSpentOnCurrentNode);
+            
+            if (timeSpentOnCurrentNode >= this.timeToStayOnCurrentNode)
+            {
+                //Update the current node to the one to move forward to (the next one)
+                this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == this.moveForwardToPortID);
+
+                this.useTimer = false;
+                this.moveForwardToPortID = null;
+
+                HandleSpecialNodes();
+                GetCurrentScreen();
+            }     
+        }
+    }
+
     private void GetCurrentScreen()
     {
         //Clear previous buttons
@@ -87,12 +116,13 @@ public class DialogueHandler : MonoBehaviour
         Vector2 buttonPosition = this.firstButtonPosition;
         foreach (NodeLinkData childNode in childNodes)
         {
-            if (!CheckIfShouldLetPlayerMoveForwardWithoutMakingAChoice(childNode))
+            if (!CheckIfShouldLetPlayerMoveForwardWithoutMakingAChoice(childNode)
+                    && !CheckIfShouldEndAfterTime(childNode))
             {
                 CreateButton(buttonPosition, childNode);
 
                 buttonPosition += this.buttonDisplacement;
-            }           
+            } 
         }
     }
 
@@ -100,18 +130,41 @@ public class DialogueHandler : MonoBehaviour
     {
         if (childNode.PortName == DialogueConstants.MoveForwardOnInputString)
         {
-            //need to figure out next port name
-            //should be able to find w/ childNode?
-
-            //DialogueNodeData targetNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == childNode.TargetNodeGuID);
-            //this.moveForwardToPortName = targetNodeData.DialogueText;
-
             this.moveForwardToPortID = childNode.TargetNodeGuID;
+            this.moveForwardOnInput = true;
 
             return true;
         }
         
         return false;
+    }
+
+    private bool CheckIfShouldEndAfterTime(NodeLinkData childNode)
+    {
+        if (childNode.PortName.Length <= timerSubStrEndIndex)
+        {
+            return false;
+        }
+
+        string substr = childNode.PortName.Substring(0, timerSubStrEndIndex);
+        if (substr != timerSubStr)
+        {
+            return false;
+        }
+
+        string timeSubstr = childNode.PortName.Substring(timerSubStrEndIndex);
+        if (!float.TryParse(timeSubstr, out float time))
+        {
+            Debug.LogError("Timer Node Port Name format should be \"" + timerSubStr + "[Time before moving to next node in sec]\"");
+        }
+
+        this.timeToStayOnCurrentNode = time;
+        this.timeEnteredCurrentNode = Time.unscaledTime; //time in seconds since the start of the game
+
+        this.moveForwardToPortID = childNode.TargetNodeGuID;
+        this.useTimer = true;
+
+        return true;
     }
 
     private List<NodeLinkData> GetChildrenNodeLinkData()
@@ -142,12 +195,12 @@ public class DialogueHandler : MonoBehaviour
 
     void OnMoveForward(CallbackContext c)
     {
-        //this.moveForwardToPortID should be null unless should respond to input
-        if (this.moveForwardToPortID != null)
+        if (this.moveForwardOnInput)
         {
             //Update the current node to the one to move forward to (the next one)
             this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == this.moveForwardToPortID);
 
+            this.moveForwardOnInput = false;
             this.moveForwardToPortID = null;
 
             HandleSpecialNodes();
@@ -192,6 +245,10 @@ public class DialogueHandler : MonoBehaviour
         else if (this.currentDialogueNodeData.DialogueText == DialogueConstants.CharacterNodeName)
         {
             HandleCharacterNode();
+        }
+        else if (this.currentDialogueNodeData.DialogueText == DialogueConstants.EndNodeName)
+        {
+            HandleEndNode();
         }
         // else, do nothing (this.currentDialogueNodeData is a regular dialogue node)
     }
@@ -267,5 +324,17 @@ public class DialogueHandler : MonoBehaviour
         }
 
         UpdateCurrentNode(newCharacterSpeakingName);
+    }
+
+    private void HandleEndNode()
+    {
+        if (EndDialogueNodeReached != null)
+        {
+            EndDialogueNodeReached();
+        }
+
+        //Debug.Log("Reached end of Dialogue");
+
+        //Destroy(this.gameObject);
     }
 }

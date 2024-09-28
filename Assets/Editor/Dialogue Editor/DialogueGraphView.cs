@@ -268,4 +268,69 @@ public class DialogueGraphView : GraphView
     {
         AddElement(CreateNewCharacterSpeakingNode());
     }
+
+    //Creates new Timer node (node that moves to the next node after a given amount of time)
+    public DialogueNode CreateNewMoveOnTimerNode(string nodeName)
+    {
+        var dialogueNode = new DialogueNode
+        {
+            title = nodeName,
+            DialogueText = nodeName,
+            GUID = Guid.NewGuid().ToString()
+        };
+
+        //adds input port
+        var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
+        inputPort.portName = "Input";
+        dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
+
+        //character dialogue
+        var textField = new TextField(string.Empty);
+        textField.RegisterValueChangedCallback(evt => {
+            dialogueNode.DialogueText = evt.newValue;
+            dialogueNode.title = evt.newValue;
+        });
+        textField.SetValueWithoutNotify(dialogueNode.title);
+        dialogueNode.mainContainer.Add(textField);
+
+        AddChoicePort(dialogueNode, "Time (sec): [Time before moving to next node in sec]");
+
+        return dialogueNode;
+    }
+
+    //adds node to graph
+    public void CreateTimerNode(string nodeName)
+    {
+        AddElement(CreateNewMoveOnTimerNode(nodeName));
+    }
+
+    //Creates new End node
+    public DialogueNode CreateEndHereNode()
+    {
+        var dialogueNode = new DialogueNode
+        {
+            title = DialogueConstants.EndNodeName,
+            DialogueText = DialogueConstants.EndNodeName,
+            GUID = Guid.NewGuid().ToString()
+        };
+
+        //adds input port
+        var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
+        inputPort.portName = "Input";
+        dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
+
+        return dialogueNode;
+    }
+
+    //adds node to graph
+    public void CreateEndNode()
+    {
+        AddElement(CreateEndHereNode());
+    }
 }

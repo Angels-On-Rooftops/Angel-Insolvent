@@ -76,6 +76,21 @@ MonoBehaviour:
   - BaseNodeGuID: b331ce7a-b448-41eb-8731-14bd08d244c5
     PortName: 'Fail: 1'
     TargetNodeGuID: a8b31c9a-b0b0-49b9-893b-b72707e0c31a
+  - BaseNodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
+    PortName: ->
+    TargetNodeGuID: 55844840-f515-4737-a7a7-6ee7666e1ec7
+  - BaseNodeGuID: 57ed0645-8fe2-42fc-9857-e83242e19795
+    PortName: ->
+    TargetNodeGuID: 72739932-cd87-4ded-9900-262403365fee
+  - BaseNodeGuID: 72739932-cd87-4ded-9900-262403365fee
+    PortName: 'Time (sec): 2.5'
+    TargetNodeGuID: c5f5d53c-78a1-428f-9689-ec1104df1fc5
+  - BaseNodeGuID: c5f5d53c-78a1-428f-9689-ec1104df1fc5
+    PortName: ->
+    TargetNodeGuID: 399f7b1e-08b3-4cc1-891c-9c51eca4e9b0
+  - BaseNodeGuID: 399f7b1e-08b3-4cc1-891c-9c51eca4e9b0
+    PortName: 'Time (sec): 3'
+    TargetNodeGuID: b10bb99c-5883-4342-84e8-3346ddd06753
   DialogueNodeData:
   - NodeGuID: 2796f926-7874-4486-86b0-8499004948ae
     DialogueText: Zero
@@ -131,3 +146,18 @@ MonoBehaviour:
   - NodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
     DialogueText: After next keyboard input
     position: {x: 2533, y: 451}
+  - NodeGuID: 55844840-f515-4737-a7a7-6ee7666e1ec7
+    DialogueText: END_NODE
+    position: {x: 3019, y: 461}
+  - NodeGuID: 72739932-cd87-4ded-9900-262403365fee
+    DialogueText: Time arrives for all
+    position: {x: 1436, y: 712}
+  - NodeGuID: c5f5d53c-78a1-428f-9689-ec1104df1fc5
+    DialogueText: Hello
+    position: {x: 1775, y: 712}
+  - NodeGuID: 399f7b1e-08b3-4cc1-891c-9c51eca4e9b0
+    DialogueText: Time is ticking, ha, ha
+    position: {x: 2077, y: 743}
+  - NodeGuID: b10bb99c-5883-4342-84e8-3346ddd06753
+    DialogueText: END_NODE
+    position: {x: 2399, y: 762}

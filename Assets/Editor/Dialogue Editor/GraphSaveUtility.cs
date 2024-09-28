@@ -115,6 +115,10 @@ public class GraphSaveUtility
             {
                 tempNode = _targetGraphView.CreateNewCharacterSpeakingNode();
             }
+            else if (nodeData.DialogueText == DialogueConstants.EndNodeName)
+            {
+                tempNode = _targetGraphView.CreateEndHereNode();
+            }
             else
             {
                 tempNode = _targetGraphView.CreateDialogueNode(nodeData.DialogueText);
