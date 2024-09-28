@@ -36,6 +36,7 @@ float GetShininessPower(float shininess)
 
 float Posterize(float value, float steps)
 {
+    //posterize with offset to account for floor cutting off too much by default
     return floor((value + (0.5 / steps)) * steps) * (1 / steps);
 }
 
@@ -54,11 +55,12 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     [branch]
     if (params.isToon)
     {
-        //posterize lighting contributions (add step
+        //posterize lighting contributions
         diffuse = Posterize(diffuse, params.diffuseSteps);
         specular = Posterize(specular, params.specularSteps);
     }
-    
+
+    //calc light total
     float combinedContributions = (diffuse + specular);
     return params.albedo * light.color * light.shadowAttenuation * light.distanceAttenuation * combinedContributions;
 }
@@ -72,7 +74,7 @@ float3 CalculateGlobalIllumination(ToonLightingParams params)
 float3 CalculateLighting(ToonLightingParams params) 
 {
     #ifdef SHADERGRAPH_PREVIEW
-    //approximate lighting for node preview
+    //approximate lighting for node preview (shadergraph preview doesn't have world info)
         float3 lightDir = float3(0.5,0.5,-0.5);
     
         float3 diffuse = dot(lightDir, params.normal);
@@ -81,15 +83,25 @@ float3 CalculateLighting(ToonLightingParams params)
         float3 specularDotProduct = saturate(dot(middle, params.normal));
         float3 smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.smoothness));
         float3 specular = smoothedSpecularDot * diffuse;
+
+        [branch]
+        if (params.isToon)
+        {
+            //posterize lighting contributions
+            diffuse = Posterize(diffuse, params.diffuseSteps);
+            specular = Posterize(specular, params.specularSteps);
+        }
     
         return params.albedo * (diffuse+specular);
+
     #else
-    
+
         Light mainLight = GetMainLight(params.shadowCoordinate, params.fragWorldPos, params.shadowMask);
     
         //make sure no lights are considered twice, baked vs realtime
         MixRealtimeAndBakedGI(mainLight, params.normal, params.bakedLighting);
         float3 color = CalculateGlobalIllumination(params);
+
         //calculate main light info
         color += CalculateOneLight(params, mainLight);
     
