@@ -8,6 +8,7 @@ namespace Items
     public class ItemData : ScriptableObject
     {
         public string itemName;
+        public string itemDesc;
         public Sprite sprite; //can be used for UI graphic
         public GameObject itemPrefab;
         public bool isEquippable;
