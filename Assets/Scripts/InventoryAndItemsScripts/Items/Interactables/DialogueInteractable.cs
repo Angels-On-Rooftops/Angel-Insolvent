@@ -14,22 +14,26 @@ namespace Items.Interactables
         }
 
         public override void Interact()
-        {
-            this.isActive = !this.isActive;
+        {          
+            //this.isActive = !this.isActive;
 
-            if (this.isActive)
+            if (!this.isActive)
             {
                 //Creates prefab in the center
                 this.instantiatedUIPrefab = Instantiate(this.UIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
 
                 FreezeCharacterMovement();
-            }
-            else
-            {
-                Destroy(this.instantiatedUIPrefab);
 
-                UnFreezeCharacterMovement();
+                //Mark Active when changing from inactive to active, but do not deactivate from this class
+                this.isActive = true;
             }
+
+            //else
+            //{
+            //Destroy(this.instantiatedUIPrefab);
+
+            //UnFreezeCharacterMovement();
+            //}
         }
     }
 }

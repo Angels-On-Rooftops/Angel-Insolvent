@@ -7,6 +7,8 @@ using System.Linq;
 using UnityEngine.EventSystems;
 using System;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputAction;
 
 public class DialogueHandler : MonoBehaviour
 {
@@ -16,6 +18,10 @@ public class DialogueHandler : MonoBehaviour
     [SerializeField] private Vector2 firstButtonPosition;
     [SerializeField] private Vector2 buttonDisplacement;
     [SerializeField] private GameObject parentCanvas;
+
+    [SerializeField]
+    [Tooltip("The keybinds that allow the player to move forward in the dialogue (when not choosing a specific response).")]
+    InputAction InteractAction;
 
     [Tooltip("Text should have the first character's name")]
     [SerializeField] private TMP_Text currentCharacterSpeakingNameText;
@@ -39,6 +45,20 @@ public class DialogueHandler : MonoBehaviour
     private DialogueNodeData currentDialogueNodeData;
 
     private List<GameObject> currentButtons = new List<GameObject>();
+
+    private string moveForwardToPortID = null;
+
+    private void OnEnable()
+    {
+        InteractAction.performed += OnMoveForward;
+        InteractAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        InteractAction.performed -= OnMoveForward;
+        InteractAction.Disable();
+    }
 
     void Awake()
     {
@@ -67,10 +87,31 @@ public class DialogueHandler : MonoBehaviour
         Vector2 buttonPosition = this.firstButtonPosition;
         foreach (NodeLinkData childNode in childNodes)
         {
-            CreateButton(buttonPosition, childNode);
+            if (!CheckIfShouldLetPlayerMoveForwardWithoutMakingAChoice(childNode))
+            {
+                CreateButton(buttonPosition, childNode);
 
-            buttonPosition += this.buttonDisplacement;
+                buttonPosition += this.buttonDisplacement;
+            }           
         }
+    }
+
+    private bool CheckIfShouldLetPlayerMoveForwardWithoutMakingAChoice(NodeLinkData childNode)
+    {
+        if (childNode.PortName == DialogueConstants.MoveForwardOnInputString)
+        {
+            //need to figure out next port name
+            //should be able to find w/ childNode?
+
+            //DialogueNodeData targetNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == childNode.TargetNodeGuID);
+            //this.moveForwardToPortName = targetNodeData.DialogueText;
+
+            this.moveForwardToPortID = childNode.TargetNodeGuID;
+
+            return true;
+        }
+        
+        return false;
     }
 
     private List<NodeLinkData> GetChildrenNodeLinkData()
@@ -97,6 +138,21 @@ public class DialogueHandler : MonoBehaviour
         UpdateCurrentNode(buttonPortName);
 
         GetCurrentScreen();
+    }
+
+    void OnMoveForward(CallbackContext c)
+    {
+        //this.moveForwardToPortID should be null unless should respond to input
+        if (this.moveForwardToPortID != null)
+        {
+            //Update the current node to the one to move forward to (the next one)
+            this.currentDialogueNodeData = this.dialogueContainer.DialogueNodeData.FirstOrDefault(node => node.NodeGuID == this.moveForwardToPortID);
+
+            this.moveForwardToPortID = null;
+
+            HandleSpecialNodes();
+            GetCurrentScreen();
+        }
     }
 
     /// <summary>

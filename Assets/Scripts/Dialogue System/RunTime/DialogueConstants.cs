@@ -9,4 +9,5 @@ public static class DialogueConstants
     public const string CheckerNodeName = "CHECKER_NODE";
     public const string EventNodeName = "EVENT_TRIGGER_NODE";
     public const string CharacterNodeName = "NEW_CHARACTER_SPEAKING_NODE";
+    public const string MoveForwardOnInputString = "->";
 }

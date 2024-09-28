@@ -52,24 +52,24 @@ MonoBehaviour:
   - BaseNodeGuID: 86b7feca-2b32-4064-afcb-b173e5112f65
     PortName: Character
     TargetNodeGuID: a24f363d-67eb-4bf9-bf23-c27b6b0b6e89
-  - BaseNodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
-    PortName: 'Pass: 0'
-    TargetNodeGuID: 6fc15e82-1c82-4a66-8bfd-8983fe7266c4
-  - BaseNodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
-    PortName: 'Fail: 0'
-    TargetNodeGuID: 85748b08-09af-4b04-ab5e-5165fe79bb2b
   - BaseNodeGuID: b1a209af-ff7c-4514-b459-c67659121c5b
     PortName: 0
     TargetNodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
   - BaseNodeGuID: b1a209af-ff7c-4514-b459-c67659121c5b
     PortName: 1
     TargetNodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
-  - BaseNodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
-    PortName: Choice 0
-    TargetNodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
   - BaseNodeGuID: a24f363d-67eb-4bf9-bf23-c27b6b0b6e89
-    PortName: New Character Yay!
+    PortName: '[Insert Character speaking next]'
     TargetNodeGuID: b331ce7a-b448-41eb-8731-14bd08d244c5
+  - BaseNodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
+    PortName: ->
+    TargetNodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
+  - BaseNodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
+    PortName: 'Pass: 0'
+    TargetNodeGuID: 6fc15e82-1c82-4a66-8bfd-8983fe7266c4
+  - BaseNodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
+    PortName: 'Fail: 0'
+    TargetNodeGuID: 85748b08-09af-4b04-ab5e-5165fe79bb2b
   - BaseNodeGuID: b331ce7a-b448-41eb-8731-14bd08d244c5
     PortName: 'Pass: 1'
     TargetNodeGuID: d69011db-ecb0-4cf1-90c9-137a9f0b0a66
@@ -116,9 +116,6 @@ MonoBehaviour:
   - NodeGuID: 16498ccd-1cf6-4f72-be0c-f0c6b890f633
     DialogueText: After Event
     position: {x: 2184, y: 451}
-  - NodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
-    DialogueText: Dialogue Node
-    position: {x: 2533, y: 451}
   - NodeGuID: 6bb998b7-60e4-4b5f-993f-269514a47c46
     DialogueText: CHECKER_NODE
     position: {x: 1624, y: 230}
@@ -131,3 +128,6 @@ MonoBehaviour:
   - NodeGuID: a8b31c9a-b0b0-49b9-893b-b72707e0c31a
     DialogueText: Check #1 Failed
     position: {x: 2680, y: 725}
+  - NodeGuID: f2ba8fd8-f9bc-4425-8632-c5585b27112f
+    DialogueText: After next keyboard input
+    position: {x: 2533, y: 451}
