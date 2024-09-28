@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
     }
     public void OnPlayButton()
     {
-        GameStateManager.Instance.SetState(new PlayingState("InventoryTestScene"));
+        GameStateManager.Instance.SetState(new PlayingState("UI_testing"));
     }
 
     public void OnSettingsButton()
