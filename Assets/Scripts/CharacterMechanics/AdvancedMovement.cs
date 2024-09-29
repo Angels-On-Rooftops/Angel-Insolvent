@@ -30,7 +30,8 @@ public class AdvancedMovement : MonoBehaviour
     CharacterController Controller => GetComponent<CharacterController>();
     readonly Maid StateMaid = new();
 
-    Dictionary<string, object> PreCurrentStateMovementProperties = new();
+    // does not contain every default property, just ones that have been overwritten previously
+    Dictionary<string, object> DefaultMovementProperties = new();
 
     private void Start()
     {
@@ -96,11 +97,13 @@ public class AdvancedMovement : MonoBehaviour
     void TransitionFrom(AdvancedMovementState oldState, AdvancedMovementState newState)
     {
         States[oldState].TransitioningFrom();
-        Dictionary<string, object> statesToSet = DictionaryUtil.RemoveKeys(
-            PreCurrentStateMovementProperties,
+
+        Dictionary<string, object> DefaultMovementPropertiesMinusHoldProperties = DictionaryUtil.RemoveKeys(
+            DefaultMovementProperties,
             States[newState].HoldFromPreviousState
         );
-        SetMovementProperties(statesToSet);
+
+        SetMovementProperties(DefaultMovementPropertiesMinusHoldProperties);
     }
 
     // Transitions to a new state
@@ -109,9 +112,7 @@ public class AdvancedMovement : MonoBehaviour
         var oldState = CurrentState;
         CurrentState = state;
 
-        PreCurrentStateMovementProperties = SetMovementProperties(
-            States[CurrentState].MovementProperties
-        );
+        SetMovementProperties(States[CurrentState].MovementProperties);
 
         States[state].TransitionedTo();
         StateChanged?.Invoke(oldState, CurrentState);
@@ -119,10 +120,8 @@ public class AdvancedMovement : MonoBehaviour
 
     // Sets movement properties via a dictionary of the property names and values
     // returns a dictionary of all properties that were changed, with their old values
-    Dictionary<string, object> SetMovementProperties(Dictionary<string, object> newProperties)
+    void SetMovementProperties(Dictionary<string, object> newProperties)
     {
-        Dictionary<string, object> oldProps = new();
-
         foreach (var (name, newValue) in newProperties)
         {
             var field = Movement.GetType().GetField(name);
@@ -131,19 +130,17 @@ public class AdvancedMovement : MonoBehaviour
             // (because those are different in c# for some reason)
             if (field is not null)
             {
-                oldProps.Add(name, field.GetValue(Movement));
+                DefaultMovementProperties.TryAdd(name, field.GetValue(Movement));
                 field.SetValue(Movement, newValue);
             }
             else
             {
                 var property = Movement.GetType().GetProperty(name);
 
-                oldProps.Add(name, property.GetValue(Movement));
+                DefaultMovementProperties.TryAdd(name, property.GetValue(Movement));
                 property.SetValue(Movement, newValue);
             }
         }
-
-        return oldProps;
     }
 
     // enables the passed collider and disables the default movement collider

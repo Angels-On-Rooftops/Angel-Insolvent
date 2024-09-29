@@ -81,6 +81,10 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
     void LateUpdate()
     {
+        // unstick the action button, so if the roll was still on the ground
+        // it won't immediately dive when rolling off an edge
+        // Note: has to be done on LateUpdate because state transitions
+        //       take place in Update
         pushedActionButton = false;
     }
 }
