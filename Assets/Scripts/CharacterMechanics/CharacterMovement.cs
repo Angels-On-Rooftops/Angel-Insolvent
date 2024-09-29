@@ -201,12 +201,13 @@ public class CharacterMovement : MonoBehaviour
 
     readonly Maid maid = new();
 
+    private void Awake()
+    {
+        FacingVectorMiddleware = FacingMiddleware.UpdateOnlyWhenMoving(this);
+    }
+
     void OnEnable()
     {
-        FacingVectorMiddleware = (v, dt) =>
-            Quaternion.LookRotation(-ForwardMovementDirectionFromCamera(), Vector3.up)
-            * RawFacingVector;
-
         if (Walk is not null)
         {
             maid.GiveEvent(Walk, "performed", (CallbackContext c) => DoWalk(c));
@@ -241,9 +242,6 @@ public class CharacterMovement : MonoBehaviour
         if (newDirection.magnitude > 0)
         {
             RawFacingVector = new Vector3(newDirection.x, 0, newDirection.y).normalized;
-            FacingVector =
-                Quaternion.LookRotation(-ForwardMovementDirectionFromCamera(), Vector3.up)
-                * RawFacingVector;
         }
     }
 
@@ -290,7 +288,7 @@ public class CharacterMovement : MonoBehaviour
         DoJump(false);
     }
 
-    Vector3 ForwardMovementDirectionFromCamera()
+    public Vector3 ForwardMovementDirectionFromCamera()
     {
         // get the custom camera transform if we need to, otherwise the regular one will be fine
         Vector3 forward =
@@ -441,9 +439,10 @@ public class CharacterMovement : MonoBehaviour
         transform.LookAt(transform.position + FacingVector, GravityUpDirection);
     }
 
-    void UpdateProcessedVector()
+    void UpdateProcessedVectors()
     {
         MovementVector = MovementVectorMiddleware(RawMovementVector, Time.deltaTime);
+        FacingVector = FacingVectorMiddleware(RawFacingVector, Time.deltaTime);
     }
 
     void UpdateState()
@@ -532,12 +531,13 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        UpdateProcessedVectors();
+
         if (GravityEnabled)
         {
             ApplyGravity();
         }
 
-        UpdateProcessedVector();
         ApplyMovementVelocity(AdditionalImpulse);
 
         if (RotationEnabled)

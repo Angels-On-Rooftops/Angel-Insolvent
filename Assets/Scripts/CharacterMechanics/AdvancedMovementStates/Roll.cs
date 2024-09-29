@@ -33,6 +33,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
             { "WalkSpeed", RollingSpeed },
             { "JumpHeight", JumpOutHeight },
             { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
+            { "FacingVectorMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
             { "Jumps", 2 },
             { "ExtraJumpsRemaining", 1 },
         };
