@@ -8,7 +8,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
     AnimationCurve AccelerationCurve;
 
     [SerializeField]
-    float MaxSpeed;
+    AnimationCurve FastAccelerationCurve;
 
     void Start()
     {
@@ -41,19 +41,35 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
 
         doneDecelerating = false;
-        Coroutine decelerateRoutine = StartCoroutine(Decelerate());
+        Coroutine normalDecelerateRoutine = StartCoroutine(Decelerate(AccelerationCurve));
         StateMaid.GiveTask(() =>
         {
-            if (decelerateRoutine is not null)
+            if (normalDecelerateRoutine is not null)
             {
-                StopCoroutine(decelerateRoutine);
+                StopCoroutine(normalDecelerateRoutine);
             }
         });
 
-        if (Movement.WalkSpeed > MaxSpeed)
+        Coroutine fastDecelerationRoutine = null;
+        StateMaid.GiveEvent(
+            Movement,
+            "Jumped",
+            (int _) =>
+            {
+                if (normalDecelerateRoutine is not null)
+                {
+                    StopCoroutine(normalDecelerateRoutine);
+                }
+                fastDecelerationRoutine = StartCoroutine(Decelerate(FastAccelerationCurve));
+            }
+        );
+        StateMaid.GiveTask(() =>
         {
-            Movement.WalkSpeed = MaxSpeed;
-        }
+            if (fastDecelerationRoutine is not null)
+            {
+                StopCoroutine(fastDecelerationRoutine);
+            }
+        });
     }
 
     public void TransitioningFrom()
@@ -61,7 +77,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
         StateMaid.Cleanup();
     }
 
-    IEnumerator Decelerate()
+    IEnumerator Decelerate(AnimationCurve curve)
     {
         float timeElapsed = 0;
         while (Movement.WalkSpeed > defaultWalkSpeed)
@@ -72,7 +88,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
                 Movement.WalkSpeed = defaultWalkSpeed;
                 yield break;
             }
-            Movement.WalkSpeed += AccelerationCurve.Evaluate(timeElapsed) * Time.deltaTime;
+            Movement.WalkSpeed += curve.Evaluate(timeElapsed) * Time.deltaTime;
             timeElapsed += Time.deltaTime;
             yield return null;
         }

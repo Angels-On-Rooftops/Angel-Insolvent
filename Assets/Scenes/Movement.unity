@@ -186,7 +186,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae70987223ef9f428ce981676e28403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PushOffSpeed: 34
+  AccelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.05
+      value: 20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  PushOffSpeed: 30
+  SpeedLimit: 34
 --- !u!114 &153980798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,8 +225,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FallAcceleration: 30
-  AdjustSpeed: 2
+  MinAdjustSpeed: 5
   TerminalVelocity: 96
+  DownwardsBoost: 10
+  HorizAccelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.05
+      value: -60
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &153980799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,7 +335,30 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  MaxSpeed: 26
+  FastAccelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -15
+      inSlope: -614.81915
+      outSlope: -614.81915
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.060803372
+    - serializedVersion: 3
+      time: 0.025
+      value: -20
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!96 &153980808
 TrailRenderer:
   serializedVersion: 3
