@@ -69,6 +69,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
             if (Movement.RawMovementVector == Vector3.zero)
             {
                 doneDecelerating = true;
+                Movement.WalkSpeed = defaultWalkSpeed;
                 yield break;
             }
             Movement.WalkSpeed += AccelerationCurve.Evaluate(timeElapsed) * Time.deltaTime;
@@ -76,5 +77,6 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
             yield return null;
         }
         doneDecelerating = true;
+        Movement.WalkSpeed = defaultWalkSpeed;
     }
 }
