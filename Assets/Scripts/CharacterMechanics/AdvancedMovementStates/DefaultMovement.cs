@@ -5,11 +5,14 @@ using UnityEngine;
 public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
 {
     public Dictionary<string, object> MovementProperties => new();
-    public Dictionary<AdvancedMovementState, bool> Transitions => new()
-    {
-        { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
-        { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
-    };
+    public Dictionary<AdvancedMovementState, bool> Transitions =>
+        new()
+        {
+            { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
+            { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
+        };
+
+    public List<string> HoldFromPreviousState => new() { };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();

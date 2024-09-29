@@ -27,6 +27,8 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
         { "JumpHeight", 0 }
     };
 
+    public List<string> HoldFromPreviousState => new() { };
+
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
 

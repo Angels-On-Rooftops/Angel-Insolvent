@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterMovement))]
@@ -15,14 +16,15 @@ public class AdvancedMovement : MonoBehaviour
     public AdvancedMovementState CurrentState = AdvancedMovementState.None;
     public event Action<AdvancedMovementState, AdvancedMovementState> StateChanged;
 
-    Dictionary<AdvancedMovementState, IAdvancedMovementStateSpec> States => new()
-    {
-        { AdvancedMovementState.None, GetComponent<DefaultMovement>() },
-        { AdvancedMovementState.Rolling, GetComponent<Roll>() },
-        { AdvancedMovementState.LongJumping, GetComponent<LongJump>() },
-        { AdvancedMovementState.Diving, GetComponent<Dive>() },
-    };
-    
+    Dictionary<AdvancedMovementState, IAdvancedMovementStateSpec> States =>
+        new()
+        {
+            { AdvancedMovementState.None, GetComponent<DefaultMovement>() },
+            { AdvancedMovementState.Rolling, GetComponent<Roll>() },
+            { AdvancedMovementState.LongJumping, GetComponent<LongJump>() },
+            { AdvancedMovementState.Diving, GetComponent<Dive>() },
+            { AdvancedMovementState.Decelerating, GetComponent<Deceleration>() },
+        };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     CharacterController Controller => GetComponent<CharacterController>();
@@ -30,15 +32,32 @@ public class AdvancedMovement : MonoBehaviour
 
     Dictionary<string, object> PreCurrentStateMovementProperties = new();
 
+    private void Start()
+    {
+        foreach (IAdvancedMovementStateSpec movementState in States.Values)
+        {
+            Assert.IsFalse(
+                DictionaryUtil.HasAnyKey(
+                    movementState.MovementProperties,
+                    movementState.HoldFromPreviousState
+                ),
+                $"Value both held and set from previous state in movement state {movementState.GetType().Name}!"
+            );
+        }
+    }
+
     void OnEnable()
     {
-        StateMaid.GiveEvent(ActionKeybind, "performed", (InputAction.CallbackContext c) => ActionRequested?.Invoke());
+        StateMaid.GiveEvent(
+            ActionKeybind,
+            "performed",
+            (InputAction.CallbackContext c) => ActionRequested?.Invoke()
+        );
 
         ActionKeybind.Enable();
         StateMaid.GiveTask(() => ActionKeybind.Disable());
 
         TransitionTo(CurrentState);
-        StateMaid.GiveTask(() => TransitionFrom(CurrentState));
     }
 
     void OnDisable()
@@ -50,7 +69,7 @@ public class AdvancedMovement : MonoBehaviour
     {
         if (CanTransition(out AdvancedMovementState newState))
         {
-            TransitionFrom(CurrentState);
+            TransitionFrom(CurrentState, newState);
             TransitionTo(newState);
         }
     }
@@ -74,10 +93,14 @@ public class AdvancedMovement : MonoBehaviour
     }
 
     // Transitions back from a state
-    void TransitionFrom(AdvancedMovementState state)
+    void TransitionFrom(AdvancedMovementState oldState, AdvancedMovementState newState)
     {
-        States[state].TransitioningFrom();
-        SetMovementProperties(PreCurrentStateMovementProperties);
+        States[oldState].TransitioningFrom();
+        Dictionary<string, object> statesToSet = DictionaryUtil.RemoveKeys(
+            PreCurrentStateMovementProperties,
+            States[newState].HoldFromPreviousState
+        );
+        SetMovementProperties(statesToSet);
     }
 
     // Transitions to a new state
@@ -86,7 +109,9 @@ public class AdvancedMovement : MonoBehaviour
         var oldState = CurrentState;
         CurrentState = state;
 
-        PreCurrentStateMovementProperties = SetMovementProperties(States[CurrentState].MovementProperties);
+        PreCurrentStateMovementProperties = SetMovementProperties(
+            States[CurrentState].MovementProperties
+        );
 
         States[state].TransitionedTo();
         StateChanged?.Invoke(oldState, CurrentState);
@@ -104,10 +129,11 @@ public class AdvancedMovement : MonoBehaviour
 
             // check if name refers to a field or property
             // (because those are different in c# for some reason)
-            if (field is not null) {
+            if (field is not null)
+            {
                 oldProps.Add(name, field.GetValue(Movement));
                 field.SetValue(Movement, newValue);
-            } 
+            }
             else
             {
                 var property = Movement.GetType().GetProperty(name);
@@ -129,7 +155,7 @@ public class AdvancedMovement : MonoBehaviour
 
         Controller.height = newHeight;
         Controller.center += Vector3.up * (newHeight - oldHeight) / 2;
-        return () => 
+        return () =>
         {
             Controller.height = oldHeight;
             Controller.center = oldCenter;

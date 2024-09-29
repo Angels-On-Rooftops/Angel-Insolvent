@@ -16,21 +16,28 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     [SerializeField]
     float ColliderHeight = 1;
 
-    public Dictionary<AdvancedMovementState, bool> Transitions => new()
-    {
-        { AdvancedMovementState.LongJumping, jumped },
-        { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
-        { AdvancedMovementState.None, (IsRollOver() && Movement.IsOnGround()) || hitWall },
-    };
+    public Dictionary<AdvancedMovementState, bool> Transitions =>
+        new()
+        {
+            { AdvancedMovementState.LongJumping, jumped },
+            { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
+            {
+                AdvancedMovementState.Decelerating,
+                (IsRollOver() && Movement.IsOnGround()) || hitWall
+            },
+        };
 
-    public Dictionary<string, object> MovementProperties => new()
-    {
-        { "WalkSpeed", RollingSpeed },
-        { "JumpHeight", JumpOutHeight },
-        { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
-        { "Jumps", 2 },
-        { "ExtraJumpsRemaining", 1 },
-    };
+    public Dictionary<string, object> MovementProperties =>
+        new()
+        {
+            { "WalkSpeed", RollingSpeed },
+            { "JumpHeight", JumpOutHeight },
+            { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
+            { "Jumps", 2 },
+            { "ExtraJumpsRemaining", 1 },
+        };
+
+    public List<string> HoldFromPreviousState => new() { };
 
     public Vector3 RollingDirection = Vector3.zero;
 

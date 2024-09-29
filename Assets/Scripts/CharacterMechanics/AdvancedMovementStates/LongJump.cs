@@ -7,23 +7,28 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     [SerializeField]
     int PushOffSpeed = 24;
 
-    public Dictionary<AdvancedMovementState, bool> Transitions => new()
-    {
-        { AdvancedMovementState.None, hitWall || Movement.IsOnStableGround() },
-        { AdvancedMovementState.Diving, pushedActionButton },
+    public Dictionary<AdvancedMovementState, bool> Transitions =>
+        new()
+        {
+            { AdvancedMovementState.Decelerating, hitWall || Movement.IsOnStableGround() },
+            { AdvancedMovementState.Diving, pushedActionButton },
+        };
+    public Dictionary<string, object> MovementProperties =>
+        new()
+        {
+            { "WalkSpeed", PushOffSpeed },
+            { "JumpHeight", GetComponent<Roll>().JumpOutHeight },
+            { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
+        };
 
-    };
-    public Dictionary<string, object> MovementProperties => new()
-    {
-        { "WalkSpeed", PushOffSpeed },
-        { "JumpHeight", GetComponent<Roll>().JumpOutHeight },
-        { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
-    };
+    public List<string> HoldFromPreviousState => new() { };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
 
-    bool hitWall, landed, pushedActionButton;
+    bool hitWall,
+        landed,
+        pushedActionButton;
     readonly Maid StateMaid = new();
 
     public void TransitionedTo()

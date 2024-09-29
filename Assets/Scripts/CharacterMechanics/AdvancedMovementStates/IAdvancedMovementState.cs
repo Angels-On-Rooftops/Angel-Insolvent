@@ -9,13 +9,15 @@ public enum AdvancedMovementState
     Rolling,
     Diving,
     LongJumping,
+    Decelerating
 }
-
 
 public interface IAdvancedMovementStateSpec
 {
     public Dictionary<AdvancedMovementState, bool> Transitions { get; }
     public Dictionary<string, object> MovementProperties { get; }
+
+    public List<string> HoldFromPreviousState { get; }
 
     public void TransitionedTo();
 
