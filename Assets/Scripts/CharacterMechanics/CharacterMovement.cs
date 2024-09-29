@@ -105,6 +105,8 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Events
+    public event Action WalkStartRequested;
+    public event Action WalkStopRequested;
     public event Action StartedWalking;
     public event Action StoppedWalking;
     public event Action<int> Jumped;
@@ -229,10 +231,19 @@ public class CharacterMovement : MonoBehaviour
 
     void DoWalk(CallbackContext c)
     {
-        Vector3 oldMovementDirection = MovementVector;
+        Vector3 oldRawMovementVector = RawMovementVector;
 
         Vector2 move2d = c.ReadValue<Vector2>();
         RawMovementVector = new Vector3(move2d.x, 0, move2d.y);
+
+        if (oldRawMovementVector.magnitude == 0 && RawMovementVector.magnitude != 0)
+        {
+            WalkStartRequested?.Invoke();
+        }
+        else if (oldRawMovementVector.magnitude != 0 && RawMovementVector.magnitude == 0)
+        {
+            WalkStopRequested?.Invoke();
+        }
     }
 
     void DoFacing(CallbackContext c)
@@ -441,8 +452,19 @@ public class CharacterMovement : MonoBehaviour
 
     void UpdateProcessedVectors()
     {
+        Vector3 oldMovementVector = MovementVector;
+
         MovementVector = MovementVectorMiddleware(RawMovementVector, Time.deltaTime);
         FacingVector = FacingVectorMiddleware(RawFacingVector, Time.deltaTime);
+
+        if (oldMovementVector.magnitude == 0 && MovementVector.magnitude != 0)
+        {
+            StartedWalking?.Invoke();
+        }
+        else if (oldMovementVector.magnitude != 0 && MovementVector.magnitude == 0)
+        {
+            StoppedWalking?.Invoke();
+        }
     }
 
     void UpdateState()
