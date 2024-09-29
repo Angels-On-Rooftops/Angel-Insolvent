@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b69777f6532f143beafc733f9fc11f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RollingSpeed: 28
+  RollingSpeed: 24
   RollDuration: 0.3
   JumpOutHeight: 4
   ColliderHeight: 1
@@ -243,7 +243,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16c43a022fcd15947abbcaae405d8129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Acceleration: -5
+  AccelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.74
+      value: 0
+      inSlope: Infinity
+      outSlope: Infinity
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.75
+      value: 0
+      inSlope: -0.007646738
+      outSlope: -0.007646738
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: -8
+      inSlope: -1.2074823
+      outSlope: -1.2074823
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.18496418
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &292222662
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,7 +1354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1619467475368231865, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: WalkSpeed
-      value: 12
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1619467475368231865, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       propertyPath: CoyoteTime

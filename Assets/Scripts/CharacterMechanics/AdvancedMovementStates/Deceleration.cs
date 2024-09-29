@@ -5,12 +5,11 @@ using UnityEngine;
 public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
 {
     [SerializeField]
-    float Acceleration = -1;
+    AnimationCurve AccelerationCurve;
 
     void Start()
     {
         defaultWalkSpeed = Movement.WalkSpeed;
-        Acceleration = Mathf.Clamp(float.MinValue, 0, Acceleration);
     }
 
     public Dictionary<AdvancedMovementState, bool> Transitions =>
@@ -56,6 +55,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
 
     IEnumerator Decelerate()
     {
+        float timeElapsed = 0;
         while (Movement.WalkSpeed > defaultWalkSpeed)
         {
             if (Movement.RawMovementVector == Vector3.zero)
@@ -63,7 +63,8 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
                 doneDecelerating = true;
                 yield break;
             }
-            Movement.WalkSpeed += Acceleration * Time.deltaTime;
+            Movement.WalkSpeed += AccelerationCurve.Evaluate(timeElapsed) * Time.deltaTime;
+            timeElapsed += Time.deltaTime;
             yield return null;
         }
         doneDecelerating = true;
