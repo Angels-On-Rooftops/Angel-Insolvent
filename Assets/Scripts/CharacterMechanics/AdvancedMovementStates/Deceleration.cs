@@ -7,6 +7,9 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
     [SerializeField]
     AnimationCurve AccelerationCurve;
 
+    [SerializeField]
+    float MaxSpeed;
+
     void Start()
     {
         defaultWalkSpeed = Movement.WalkSpeed;
@@ -46,6 +49,11 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
                 StopCoroutine(decelerateRoutine);
             }
         });
+
+        if (Movement.WalkSpeed > MaxSpeed)
+        {
+            Movement.WalkSpeed = MaxSpeed;
+        }
     }
 
     public void TransitioningFrom()
