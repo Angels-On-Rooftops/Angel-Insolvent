@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
 {
+    float defaultWalkSpeed;
+
+    void Start()
+    {
+        defaultWalkSpeed = Movement.WalkSpeed;
+    }
+
     public Dictionary<string, object> MovementProperties => new();
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()

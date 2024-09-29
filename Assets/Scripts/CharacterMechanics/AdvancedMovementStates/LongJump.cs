@@ -11,7 +11,7 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     float PushOffSpeed = 24;
 
     [SerializeField]
-    float SpeedLimit;
+    float MaxSpeedFromLongJump;
 
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
@@ -22,13 +22,12 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     public Dictionary<string, object> MovementProperties =>
         new()
         {
-            { "WalkSpeed", PushOffSpeed },
             { "JumpHeight", GetComponent<Roll>().JumpOutHeight },
             { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
             { "FacingVectorMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
         };
 
-    public List<string> HoldFromPreviousState => new() { };
+    public List<string> HoldFromPreviousState => new() { "WalkSpeed" };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
@@ -41,6 +40,11 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
 
     public void TransitionedTo()
     {
+        if (Movement.WalkSpeed < PushOffSpeed)
+        {
+            Movement.WalkSpeed = PushOffSpeed;
+        }
+
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
 
@@ -66,9 +70,10 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     IEnumerator Accelerate()
     {
         float timeElapsed = 0;
-        while (Movement.WalkSpeed < SpeedLimit)
+        while (Movement.WalkSpeed < MaxSpeedFromLongJump)
         {
             Movement.WalkSpeed += AccelerationCurve.Evaluate(timeElapsed) * Time.deltaTime;
+            Movement.WalkSpeed = Mathf.Clamp(Movement.WalkSpeed, 0, MaxSpeedFromLongJump);
             timeElapsed += Time.deltaTime;
             yield return null;
         }

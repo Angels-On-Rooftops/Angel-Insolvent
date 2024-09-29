@@ -30,7 +30,6 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     public Dictionary<string, object> MovementProperties =>
         new()
         {
-            { "WalkSpeed", RollingSpeed },
             { "JumpHeight", JumpOutHeight },
             { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
             { "FacingVectorMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
@@ -38,7 +37,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
             { "ExtraJumpsRemaining", 1 },
         };
 
-    public List<string> HoldFromPreviousState => new() { };
+    public List<string> HoldFromPreviousState => new() { "WalkSpeed" };
 
     public Vector3 RollingDirection = Vector3.zero;
 
@@ -57,6 +56,11 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         RollingDirection = Vector3.zero;
 
         timeStarted = Time.time;
+
+        if (Movement.WalkSpeed < RollingSpeed)
+        {
+            Movement.WalkSpeed = RollingSpeed;
+        }
 
         jumped = false;
         StateMaid.GiveEvent(Movement, "Jumped", (int _) => jumped = true);
