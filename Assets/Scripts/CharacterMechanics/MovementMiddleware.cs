@@ -14,7 +14,7 @@ public static class MovementMiddleware
             // set initial direction on first iteration
             if (movementDirection.magnitude == 0)
             {
-                movementDirection = movement.RawFacingDirection;
+                movementDirection = movement.RawFacingVector;
                 return movementDirection;
             }
 

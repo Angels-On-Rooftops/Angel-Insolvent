@@ -177,10 +177,10 @@ public class CharacterCamera : MonoBehaviour
         return FocusOn.position + FocusOn.rotation * FocusOffset;
     }
 
-    public Transform UpdateNextTransform()
+    public Transform GetNextCameraTransform()
     {
         NextTransform.position = Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
-            
+
         if (MitigateClipping)
         {
             SnapForwardToAvoidClipping(NextTransform);
@@ -201,7 +201,7 @@ public class CharacterCamera : MonoBehaviour
     {
         UpdateLockState();
         AddRotationDelta(GetRotationDeltaForFrame() * 360);
-        UpdateNextTransform();
+        GetNextCameraTransform();
 
         Vector3 nextPosition = NextTransform.position;
 

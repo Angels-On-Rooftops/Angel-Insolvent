@@ -17,5 +17,11 @@ static class VectorMath
     {
         return Apply(v, Mathf.Abs);
     }
+    public static (Vector3 acrossSlope, Vector3 downSlope) BasisVectorsOfSlope(Vector3 surfaceNormal, Vector3 up)
+    {
+        Vector3 acrossSlope = Vector3.Cross(surfaceNormal, up);
+
+        return (acrossSlope, Vector3.Cross(acrossSlope, up));
+    }
 
 }
