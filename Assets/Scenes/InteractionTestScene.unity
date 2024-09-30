@@ -1020,7 +1020,7 @@ GameObject:
   - component: {fileID: 155230859}
   m_Layer: 5
   m_Name: Item Name
-  m_TagString: Untagged
+  m_TagString: InventoryItemName
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1531,6 +1531,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIPrefab: {fileID: 1898114188681818198, guid: d9597a0bebcc3c34b9f2570eccd39169, type: 3}
+  player: {fileID: 0}
 --- !u!1 &358070969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1876,7 +1877,7 @@ GameObject:
   - component: {fileID: 379362180}
   m_Layer: 5
   m_Name: Description
-  m_TagString: Untagged
+  m_TagString: InventoryItemDescription
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9799,6 +9800,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UIDialoguePrefab: {fileID: 3629804214026305994, guid: bd869224a61a8c246926c4c72723d5cd, type: 3}
+  isActive: 0
+  instantiatedUIPrefab: {fileID: 0}
+  interactableOverlay: {fileID: 0}
 --- !u!1 &2006541606
 GameObject:
   m_ObjectHideFlags: 0
@@ -10716,6 +10720,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 468676850}
     m_Modifications:
+    - target: {fileID: 565035587448329236, guid: c51080746ab471f419bf3f2a4a8401ed, type: 3}
+      propertyPath: m_TagString
+      value: InventoryHealth
+      objectReference: {fileID: 0}
     - target: {fileID: 4710016999184927819, guid: c51080746ab471f419bf3f2a4a8401ed, type: 3}
       propertyPath: m_text
       value: 4
