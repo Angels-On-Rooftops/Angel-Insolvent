@@ -97,14 +97,16 @@ public class DialogueGraphView : GraphView
 
     //adds choices to node
         //output ports are invisible for some reason
-    public void AddChoicePort(DialogueNode dialogueNode, string overriddenPortName = "") {
+    public void AddChoicePort(DialogueNode dialogueNode, string overriddenPortName = "", string defaultPortName = null) {
         var generatePort = GeneratePort(dialogueNode,Direction.Output);
        
         var oldLabel = generatePort.contentContainer.Q<Label>("type");
         generatePort.contentContainer.Remove(oldLabel);
 
         var outputPortCount = dialogueNode.outputContainer.Query("connector").ToList().Count;
-        var choicePortName = string.IsNullOrEmpty(overriddenPortName) ? $"Choice {outputPortCount}" : overriddenPortName;
+        string choicePortName;
+        defaultPortName ??= $"Choice {outputPortCount}";
+        choicePortName = string.IsNullOrEmpty(overriddenPortName) ? defaultPortName : overriddenPortName;
 
         //character reponse
         var textField = new TextField {
@@ -163,5 +165,166 @@ public class DialogueGraphView : GraphView
         return compatiblePorts;
         }
 
-    
+    /*** Additional Types of Nodes ***/
+
+    //Creates new Checker Dialogue node
+    public DialogueNode CreateCheckerDialogueNode()
+    {
+        var dialogueNode = new DialogueNode
+        {
+            title = DialogueConstants.CheckerNodeName,
+            DialogueText = DialogueConstants.CheckerNodeName,
+            GUID = Guid.NewGuid().ToString()
+        };
+
+        //adds input port
+        var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
+        inputPort.portName = "Input";
+        dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
+
+        //buttons to add ports
+        var passButton = new Button(() => { AddChoicePort(dialogueNode, "Pass: [Insert Checker Index]"); });
+        passButton.text = "Add Pass Check";
+        dialogueNode.titleContainer.Add(passButton);
+        var failButton = new Button(() => { AddChoicePort(dialogueNode, "Fail: [Insert Checker Index]"); });
+        failButton.text = "Add Fail Check";
+        dialogueNode.titleContainer.Add(failButton);
+
+        return dialogueNode;
     }
+
+    //adds node to graph
+    public void CreateCheckerNode()
+    {
+        AddElement(CreateCheckerDialogueNode());
+    }
+
+    //Creates new Event node
+    public DialogueNode CreateEventTriggerNode()
+    {
+        var dialogueNode = new DialogueNode
+        {
+            title = DialogueConstants.EventNodeName,
+            DialogueText = DialogueConstants.EventNodeName,
+            GUID = Guid.NewGuid().ToString()
+        };
+
+        //adds input port
+        var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
+        inputPort.portName = "Input";
+        dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
+
+        //button to add event indices
+        var button = new Button(() => { AddChoicePort(dialogueNode, "[Insert Event Index]"); });
+        button.text = "Add Event";
+        dialogueNode.titleContainer.Add(button);
+
+        return dialogueNode;
+    }
+
+    //adds node to graph
+    public void CreateEventNode()
+    {
+        AddElement(CreateEventTriggerNode());
+    }
+
+    //Creates new Character node
+    public DialogueNode CreateNewCharacterSpeakingNode()
+    {
+        var dialogueNode = new DialogueNode
+        {
+            title = DialogueConstants.CharacterNodeName,
+            DialogueText = DialogueConstants.CharacterNodeName,
+            GUID = Guid.NewGuid().ToString()
+        };
+
+        //adds input port
+        var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
+        inputPort.portName = "Input";
+        dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
+
+        AddChoicePort(dialogueNode, "[Insert Character speaking next]");
+
+        return dialogueNode;
+    }
+
+    //adds node to graph
+    public void CreateCharacterNode()
+    {
+        AddElement(CreateNewCharacterSpeakingNode());
+    }
+
+    //Creates new Timer node (node that moves to the next node after a given amount of time)
+    public DialogueNode CreateNewMoveOnTimerNode(string nodeName)
+    {
+        var dialogueNode = new DialogueNode
+        {
+            title = nodeName,
+            DialogueText = nodeName,
+            GUID = Guid.NewGuid().ToString()
+        };
+
+        //adds input port
+        var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
+        inputPort.portName = "Input";
+        dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
+
+        //character dialogue
+        var textField = new TextField(string.Empty);
+        textField.RegisterValueChangedCallback(evt => {
+            dialogueNode.DialogueText = evt.newValue;
+            dialogueNode.title = evt.newValue;
+        });
+        textField.SetValueWithoutNotify(dialogueNode.title);
+        dialogueNode.mainContainer.Add(textField);
+
+        AddChoicePort(dialogueNode, "Time (sec): [Time before moving to next node in sec]");
+
+        return dialogueNode;
+    }
+
+    //adds node to graph
+    public void CreateTimerNode(string nodeName)
+    {
+        AddElement(CreateNewMoveOnTimerNode(nodeName));
+    }
+
+    //Creates new End node
+    public DialogueNode CreateEndHereNode()
+    {
+        var dialogueNode = new DialogueNode
+        {
+            title = DialogueConstants.EndNodeName,
+            DialogueText = DialogueConstants.EndNodeName,
+            GUID = Guid.NewGuid().ToString()
+        };
+
+        //adds input port
+        var inputPort = GeneratePort(dialogueNode, Direction.Input, Port.Capacity.Multi);
+        inputPort.portName = "Input";
+        dialogueNode.inputContainer.Add(inputPort);
+        dialogueNode.RefreshExpandedState();
+        dialogueNode.RefreshPorts();
+        dialogueNode.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
+
+        return dialogueNode;
+    }
+
+    //adds node to graph
+    public void CreateEndNode()
+    {
+        AddElement(CreateEndHereNode());
+    }
+}

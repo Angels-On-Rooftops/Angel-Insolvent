@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4e1e9000a09838479125337a49637ba, type: 3}
+  m_Name: OtherNodesDemo
+  m_EditorClassIdentifier: 
+  NodeLinks:
+  - BaseNodeGuID: a629b4cb-7f33-4e23-a214-ccfa822aa32b
+    PortName: Next
+    TargetNodeGuID: 0eeb3524-bf71-4e53-9eee-07e8559449a9
+  - BaseNodeGuID: 0eeb3524-bf71-4e53-9eee-07e8559449a9
+    PortName: ->
+    TargetNodeGuID: d40aaf8e-e5a1-4c1c-9af4-c1837a26883f
+  - BaseNodeGuID: d40aaf8e-e5a1-4c1c-9af4-c1837a26883f
+    PortName: Checker Node
+    TargetNodeGuID: e6611be1-e978-4656-a1e3-b64c7d3e135d
+  - BaseNodeGuID: e6611be1-e978-4656-a1e3-b64c7d3e135d
+    PortName: 'Pass: 0'
+    TargetNodeGuID: b7f9a9d9-cf54-4448-a759-5ca87b89bb71
+  - BaseNodeGuID: e6611be1-e978-4656-a1e3-b64c7d3e135d
+    PortName: 'Fail: 0'
+    TargetNodeGuID: e495e27d-eacb-4ff1-ba10-92d736e57bd7
+  - BaseNodeGuID: b7f9a9d9-cf54-4448-a759-5ca87b89bb71
+    PortName: ->
+    TargetNodeGuID: bd7672b6-8d8c-433d-8cd0-eac2893d4378
+  - BaseNodeGuID: e495e27d-eacb-4ff1-ba10-92d736e57bd7
+    PortName: ->
+    TargetNodeGuID: bd7672b6-8d8c-433d-8cd0-eac2893d4378
+  - BaseNodeGuID: bd7672b6-8d8c-433d-8cd0-eac2893d4378
+    PortName: 'Pass: 1'
+    TargetNodeGuID: dff86130-0e2e-4d54-8aa7-34e119888ea5
+  - BaseNodeGuID: bd7672b6-8d8c-433d-8cd0-eac2893d4378
+    PortName: 'Fail: 1'
+    TargetNodeGuID: e9438540-106a-44c1-947f-dcc9dbcdc686
+  - BaseNodeGuID: dff86130-0e2e-4d54-8aa7-34e119888ea5
+    PortName: ->
+    TargetNodeGuID: 5d91b11a-b636-4cca-baf6-c3895b096013
+  - BaseNodeGuID: e9438540-106a-44c1-947f-dcc9dbcdc686
+    PortName: ->
+    TargetNodeGuID: 5d91b11a-b636-4cca-baf6-c3895b096013
+  - BaseNodeGuID: d40aaf8e-e5a1-4c1c-9af4-c1837a26883f
+    PortName: Event Node
+    TargetNodeGuID: be75076b-c573-4dc0-a09c-e35ccac52497
+  - BaseNodeGuID: be75076b-c573-4dc0-a09c-e35ccac52497
+    PortName: 0
+    TargetNodeGuID: b38b1d49-3178-4adc-be9e-366c1300f5aa
+  - BaseNodeGuID: be75076b-c573-4dc0-a09c-e35ccac52497
+    PortName: 1
+    TargetNodeGuID: b38b1d49-3178-4adc-be9e-366c1300f5aa
+  - BaseNodeGuID: b38b1d49-3178-4adc-be9e-366c1300f5aa
+    PortName: ->
+    TargetNodeGuID: 4e34117e-808c-40ea-8406-54052bb30bb0
+  - BaseNodeGuID: d40aaf8e-e5a1-4c1c-9af4-c1837a26883f
+    PortName: Character Node
+    TargetNodeGuID: d43fd843-1c8a-413a-a1fc-dcb41b298465
+  - BaseNodeGuID: d43fd843-1c8a-413a-a1fc-dcb41b298465
+    PortName: New NPC Name
+    TargetNodeGuID: fdd48736-5b16-4e72-af21-269e9595511e
+  - BaseNodeGuID: fdd48736-5b16-4e72-af21-269e9595511e
+    PortName: ->
+    TargetNodeGuID: 4986f57c-379e-4e82-a9e0-c7f070219623
+  - BaseNodeGuID: d40aaf8e-e5a1-4c1c-9af4-c1837a26883f
+    PortName: Timed Node
+    TargetNodeGuID: 16590b93-b27c-4abf-9892-25e8d6e5628c
+  - BaseNodeGuID: 16590b93-b27c-4abf-9892-25e8d6e5628c
+    PortName: 'Time (sec): 5'
+    TargetNodeGuID: b9d7278a-0f8b-4371-bc32-5a935d6f583d
+  - BaseNodeGuID: b9d7278a-0f8b-4371-bc32-5a935d6f583d
+    PortName: ->
+    TargetNodeGuID: 3e7e11ce-f8a2-4a73-bb2d-4584bdd37f0f
+  DialogueNodeData:
+  - NodeGuID: 0eeb3524-bf71-4e53-9eee-07e8559449a9
+    DialogueText: Welcome to this Demo! Press the interact button to move forward
+      in this dialogue.
+    position: {x: 200, y: 200}
+  - NodeGuID: d40aaf8e-e5a1-4c1c-9af4-c1837a26883f
+    DialogueText: What do you want to see the demo for? (All of these will end on
+      an End Node.)
+    position: {x: 921, y: 200}
+  - NodeGuID: e6611be1-e978-4656-a1e3-b64c7d3e135d
+    DialogueText: CHECKER_NODE
+    position: {x: 1650, y: -15}
+  - NodeGuID: b7f9a9d9-cf54-4448-a759-5ca87b89bb71
+    DialogueText: If you see this, you have a Red item equipped.
+    position: {x: 2164, y: -111}
+  - NodeGuID: e495e27d-eacb-4ff1-ba10-92d736e57bd7
+    DialogueText: If you see this, you do NOT have a Red item equipped.
+    position: {x: 2164, y: 5}
+  - NodeGuID: bd7672b6-8d8c-433d-8cd0-eac2893d4378
+    DialogueText: CHECKER_NODE
+    position: {x: 2733, y: -65}
+  - NodeGuID: dff86130-0e2e-4d54-8aa7-34e119888ea5
+    DialogueText: If you see this, you collected at least 1 coin.
+    position: {x: 3234, y: -161}
+  - NodeGuID: e9438540-106a-44c1-947f-dcc9dbcdc686
+    DialogueText: If you see this, you did not collect any coins.
+    position: {x: 3234, y: -43}
+  - NodeGuID: 5d91b11a-b636-4cca-baf6-c3895b096013
+    DialogueText: END_NODE
+    position: {x: 3763, y: -103}
+  - NodeGuID: be75076b-c573-4dc0-a09c-e35ccac52497
+    DialogueText: EVENT_TRIGGER_NODE
+    position: {x: 1689, y: 195}
+  - NodeGuID: b38b1d49-3178-4adc-be9e-366c1300f5aa
+    DialogueText: Multiple Events were just called!
+    position: {x: 2083, y: 195}
+  - NodeGuID: d43fd843-1c8a-413a-a1fc-dcb41b298465
+    DialogueText: NEW_CHARACTER_SPEAKING_NODE
+    position: {x: 1701, y: 344}
+  - NodeGuID: fdd48736-5b16-4e72-af21-269e9595511e
+    DialogueText: My name tag just changed!
+    position: {x: 2083, y: 344}
+  - NodeGuID: 4e34117e-808c-40ea-8406-54052bb30bb0
+    DialogueText: END_NODE
+    position: {x: 2522, y: 195}
+  - NodeGuID: 4986f57c-379e-4e82-a9e0-c7f070219623
+    DialogueText: END_NODE
+    position: {x: 2491, y: 344}
+  - NodeGuID: 16590b93-b27c-4abf-9892-25e8d6e5628c
+    DialogueText: This text will show up for 5 seconds.
+    position: {x: 1701, y: 507}
+  - NodeGuID: b9d7278a-0f8b-4371-bc32-5a935d6f583d
+    DialogueText: The text changed after 5 seconds without input!
+    position: {x: 2083, y: 507}
+  - NodeGuID: 3e7e11ce-f8a2-4a73-bb2d-4584bdd37f0f
+    DialogueText: END_NODE
+    position: {x: 2613, y: 507}
