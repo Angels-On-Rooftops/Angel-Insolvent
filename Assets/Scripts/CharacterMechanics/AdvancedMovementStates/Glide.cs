@@ -44,15 +44,11 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
-        if (Movement.WalkSpeed < minWalkSpeed)
-        {
-            Movement.WalkSpeed = minWalkSpeed;
-        }
         if (Movement.WalkSpeed < DownSpeedContribCuttoff)
         {
             Movement.WalkSpeed = Mathf.Clamp(
                 Movement.WalkSpeed + (DownSpeedToHorizRate * -Movement.VerticalSpeed),
-                0,
+                Movement.WalkSpeed,
                 DownSpeedContribCuttoff
             );
         }
