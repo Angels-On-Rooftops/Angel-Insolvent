@@ -49,7 +49,7 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
 
     bool jumpedOffGround = false;
 
-    public void TransitionedTo()
+    public void TransitionedTo(AdvancedMovementState fromState)
     {
         hitWall = false;
         StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);

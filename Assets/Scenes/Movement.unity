@@ -266,7 +266,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RollingSpeed: 28
   RollDuration: 0.5
-  JumpOutHeight: 3
+  LongJumpHeight: 2
+  HighJumpHeight: 7
+  HighJumpWindow: 0.2
   ColliderHeight: 1
   RollingDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &153980800
@@ -281,6 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 713daf6daf8ef4b4d870a1923bc6ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StandardSpeed: 16
 --- !u!114 &153980804
 MonoBehaviour:
   m_ObjectHideFlags: 0

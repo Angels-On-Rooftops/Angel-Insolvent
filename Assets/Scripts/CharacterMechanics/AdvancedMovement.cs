@@ -118,7 +118,7 @@ public class AdvancedMovement : MonoBehaviour
 
         SetMovementProperties(States[CurrentState].MovementProperties);
 
-        States[state].TransitionedTo();
+        States[state].TransitionedTo(oldState);
         StateChanged?.Invoke(oldState, CurrentState);
     }
 

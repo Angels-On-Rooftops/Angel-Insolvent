@@ -36,7 +36,7 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
     bool movementStarted = false;
     bool rampDownEnded = false;
 
-    public void TransitionedTo()
+    public void TransitionedTo(AdvancedMovementState fromState)
     {
         if (Movement.WalkSpeed > defaultSpeed)
         {

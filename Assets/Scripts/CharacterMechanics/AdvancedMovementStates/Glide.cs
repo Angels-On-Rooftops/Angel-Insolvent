@@ -42,7 +42,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     bool pushedActionButton = false;
     bool jumpedOffGround = false;
 
-    public void TransitionedTo()
+    public void TransitionedTo(AdvancedMovementState fromState)
     {
         if (Movement.WalkSpeed < minWalkSpeed)
         {

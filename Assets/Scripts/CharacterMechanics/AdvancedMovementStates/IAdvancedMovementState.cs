@@ -12,7 +12,8 @@ public enum AdvancedMovementState
     Decelerating,
     MoveStarting,
     MoveStopping,
-    Gliding
+    Gliding,
+    HighJumping
 }
 
 public interface IAdvancedMovementStateSpec
@@ -22,7 +23,7 @@ public interface IAdvancedMovementStateSpec
 
     public List<string> HoldFromPreviousState { get; }
 
-    public void TransitionedTo();
+    public void TransitionedTo(AdvancedMovementState oldState);
 
     public void TransitioningFrom();
 }

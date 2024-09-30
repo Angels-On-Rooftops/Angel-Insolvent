@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
 {
-    public Dictionary<string, object> MovementProperties => new();
+    [SerializeField]
+    float StandardSpeed;
+
+    public Dictionary<string, object> MovementProperties =>
+        new() { { "WalkSpeed", StandardSpeed } };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
         {
@@ -26,7 +30,7 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
     bool movementEnded = false;
     bool jumpedOffGround = false;
 
-    public void TransitionedTo()
+    public void TransitionedTo(AdvancedMovementState fromState)
     {
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);

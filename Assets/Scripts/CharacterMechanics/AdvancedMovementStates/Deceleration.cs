@@ -39,7 +39,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
 
     readonly Maid StateMaid = new();
 
-    public void TransitionedTo()
+    public void TransitionedTo(AdvancedMovementState fromState)
     {
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);

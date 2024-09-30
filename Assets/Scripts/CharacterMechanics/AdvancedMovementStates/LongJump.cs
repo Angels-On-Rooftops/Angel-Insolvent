@@ -26,7 +26,7 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     public Dictionary<string, object> MovementProperties =>
         new()
         {
-            { "JumpHeight", GetComponent<Roll>().JumpOutHeight },
+            { "JumpHeight", GetComponent<Roll>().LongJumpHeight },
             { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
             { "FacingVectorMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
         };
@@ -42,7 +42,7 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     readonly Maid StateMaid = new();
     bool jumpedOffGround = false;
 
-    public void TransitionedTo()
+    public void TransitionedTo(AdvancedMovementState oldState)
     {
         if (Movement.WalkSpeed < PushOffSpeed)
         {

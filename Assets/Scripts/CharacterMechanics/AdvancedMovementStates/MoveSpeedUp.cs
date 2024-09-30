@@ -35,7 +35,7 @@ public class MoveSpeedUp : MonoBehaviour, IAdvancedMovementStateSpec
     bool movementEnded = false;
     bool rampUpEnded = false;
 
-    public void TransitionedTo()
+    public void TransitionedTo(AdvancedMovementState fromState)
     {
         Movement.WalkSpeed = 0;
 
