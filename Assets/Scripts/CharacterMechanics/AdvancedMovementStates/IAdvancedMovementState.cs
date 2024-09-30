@@ -7,7 +7,7 @@ public enum AdvancedMovementState
 {
     None,
     Rolling,
-    Diving,
+    Plunging,
     LongJumping,
     Decelerating,
     MoveStarting,

@@ -13,7 +13,7 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
-            { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
+            { AdvancedMovementState.Plunging, pushedActionButton && !Movement.IsOnGround() },
             { AdvancedMovementState.MoveStarting, movementStarted },
             { AdvancedMovementState.MoveStopping, movementEnded },
             { AdvancedMovementState.Gliding, jumpedOffGround },

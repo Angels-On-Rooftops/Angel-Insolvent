@@ -20,7 +20,7 @@ public class MoveSpeedUp : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
-            { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
+            { AdvancedMovementState.Plunging, pushedActionButton && !Movement.IsOnGround() },
             { AdvancedMovementState.MoveStopping, movementEnded },
             { AdvancedMovementState.None, rampUpEnded }
         };

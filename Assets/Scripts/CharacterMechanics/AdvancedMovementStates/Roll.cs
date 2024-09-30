@@ -27,7 +27,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { AdvancedMovementState.LongJumping, jumped && !canHighJump },
-            { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
+            { AdvancedMovementState.Plunging, pushedActionButton && !Movement.IsOnGround() },
             {
                 AdvancedMovementState.Decelerating,
                 (IsRollOver() && Movement.IsOnGround()) || hitWall
@@ -82,7 +82,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
         canHighJump = false;
         Coroutine highJumpCounter = null;
-        if (fromState == AdvancedMovementState.Diving)
+        if (fromState == AdvancedMovementState.Plunging)
         {
             canHighJump = true;
             Movement.JumpHeight = HighJumpHeight;

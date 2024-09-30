@@ -17,7 +17,7 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { AdvancedMovementState.Decelerating, hitWall || Movement.IsOnStableGround() },
-            { AdvancedMovementState.Diving, pushedActionButton },
+            { AdvancedMovementState.Plunging, pushedActionButton },
             {
                 AdvancedMovementState.Gliding,
                 jumpedOffGround && !Movement.IsOnStableGround() && Movement.ExtraJumpsRemaining == 0

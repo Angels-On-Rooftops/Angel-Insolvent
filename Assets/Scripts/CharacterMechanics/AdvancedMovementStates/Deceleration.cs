@@ -21,7 +21,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
             { AdvancedMovementState.None, doneDecelerating },
             { AdvancedMovementState.MoveStopping, controlLifted },
             { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
-            { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
+            { AdvancedMovementState.Plunging, pushedActionButton && !Movement.IsOnGround() },
             { AdvancedMovementState.Gliding, jumpedOffGround },
         };
 

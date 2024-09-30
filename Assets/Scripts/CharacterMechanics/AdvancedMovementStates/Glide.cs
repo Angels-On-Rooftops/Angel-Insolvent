@@ -30,7 +30,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { AdvancedMovementState.Decelerating, Movement.IsOnStableGround() || jumpedOffGround },
-            { AdvancedMovementState.Diving, !Movement.IsOnStableGround() && pushedActionButton },
+            { AdvancedMovementState.Plunging, !Movement.IsOnStableGround() && pushedActionButton },
         };
 
     public List<string> HoldFromPreviousState => new() { "WalkSpeed", "VerticalSpeed" };

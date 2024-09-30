@@ -22,7 +22,7 @@ public class AdvancedMovement : MonoBehaviour
             { AdvancedMovementState.None, GetComponent<DefaultMovement>() },
             { AdvancedMovementState.Rolling, GetComponent<Roll>() },
             { AdvancedMovementState.LongJumping, GetComponent<LongJump>() },
-            { AdvancedMovementState.Diving, GetComponent<Dive>() },
+            { AdvancedMovementState.Plunging, GetComponent<Plunge>() },
             { AdvancedMovementState.Decelerating, GetComponent<Deceleration>() },
             { AdvancedMovementState.MoveStarting, GetComponent<MoveSpeedUp>() },
             { AdvancedMovementState.MoveStopping, GetComponent<MoveSpeedDown>() },
