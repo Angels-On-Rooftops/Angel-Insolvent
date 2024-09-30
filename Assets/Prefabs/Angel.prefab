@@ -36,7 +36,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 609318250586708756}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -177,10 +177,10 @@ MonoBehaviour:
   SnapToGround: 1
   MaximumSnappingDistance: 1
   VerticalSpeed: 0
-  RawMovementVector: {x: 0, y: 0, z: 0}
-  RawFacingVector: {x: 0, y: 0, z: 0}
-  FacingVector: {x: 0, y: 0, z: 0}
-  MovementVector: {x: 0, y: 0, z: 0}
+  RawMovementDirection: {x: 0, y: 0, z: 0}
+  RawFacingDirection: {x: 0, y: 0, z: 0}
+  FacingDirection: {x: 0, y: 0, z: 0}
+  MovementDirection: {x: 0, y: 0, z: 0}
   VerticalState: 0
 --- !u!114 &2654129792429376684
 MonoBehaviour:
