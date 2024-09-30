@@ -42,9 +42,6 @@ namespace Items.Collectables
                 wait = true;
                 player.GetComponent<PlayerManager>().IncreaseHealth(healthIncreaseWhenPass);
                 Debug.Log("Yay! Health +" + this.healthIncreaseWhenPass);
-            } else
-            {
-                elapsed -= Time.deltaTime;
             }
         }
 
@@ -55,14 +52,12 @@ namespace Items.Collectables
                 wait = true;
                 player.GetComponent<PlayerManager>().DecreaseHealth(healthDecreaseWhenFail);
                 Debug.Log("Ow! Health -" + this.healthDecreaseWhenFail);
-            } else
-            {
-                elapsed -= Time.deltaTime;
             }
         }
 
         private void Update()
         {
+            elapsed -= Time.deltaTime;
             if (elapsed <= 0)
             {
                 elapsed = 3f;

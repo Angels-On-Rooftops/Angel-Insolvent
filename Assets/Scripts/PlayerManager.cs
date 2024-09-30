@@ -17,7 +17,9 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         health = 4;
-        healthUI = inventory.transform.GetChild(2).gameObject.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+        inventory.SetActive(true);
+        healthUI = GameObject.FindWithTag("InventoryHealth").GetComponent<TextMeshProUGUI>();
+        inventory.SetActive(false);
     }
 
     public void IncreaseHealth(int amount = 1)
@@ -27,8 +29,7 @@ public class PlayerManager : MonoBehaviour
 
     public void DecreaseHealth(int amount = 1)
     {
-        if (health > 0) health -= amount;
-        if (health < 0) health = 0; // in the event that the health decrease amount brings the health to negative
+        health = Mathf.Max(health - amount, 0);
     }
 
     // Update is called once per frame

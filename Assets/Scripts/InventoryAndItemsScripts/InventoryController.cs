@@ -45,12 +45,16 @@ public class InventoryController : MonoBehaviour
     private GameObject invPanel; // main inventory panel within canvas
     private GameObject coins; // coin counter and icon
     private GameObject health; // health icon
-    private GameObject itemDesc; // item name & description
+    private GameObject itemInfo; // item name & description parent (holds the two fields below)
+    private GameObject itemName;
+    private GameObject itemDescription;
+
     private PlayerInventory pInv;
 
-    private List<GameObject> inventorySlots; // slots in the inventory panel
+    private List<GameObject> inventorySlots; // slots in the inventory 
     private List<ItemData> itemsInInventory; // list of items currently held in inventory
     private int inventoryIndex = 0;
+    private int inventoryRowSize;
     private UnityEngine.UI.Image selectedSlot;
 
     public GameObject GetInventoryPanel() { return inventory; }
@@ -61,7 +65,12 @@ public class InventoryController : MonoBehaviour
         invPanel = inventory.transform.GetChild(0).gameObject;
         coins = inventory.transform.GetChild(1).gameObject;
         health = inventory.transform.GetChild(2).gameObject;
-        itemDesc = inventory.transform.GetChild(3).gameObject;
+        itemInfo = inventory.transform.GetChild(3).gameObject;
+
+        inventory.SetActive(true);
+        itemName = GameObject.FindWithTag("InventoryItemName");
+        itemDescription = GameObject.FindWithTag("InventoryItemDescription");
+        inventory.SetActive(false);
 
         inventorySlots = new List<GameObject>();
         itemsInInventory = new List<ItemData>();
@@ -71,6 +80,7 @@ public class InventoryController : MonoBehaviour
             inventorySlots.Add(child.gameObject);
         }
 
+        inventoryRowSize = invPanel.GetComponent<GridLayoutGroup>().constraintCount;
         selectedSlot = invPanel.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Image>();
     }
 
@@ -140,7 +150,7 @@ public class InventoryController : MonoBehaviour
     {
         if (inventory.activeSelf)
         {
-            if (inventoryIndex > 0 && inventoryIndex % 6 != 0) 
+            if (inventoryIndex > 0 && inventoryIndex % inventoryRowSize != 0) 
             {
                 inventoryIndex--;
                 selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
@@ -154,7 +164,7 @@ public class InventoryController : MonoBehaviour
     {
         if (inventory.activeSelf)
         {
-            if (inventoryIndex < inventorySlots.Count && inventoryIndex % 6 != 5)
+            if (inventoryIndex < inventorySlots.Count && inventoryIndex % inventoryRowSize != inventoryRowSize - 1)
             {
                 inventoryIndex++;
                 selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
@@ -168,7 +178,7 @@ public class InventoryController : MonoBehaviour
     {
         if (inventory.activeSelf)
         {
-            if (inventoryIndex > 5) inventoryIndex -= 6;
+            if (inventoryIndex > inventoryRowSize - 1) inventoryIndex -= inventoryRowSize;
             selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
             selectedSlot.transform.position = invPanel.transform.GetChild(inventoryIndex).position;
             Debug.Log(inventoryIndex);
@@ -179,7 +189,7 @@ public class InventoryController : MonoBehaviour
     {
         if (inventory.activeSelf)
         {
-            if (inventoryIndex < inventorySlots.Count - 6) inventoryIndex += 6;
+            if (inventoryIndex < inventorySlots.Count - inventoryRowSize) inventoryIndex += inventoryRowSize;
             selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
             selectedSlot.transform.position = invPanel.transform.GetChild(inventoryIndex).position;
             Debug.Log(inventoryIndex);
@@ -211,17 +221,15 @@ public class InventoryController : MonoBehaviour
             pInv.ItemDictionary.Remove(key);
         }
 
-        var title = itemDesc.transform.GetChild(0).gameObject;
-        var desc = itemDesc.transform.GetChild(1).gameObject;
         if (itemsInInventory.Count > inventoryIndex)
         {
-            itemDesc.SetActive(true);
-            title.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemName;
-            desc.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemDesc;
+            itemInfo.SetActive(true);
+            itemName.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemName;
+            itemDescription.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemDesc;
         }
         else
         {
-            itemDesc.SetActive(false);
+            itemInfo.SetActive(false);
         }
     }
 }
