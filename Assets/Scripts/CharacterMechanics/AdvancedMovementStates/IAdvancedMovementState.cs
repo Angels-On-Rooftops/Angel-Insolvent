@@ -10,8 +10,9 @@ public enum AdvancedMovementState
     Diving,
     LongJumping,
     Decelerating,
-    MoveStart,
-    MoveStop
+    MoveStarting,
+    MoveStopping,
+    Gliding
 }
 
 public interface IAdvancedMovementStateSpec

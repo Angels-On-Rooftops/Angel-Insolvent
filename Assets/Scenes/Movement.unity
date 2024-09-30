@@ -535,6 +535,45 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &153980817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 153980790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cef16da5a082c54db5215f455ce4c5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TerminalVelocity: 16
+  DownSpeedContribCuttoff: 28
+  DownSpeedToHorizRate: 0.1
+  UpSpeedDampAcceleration:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -60
+      inSlope: -43.212826
+      outSlope: -43.212826
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.037113402
+    - serializedVersion: 3
+      time: 1
+      value: -80
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &292222662
 GameObject:
   m_ObjectHideFlags: 0
@@ -2021,6 +2060,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2782100389994345560, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       insertIndex: -1
       addedObject: {fileID: 153980812}
+    - targetCorrespondingSourceObject: {fileID: 2782100389994345560, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 153980817}
     - targetCorrespondingSourceObject: {fileID: 2782100389994345560, guid: a08bde3c7cb5cf842a22b99c73ef1f22, type: 3}
       insertIndex: -1
       addedObject: {fileID: 153980808}

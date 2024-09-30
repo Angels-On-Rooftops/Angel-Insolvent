@@ -18,6 +18,10 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
         {
             { AdvancedMovementState.Decelerating, hitWall || Movement.IsOnStableGround() },
             { AdvancedMovementState.Diving, pushedActionButton },
+            {
+                AdvancedMovementState.Gliding,
+                jumpedOffGround && !Movement.IsOnStableGround() && Movement.ExtraJumpsRemaining == 0
+            },
         };
     public Dictionary<string, object> MovementProperties =>
         new()
@@ -36,7 +40,7 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
         landed,
         pushedActionButton;
     readonly Maid StateMaid = new();
-    bool doneAccelerating = false;
+    bool jumpedOffGround = false;
 
     public void TransitionedTo()
     {
@@ -51,7 +55,9 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
         hitWall = false;
         StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);
 
-        doneAccelerating = false;
+        jumpedOffGround = false;
+        StateMaid.GiveEvent(Movement, "JumpRequested", () => jumpedOffGround = true);
+
         Coroutine accelerateRoutine = StartCoroutine(Accelerate());
         StateMaid.GiveTask(() =>
         {
@@ -77,6 +83,5 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        doneAccelerating = true;
     }
 }

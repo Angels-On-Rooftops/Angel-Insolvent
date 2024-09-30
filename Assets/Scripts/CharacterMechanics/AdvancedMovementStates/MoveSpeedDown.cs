@@ -22,7 +22,7 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
         {
             { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
             { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
-            { AdvancedMovementState.MoveStart, movementStarted },
+            { AdvancedMovementState.MoveStarting, movementStarted },
             { AdvancedMovementState.None, rampDownEnded }
         };
 

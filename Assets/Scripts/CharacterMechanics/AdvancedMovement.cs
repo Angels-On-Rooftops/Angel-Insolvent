@@ -24,8 +24,9 @@ public class AdvancedMovement : MonoBehaviour
             { AdvancedMovementState.LongJumping, GetComponent<LongJump>() },
             { AdvancedMovementState.Diving, GetComponent<Dive>() },
             { AdvancedMovementState.Decelerating, GetComponent<Deceleration>() },
-            { AdvancedMovementState.MoveStart, GetComponent<MoveSpeedUp>() },
-            { AdvancedMovementState.MoveStop, GetComponent<MoveSpeedDown>() },
+            { AdvancedMovementState.MoveStarting, GetComponent<MoveSpeedUp>() },
+            { AdvancedMovementState.MoveStopping, GetComponent<MoveSpeedDown>() },
+            { AdvancedMovementState.Gliding, GetComponent<Glide>() },
         };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
@@ -100,10 +101,11 @@ public class AdvancedMovement : MonoBehaviour
     {
         States[oldState].TransitioningFrom();
 
-        Dictionary<string, object> DefaultMovementPropertiesMinusHoldProperties = DictionaryUtil.RemoveKeys(
-            DefaultMovementProperties,
-            States[newState].HoldFromPreviousState
-        );
+        Dictionary<string, object> DefaultMovementPropertiesMinusHoldProperties =
+            DictionaryUtil.RemoveKeys(
+                DefaultMovementProperties,
+                States[newState].HoldFromPreviousState
+            );
 
         SetMovementProperties(DefaultMovementPropertiesMinusHoldProperties);
     }

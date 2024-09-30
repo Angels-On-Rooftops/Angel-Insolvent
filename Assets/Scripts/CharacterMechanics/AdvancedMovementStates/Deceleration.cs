@@ -19,9 +19,10 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { AdvancedMovementState.None, doneDecelerating },
-            { AdvancedMovementState.MoveStop, controlLifted },
+            { AdvancedMovementState.MoveStopping, controlLifted },
             { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
             { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
+            { AdvancedMovementState.Gliding, jumpedOffGround },
         };
 
     public List<string> HoldFromPreviousState => new() { "WalkSpeed" };
@@ -33,6 +34,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
     bool pushedActionButton = false;
     bool doneDecelerating = false;
     bool controlLifted = false;
+    bool jumpedOffGround = false;
     float defaultWalkSpeed;
 
     readonly Maid StateMaid = new();
@@ -73,6 +75,19 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
                 StopCoroutine(fastDecelerationRoutine);
             }
         });
+
+        jumpedOffGround = false;
+        StateMaid.GiveEvent(
+            Movement,
+            "JumpRequested",
+            () =>
+            {
+                if (Movement.VerticalState != VerticalMovementState.Grounded)
+                {
+                    jumpedOffGround = true;
+                }
+            }
+        );
     }
 
     public void TransitioningFrom()

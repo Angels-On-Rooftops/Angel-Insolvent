@@ -25,6 +25,10 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
         {
             { AdvancedMovementState.Rolling, Movement.IsOnStableGround() },
             { AdvancedMovementState.None, hitWall },
+            {
+                AdvancedMovementState.Gliding,
+                jumpedOffGround && !Movement.IsOnGround() && Movement.ExtraJumpsRemaining == 0
+            },
         };
     public Dictionary<string, object> MovementProperties =>
         new()
@@ -39,17 +43,19 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
 
-    bool landed,
-        hitWall;
+    bool hitWall;
 
     Maid StateMaid = new();
 
-    bool doneDecelerating = false;
+    bool jumpedOffGround = false;
 
     public void TransitionedTo()
     {
         hitWall = false;
         StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);
+
+        jumpedOffGround = false;
+        StateMaid.GiveEvent(Movement, "JumpRequested", () => jumpedOffGround = true);
 
         Coroutine decelerateRoutine = StartCoroutine(Decelerate());
         StateMaid.GiveTask(() =>
@@ -75,7 +81,6 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
         {
             if (Movement.RawMovementVector == Vector3.zero)
             {
-                doneDecelerating = true;
                 Movement.WalkSpeed = MinAdjustSpeed;
                 yield break;
             }
@@ -83,7 +88,6 @@ public class Dive : MonoBehaviour, IAdvancedMovementStateSpec
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        doneDecelerating = true;
         Movement.WalkSpeed = MinAdjustSpeed;
     }
 }
