@@ -79,7 +79,7 @@ public class Plunge : MonoBehaviour, IAdvancedMovementStateSpec
         float timeElapsed = 0;
         while (Movement.WalkSpeed > MinAdjustSpeed)
         {
-            if (Movement.RawMovementVector == Vector3.zero)
+            if (Movement.RawMovementDirection == Vector3.zero)
             {
                 Movement.WalkSpeed = MinAdjustSpeed;
                 yield break;

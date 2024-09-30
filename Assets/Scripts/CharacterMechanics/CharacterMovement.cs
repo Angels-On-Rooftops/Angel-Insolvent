@@ -171,12 +171,12 @@ public class CharacterMovement : MonoBehaviour
     //[NonSerialized]
     public float VerticalSpeed = 0;
 
-    public Vector3 RawMovementVector = new();
-    public Vector3 RawFacingVector = new();
-    public Func<Vector3, float, Vector3> MovementVectorMiddleware = (v, dt) => v;
-    public Func<Vector3, float, Vector3> FacingVectorMiddleware = (v, dt) => v;
-    public Vector3 FacingVector = new();
-    public Vector3 MovementVector = new();
+    public Vector3 RawMovementDirection = new();
+    public Vector3 RawFacingDirection = new();
+    public Func<Vector3, float, Vector3> MovementDirectionMiddleware = (v, dt) => v;
+    public Func<Vector3, float, Vector3> FacingDirectionMiddleware = (v, dt) => v;
+    public Vector3 FacingDirection = new();
+    public Vector3 MovementDirection = new();
 
     [NonSerialized]
     public int ExtraJumpsRemaining = 0;
@@ -205,7 +205,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void Awake()
     {
-        FacingVectorMiddleware = FacingMiddleware.UpdateOnlyWhenMoving(this);
+        FacingDirectionMiddleware = FacingMiddleware.UpdateOnlyWhenMoving(this);
     }
 
     void OnEnable()
@@ -231,16 +231,16 @@ public class CharacterMovement : MonoBehaviour
 
     void DoWalk(CallbackContext c)
     {
-        Vector3 oldRawMovementVector = RawMovementVector;
+        Vector3 oldRawMovementDirection = RawMovementDirection;
 
         Vector2 move2d = c.ReadValue<Vector2>();
-        RawMovementVector = new Vector3(move2d.x, 0, move2d.y);
+        RawMovementDirection = new Vector3(move2d.x, 0, move2d.y);
 
-        if (oldRawMovementVector.magnitude == 0 && RawMovementVector.magnitude != 0)
+        if (oldRawMovementDirection.magnitude == 0 && RawMovementDirection.magnitude != 0)
         {
             WalkStartRequested?.Invoke();
         }
-        else if (oldRawMovementVector.magnitude != 0 && RawMovementVector.magnitude == 0)
+        else if (oldRawMovementDirection.magnitude != 0 && RawMovementDirection.magnitude == 0)
         {
             WalkStopRequested?.Invoke();
         }
@@ -252,7 +252,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (newDirection.magnitude > 0)
         {
-            RawFacingVector = new Vector3(newDirection.x, 0, newDirection.y).normalized;
+            RawFacingDirection = new Vector3(newDirection.x, 0, newDirection.y).normalized;
         }
     }
 
@@ -317,7 +317,7 @@ public class CharacterMovement : MonoBehaviour
             return Vector3.zero;
         }
 
-        return Quaternion.LookRotation(-forwardVector, Vector3.up) * MovementVector * WalkSpeed;
+        return Quaternion.LookRotation(-forwardVector, Vector3.up) * MovementDirection * WalkSpeed;
     }
 
     (bool didHit, RaycastHit hit) GroundInfo(float checkDistance)
@@ -420,7 +420,7 @@ public class CharacterMovement : MonoBehaviour
         // subtract the component of the move velocity that's going up too steep of a slope
         if (
             GroundAngle(Controller.height / 2 + dx) > Controller.slopeLimit
-            && Vector3.Dot(FacingVector, downSlope) > 0
+            && Vector3.Dot(FacingDirection, downSlope) > 0
         )
         {
             moveVelocity -= Vector3.Project(
@@ -432,7 +432,7 @@ public class CharacterMovement : MonoBehaviour
         // make character slip off edge to prevent being stuck on the very edge of a platform
         if (IsOnSteepSlope() && GroundNormal(Controller.height).magnitude == 0)
         {
-            moveVelocity += FacingVector;
+            moveVelocity += FacingDirection;
         }
 
         // redirect vertical speed down the slope if moving downwards
@@ -447,21 +447,21 @@ public class CharacterMovement : MonoBehaviour
 
     void ApplyRotation()
     {
-        transform.LookAt(transform.position + FacingVector, GravityUpDirection);
+        transform.LookAt(transform.position + FacingDirection, GravityUpDirection);
     }
 
     void UpdateProcessedVectors()
     {
-        Vector3 oldMovementVector = MovementVector;
+        Vector3 oldMovementVector = MovementDirection;
 
-        MovementVector = MovementVectorMiddleware(RawMovementVector, Time.deltaTime);
-        FacingVector = FacingVectorMiddleware(RawFacingVector, Time.deltaTime);
+        MovementDirection = MovementDirectionMiddleware(RawMovementDirection, Time.deltaTime);
+        FacingDirection = FacingDirectionMiddleware(RawFacingDirection, Time.deltaTime);
 
-        if (oldMovementVector.magnitude == 0 && MovementVector.magnitude != 0)
+        if (oldMovementVector.magnitude == 0 && MovementDirection.magnitude != 0)
         {
             StartedWalking?.Invoke();
         }
-        else if (oldMovementVector.magnitude != 0 && MovementVector.magnitude == 0)
+        else if (oldMovementVector.magnitude != 0 && MovementDirection.magnitude == 0)
         {
             StoppedWalking?.Invoke();
         }

@@ -12,12 +12,12 @@ public static class FacingMiddleware
 
         return (v, dt) =>
         {
-            if (movement.MovementVector.magnitude == 0)
+            if (movement.MovementDirection.magnitude == 0)
             {
-                return movement.FacingVector;
+                return movement.FacingDirection;
             }
 
-            return Quaternion.LookRotation(-movement.ForwardMovementDirectionFromCamera(), Vector3.up) * movement.RawFacingVector;
+            return Quaternion.LookRotation(-movement.ForwardMovementDirectionFromCamera(), Vector3.up) * movement.RawFacingDirection;
         };
     }
 
@@ -25,7 +25,7 @@ public static class FacingMiddleware
     {
         return (v, dt) =>
         {
-            return Quaternion.LookRotation(-movement.ForwardMovementDirectionFromCamera(), Vector3.up) * movement.MovementVector.normalized;
+            return Quaternion.LookRotation(-movement.ForwardMovementDirectionFromCamera(), Vector3.up) * movement.MovementDirection.normalized;
         };
     }
 }

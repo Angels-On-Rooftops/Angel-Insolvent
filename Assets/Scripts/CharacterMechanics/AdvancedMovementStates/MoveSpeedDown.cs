@@ -16,7 +16,7 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
     }
 
     public Dictionary<string, object> MovementProperties =>
-        new() { { "MovementVectorMiddleware", MovementMiddleware.MoveInLookDir(Movement) }, };
+        new() { { "MovementDirectionMiddleware", MovementMiddleware.MoveInLookDir(Movement) }, };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
         {

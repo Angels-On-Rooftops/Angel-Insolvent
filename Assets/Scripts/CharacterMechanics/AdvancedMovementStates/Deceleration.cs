@@ -100,7 +100,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
         float timeElapsed = 0;
         while (Movement.WalkSpeed > defaultWalkSpeed)
         {
-            if (Movement.RawMovementVector == Vector3.zero)
+            if (Movement.RawMovementDirection == Vector3.zero)
             {
                 controlLifted = true;
                 Movement.WalkSpeed = defaultWalkSpeed;

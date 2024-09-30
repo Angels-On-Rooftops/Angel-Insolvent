@@ -39,8 +39,8 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { "JumpHeight", LongJumpHeight },
-            { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
-            { "FacingVectorMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
+            { "MovementDirectionMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 3.5f) },
+            { "FacingDirectionMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
             { "Jumps", 2 },
             { "ExtraJumpsRemaining", 1 },
         };

@@ -17,7 +17,7 @@ public static class MovementMiddleware
                 // set initial direction on first iteration
                 if (movementDirection.magnitude == 0)
                 {
-                    movementDirection = movement.RawFacingVector;
+                    movementDirection = movement.RawFacingDirection;
                     return movementDirection;
                 }
 
@@ -39,7 +39,7 @@ public static class MovementMiddleware
         return new Func<Vector3, float, Vector3>(
             (rawVector, dt) =>
             {
-                return movement.RawFacingVector;
+                return movement.RawFacingDirection;
             }
         );
     }

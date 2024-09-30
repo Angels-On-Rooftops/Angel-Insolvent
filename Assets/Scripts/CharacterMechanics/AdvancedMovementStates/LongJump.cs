@@ -27,8 +27,8 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { "JumpHeight", GetComponent<Roll>().LongJumpHeight },
-            { "MovementVectorMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
-            { "FacingVectorMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
+            { "MovementDirectionMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
+            { "FacingDirectionMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
         };
 
     public List<string> HoldFromPreviousState => new() { "WalkSpeed" };
