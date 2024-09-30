@@ -34,4 +34,13 @@ public static class MovementMiddleware
         );
     }
 
+    public static Func<Vector3, float, Vector3> MoveInLookDir(CharacterMovement movement)
+    {
+        return new Func<Vector3, float, Vector3>(
+            (rawVector, dt) =>
+            {
+                return movement.RawFacingVector;
+            }
+        );
+    }
 }

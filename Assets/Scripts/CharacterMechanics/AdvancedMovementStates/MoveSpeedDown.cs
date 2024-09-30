@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
 {
-
     [SerializeField]
     AnimationCurve AccelerationCurve;
 
@@ -16,9 +15,8 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
         defaultSpeed = Movement.WalkSpeed;
     }
 
-    public Dictionary<string, object> MovementProperties => new() {
-        
-    };
+    public Dictionary<string, object> MovementProperties =>
+        new() { { "MovementVectorMiddleware", MovementMiddleware.MoveInLookDir(Movement) }, };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
         {
@@ -28,7 +26,7 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
             { AdvancedMovementState.None, rampDownEnded }
         };
 
-    public List<string> HoldFromPreviousState => new() { };
+    public List<string> HoldFromPreviousState => new() { "WalkSpeed" };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
@@ -40,7 +38,10 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
 
     public void TransitionedTo()
     {
-        Movement.WalkSpeed = defaultSpeed;
+        if (Movement.WalkSpeed > defaultSpeed)
+        {
+            Movement.WalkSpeed = defaultSpeed;
+        }
 
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
@@ -59,7 +60,6 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
         });
     }
 
-
     public void TransitioningFrom()
     {
         StateMaid.Cleanup();
@@ -75,7 +75,6 @@ public class MoveSpeedDown : MonoBehaviour, IAdvancedMovementStateSpec
             yield return null;
         }
         rampDownEnded = true;
-        Debug.Log("here");
         Movement.WalkSpeed = 0;
     }
 }

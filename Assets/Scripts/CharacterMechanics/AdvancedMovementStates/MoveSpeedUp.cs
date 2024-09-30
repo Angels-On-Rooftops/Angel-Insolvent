@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class MoveSpeedUp : MonoBehaviour, IAdvancedMovementStateSpec
 {
-
     [SerializeField]
     AnimationCurve AccelerationCurve;
 
@@ -16,16 +15,14 @@ public class MoveSpeedUp : MonoBehaviour, IAdvancedMovementStateSpec
         defaultSpeed = Movement.WalkSpeed;
     }
 
-    public Dictionary<string, object> MovementProperties => new() {
-        
-    };
+    public Dictionary<string, object> MovementProperties => new() { };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
         {
             { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
             { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
             { AdvancedMovementState.MoveStop, movementEnded },
-            {AdvancedMovementState.None, rampUpEnded }
+            { AdvancedMovementState.None, rampUpEnded }
         };
 
     public List<string> HoldFromPreviousState => new() { };
@@ -58,7 +55,6 @@ public class MoveSpeedUp : MonoBehaviour, IAdvancedMovementStateSpec
             }
         });
     }
-
 
     public void TransitioningFrom()
     {
