@@ -34,19 +34,4 @@ public static class MovementMiddleware
         );
     }
 
-    public static Func<Vector3, float, Vector3> WalkIn(
-        CharacterMovement movement,
-        float target,
-        AnimationCurve accCurve
-    )
-    {
-        Vector3 movementDirection = Vector3.zero;
-
-        return new Func<Vector3, float, Vector3>(
-            (rawVector, dt) =>
-            {
-                return movementDirection;
-            }
-        );
-    }
 }

@@ -19,6 +19,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
         new()
         {
             { AdvancedMovementState.None, doneDecelerating },
+            { AdvancedMovementState.MoveStop, controlLifted },
             { AdvancedMovementState.Rolling, pushedActionButton && Movement.IsOnGround() },
             { AdvancedMovementState.Diving, pushedActionButton && !Movement.IsOnGround() },
         };
@@ -31,6 +32,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
     bool pushedActionButton = false;
     bool doneDecelerating = false;
+    bool controlLifted = false;
     float defaultWalkSpeed;
 
     readonly Maid StateMaid = new();
@@ -41,6 +43,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
 
         doneDecelerating = false;
+        controlLifted = false;
         Coroutine normalDecelerateRoutine = StartCoroutine(Decelerate(AccelerationCurve));
         StateMaid.GiveTask(() =>
         {
@@ -84,7 +87,7 @@ public class Deceleration : MonoBehaviour, IAdvancedMovementStateSpec
         {
             if (Movement.RawMovementVector == Vector3.zero)
             {
-                doneDecelerating = true;
+                controlLifted = true;
                 Movement.WalkSpeed = defaultWalkSpeed;
                 yield break;
             }
