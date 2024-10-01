@@ -68,15 +68,13 @@ public class FileDataHandler
         }
     }
 
-    public object ReadObjectFromJson(string jsonTag, Type returnType)
+    public object ReadObjectFromJson(Type type)
     {
         try
         {
-            fileReader.DiscardBufferedData();
-            fileReader.BaseStream.Seek(0, SeekOrigin.Begin);
-            string data = GetSingleJsonObjectString(jsonTag);
+            string data = fileReader.ReadToEnd();
             var method = typeof(JsonUtility).GetMethod("FromJson", new Type[] { typeof(string) });
-            var genericMethod = method.MakeGenericMethod(returnType);
+            var genericMethod = method.MakeGenericMethod(type);
             return genericMethod.Invoke(null, new object[] { data });
         }
         catch (Exception e)
@@ -84,41 +82,6 @@ public class FileDataHandler
             Debug.LogError("Error occured when trying to read file: " + fullPath + "\n" + e);
             return null;
         }
-    }
-
-    private string GetSingleJsonObjectString(string tag)
-    {
-        string array = "";
-        string json = fileReader.ReadToEnd();
-        int startIndex = json.IndexOf(tag);
-        if (startIndex != -1)
-        {
-            startIndex = json.Substring(0, startIndex).LastIndexOf("{");
-            //Find index of corresponding closing brace
-            int endIndex = -1;
-            Stack<char> braces = new Stack<char>();
-            for(int i = startIndex; i < json.Length; i++)
-            {
-                if (json[i] == '{')
-                {
-                    braces.Push(char.ToUpper(json[i]));
-                } else if (json[i] == '}')
-                {
-                    braces.Pop();
-                    if(braces.Count == 0)
-                    {
-                        endIndex = i;
-                        break;
-                    }
-                }
-            }
-
-            if(endIndex != -1)
-            {
-                array = json.Substring(startIndex, (endIndex - startIndex) + 1);
-            }
-        }
-        return array;
     }
 
     //Close file methods

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Inventory;
-using System.Threading;
 
 namespace Items.Collectables
 {
@@ -12,11 +11,8 @@ namespace Items.Collectables
     {
         [SerializeField] int healthIncreaseWhenPass;
         [SerializeField] int healthDecreaseWhenFail;
-        [SerializeField] PlayerManager player;
 
         private AreaThatChecksInventory area;
-        private float elapsed = 3f;
-        private bool wait = false;
 
         private void Awake()
         {
@@ -37,31 +33,19 @@ namespace Items.Collectables
 
         void IncreaseHealth(GameObject player)
         {
-            if (this.healthIncreaseWhenPass > 0 && !wait)
+            if (this.healthIncreaseWhenPass > 0)
             {
-                wait = true;
-                player.GetComponent<PlayerManager>().IncreaseHealth(healthIncreaseWhenPass);
+                //Would replace with call to player and update player health
                 Debug.Log("Yay! Health +" + this.healthIncreaseWhenPass);
             }
         }
 
         void DecreaseHealth(GameObject player)
         {
-            if (this.healthDecreaseWhenFail > 0 && !wait)
+            if (this.healthDecreaseWhenFail > 0)
             {
-                wait = true;
-                player.GetComponent<PlayerManager>().DecreaseHealth(healthDecreaseWhenFail);
+                //Would replace with call to player and update player health
                 Debug.Log("Ow! Health -" + this.healthDecreaseWhenFail);
-            }
-        }
-
-        private void Update()
-        {
-            elapsed -= Time.deltaTime;
-            if (elapsed <= 0)
-            {
-                elapsed = 3f;
-                wait = false;
             }
         }
     }
