@@ -657,6 +657,7 @@ Transform:
   - {fileID: 362316391}
   - {fileID: 1177774036}
   - {fileID: 305064243}
+  - {fileID: 2027907197}
   - {fileID: 1717011213}
   - {fileID: 82550906}
   - {fileID: 1966126498}
@@ -1744,10 +1745,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1966126498}
     m_Modifications:
-    - target: {fileID: 1146463842679653827, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3848495301077386676, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1795,18 +1792,6 @@ PrefabInstance:
     - target: {fileID: 4713215852763238010, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
       propertyPath: m_Name
       value: InteractableOverlay
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: actionText
-      value: Talk
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: buttonText
-      value: E
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: objectNameText
-      value: NPC
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1939,10 +1924,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 725102546}
     m_Modifications:
-    - target: {fileID: 1146463842679653827, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3848495301077386676, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1990,18 +1971,6 @@ PrefabInstance:
     - target: {fileID: 4713215852763238010, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
       propertyPath: m_Name
       value: InteractableOverlay
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: actionText
-      value: Interact
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: buttonText
-      value: E
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: objectNameText
-      value: Cube
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2147,7 +2116,7 @@ MonoBehaviour:
   destroyOnCollect: 1
   timeBeforeDestroyObj: 0.5
   speedFloatUpBeforeDestroy: 5
-  timesCanInteract: 1
+  numberOfTimesCanInteract: 3
   player: {fileID: 82550905}
 --- !u!114 &725102552
 MonoBehaviour:
@@ -2605,7 +2574,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -27, y: 210}
+  m_AnchoredPosition: {x: -41, y: 210}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1021950219
@@ -2853,10 +2822,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 305064243}
     m_Modifications:
-    - target: {fileID: 1146463842679653827, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3848495301077386676, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -2904,18 +2869,6 @@ PrefabInstance:
     - target: {fileID: 4713215852763238010, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
       propertyPath: m_Name
       value: InteractableOverlay
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: actionText
-      value: Read
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: buttonText
-      value: E
-      objectReference: {fileID: 0}
-    - target: {fileID: 6854390981742426812, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
-      propertyPath: objectNameText
-      value: Poster
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3365,7 +3318,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -101, y: 145}
+  m_AnchoredPosition: {x: -148, y: 145}
   m_SizeDelta: {x: 500, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1531517390
@@ -5128,6 +5081,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3848495301077386676, guid: 33f3fa129b2156a4fb3516b353e815c6, type: 3}
   m_PrefabInstance: {fileID: 718757559}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2027907196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2027907197}
+  m_Layer: 0
+  m_Name: TestScript2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2027907197
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027907196}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 111890054}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2047890019
 GameObject:
   m_ObjectHideFlags: 0
@@ -5165,7 +5149,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -271, y: 210}
+  m_AnchoredPosition: {x: -305, y: 212}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2047890021

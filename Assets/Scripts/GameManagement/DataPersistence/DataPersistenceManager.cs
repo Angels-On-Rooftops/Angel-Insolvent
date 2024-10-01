@@ -70,7 +70,7 @@ public class DataPersistenceManager
         }
         catch (Exception e)
         {
-            Debug.Log("Game not saved: " + e.Message);
+            Debug.Log("Error during game save: " + e.Message);
         }
     }
 
@@ -95,12 +95,12 @@ public class DataPersistenceManager
         }
         catch (Exception e)
         {
-            Debug.Log("Game not loaded: " + e.Message);
+            Debug.Log("Error during game load: " + e.Message);
         }
     }
 
-    public object LoadData(string jsonTag, Type returnType)
+    public object LoadData(Type type)
     {
-        return fileDataHandler.ReadObjectFromJson(jsonTag, returnType);
+        return fileDataHandler.ReadObjectFromJson(type);
     }
 }
