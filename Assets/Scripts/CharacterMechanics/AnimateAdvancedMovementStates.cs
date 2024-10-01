@@ -23,8 +23,11 @@ public class AnimateAdvancedMovementStates : MonoBehaviour
         maid.GiveEvent(BasicMovementController, "StartedWalking", () => SetWalk(true));
         maid.GiveEvent(BasicMovementController, "StoppedWalking", () => SetWalk(false));
 
-        //maid.GiveEvent(BasicMovementController, "Jumped", (int _) => SetTrigger("Jump"));
-        //maid.GiveEvent(BasicMovementController, "Falling", () => SetTrigger("Fall"));
+        maid.GiveEvent(BasicMovementController, "Jumped", (int _) => SetTrigger("Jump"));
+        maid.GiveEvent(BasicMovementController, "Falling", () => SetTrigger("Fall"));
+
+        maid.GiveEvent(BasicMovementController, "Landed", () => ResetTrigger("Fall"));
+        maid.GiveEvent(BasicMovementController, "Landed", () => ResetTrigger("Jump"));
         maid.GiveEvent(BasicMovementController, "Landed", () => SetTrigger("Land"));
 
         Dictionary<AdvancedMovementState, Action> StateChanges = new()
@@ -47,7 +50,9 @@ public class AnimateAdvancedMovementStates : MonoBehaviour
                 if (StateChanges.ContainsKey(next))
                 {
                     StateChanges[next]();
+                    return;
                 }
+                
             }
         );
 
@@ -72,6 +77,11 @@ public class AnimateAdvancedMovementStates : MonoBehaviour
     void SetTrigger(string state)
     {
         Animator.SetTrigger(state);
+    }
+
+    void ResetTrigger(string state)
+    {
+        Animator.ResetTrigger(state);
     }
 
     void SetWalk(bool state)

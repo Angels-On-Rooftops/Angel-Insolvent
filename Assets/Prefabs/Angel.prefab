@@ -20,6 +20,7 @@ GameObject:
   - component: {fileID: 1242128556815530259}
   - component: {fileID: 4438606825428620977}
   - component: {fileID: 193965447886615002}
+  - component: {fileID: 7875950330158587546}
   - component: {fileID: 6952746795853258125}
   m_Layer: 3
   m_Name: Character
@@ -255,9 +256,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RollingSpeed: 28
   RollDuration: 0.5
-  LongJumpHeight: 2
-  HighJumpHeight: 7
-  HighJumpWindow: 0.2
+  LongJumpHeight: 3
+  HighJumpHeight: 9
+  HighJumpWindow: 0.1
   ColliderHeight: 1
   RollingDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &1610824559097195034
@@ -527,6 +528,19 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7875950330158587546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609318250586708756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3eb659fc4f564d96800c2545d9a5e4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HighJumpStrafeSpeed: 8
 --- !u!96 &6952746795853258125
 TrailRenderer:
   serializedVersion: 3
