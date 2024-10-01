@@ -32,6 +32,9 @@
         },
         {
             "m_Id": "0c7356c8e4cc458892a62d77660bb088"
+        },
+        {
+            "m_Id": "47607a5ca5d44699b370a8b5db464b4c"
         }
     ],
     "m_Keywords": [
@@ -150,6 +153,9 @@
         },
         {
             "m_Id": "113ccf98c3034f9681204b992723f7c8"
+        },
+        {
+            "m_Id": "3dad19b010f74952ad2d01f9d4f86c73"
         }
     ],
     "m_GroupDatas": [],
@@ -253,6 +259,20 @@
                     "m_Id": "a62013644b404ce4b9512ddf0931ec71"
                 },
                 "m_SlotId": 8
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "3dad19b010f74952ad2d01f9d4f86c73"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "a62013644b404ce4b9512ddf0931ec71"
+                },
+                "m_SlotId": 14
             }
         },
         {
@@ -828,6 +848,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "13770e769b6a495ba3e89a00d9a8b690",
+    "m_Id": 0,
+    "m_DisplayName": "StepOffset",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector3MaterialSlot",
     "m_ObjectId": "1789b25382cb4f4985dbc002072ac725",
     "m_Id": 0,
@@ -1257,6 +1292,42 @@
 }
 
 {
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "3dad19b010f74952ad2d01f9d4f86c73",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 1436.0,
+            "y": 1310.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "13770e769b6a495ba3e89a00d9a8b690"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "47607a5ca5d44699b370a8b5db464b4c"
+    }
+}
+
+{
     "m_SGVersion": 1,
     "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
     "m_ObjectId": "3ee948caf696451a829abc6d47a45ad6",
@@ -1346,6 +1417,34 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "VertexDescription.Tangent"
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "47607a5ca5d44699b370a8b5db464b4c",
+    "m_Guid": {
+        "m_GuidSerialized": "71cf20f6-29ba-44f2-928e-19df8029d7ae"
+    },
+    "m_Name": "StepOffset",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "StepOffset",
+    "m_DefaultReferenceName": "_StepOffset",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.5,
+    "m_FloatType": 1,
+    "m_RangeValues": {
+        "x": 0.0010000000474974514,
+        "y": 0.9990000128746033
+    }
 }
 
 {
@@ -2214,6 +2313,9 @@
         },
         {
             "m_Id": "ba98f54df8cf4fee937c6d42196ae49a"
+        },
+        {
+            "m_Id": "47607a5ca5d44699b370a8b5db464b4c"
         }
     ]
 }
@@ -2515,9 +2617,9 @@
         "m_Position": {
             "serializedVersion": "2",
             "x": 1664.5,
-            "y": 731.0,
+            "y": 723.0,
             "width": 235.0,
-            "height": 542.0
+            "height": 566.0
         }
     },
     "m_Slots": [
@@ -2556,6 +2658,9 @@
         },
         {
             "m_Id": "4dadc475ece9465c90ee764cdbbd9501"
+        },
+        {
+            "m_Id": "c3170aef95a44dd1bd39a7f701b9babd"
         },
         {
             "m_Id": "cc9966cdd2c34d6389d007f5423ba66d"
@@ -2940,6 +3045,21 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "c3170aef95a44dd1bd39a7f701b9babd",
+    "m_Id": 14,
+    "m_DisplayName": "StepOffset",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "StepOffset",
+    "m_StageCapability": 3,
+    "m_Value": 0.5,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
 }
 
 {
