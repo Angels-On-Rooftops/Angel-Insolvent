@@ -32,7 +32,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
                 AdvancedMovementState.Decelerating,
                 (IsRollOver() && Movement.IsOnGround()) || hitWall
             },
-            { AdvancedMovementState.None, jumped && canHighJump },
+            { AdvancedMovementState.HighJumping, jumped && canHighJump },
         };
 
     public Dictionary<string, object> MovementProperties =>
