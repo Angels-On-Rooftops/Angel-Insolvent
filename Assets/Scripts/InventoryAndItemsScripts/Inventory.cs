@@ -4,6 +4,8 @@ using UnityEngine;
 using Items;
 using Items.Collectables;
 using System;
+using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 using static UnityEditor.Progress;
 using System.Linq;
 
@@ -45,7 +47,7 @@ namespace Inventory
             else
             {
                 InventoryItem newItem = new InventoryItem(itemData, amount);
-                this.itemDictionary.Add(itemData, newItem);  
+                this.itemDictionary.Add(itemData, newItem);
             }
         }
 
@@ -57,7 +59,7 @@ namespace Inventory
             }
             else
             {
-                this.itemDictionary.Add(item.Data, item);  
+                this.itemDictionary.Add(item.Data, item);
             }
         }
 
@@ -88,7 +90,7 @@ namespace Inventory
             List<SerializableInventoryItem> items = new List<SerializableInventoryItem>();
             foreach(var item in this.itemDictionary.Values)
             {
-                items.Add(new SerializableInventoryItem(item.Data.itemName, item.StackSize));
+                items.Add(new SerializableInventoryItem(item.Data.itemName, item.StackSize, item.Data.isRespawnable));
             }
 
             DataPersistenceManager.Instance.SaveData(new SerializableInventory(items));
@@ -98,7 +100,7 @@ namespace Inventory
             //Clean out dictionary of unsaved data for a clean load
             this.ItemDictionary.Clear();
 
-            SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData(typeof(SerializableInventory)) as SerializableInventory;
+            SerializableInventory deserializedInventory = DataPersistenceManager.Instance.LoadData("Inventory", typeof(SerializableInventory)) as SerializableInventory;
 
             if(deserializedInventory != null)
             {
@@ -133,10 +135,12 @@ namespace Inventory
     {
         public string itemName;
         public int stackSize;
-        public SerializableInventoryItem(string _itemName, int _stackSize)
+        public bool isRespawnable;
+        public SerializableInventoryItem(string _itemName, int _stackSize, bool isRespawnable)
         {
             this.itemName = _itemName;
             this.stackSize = _stackSize;
+            this.isRespawnable = isRespawnable;
         }
     }
 }
