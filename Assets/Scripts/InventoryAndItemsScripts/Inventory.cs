@@ -6,7 +6,6 @@ using Items.Collectables;
 using System;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
-using static UnityEditor.Progress;
 using System.Linq;
 
 namespace Inventory

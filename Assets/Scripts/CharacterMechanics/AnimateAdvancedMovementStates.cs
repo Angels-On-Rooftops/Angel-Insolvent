@@ -88,4 +88,9 @@ public class AnimateAdvancedMovementStates : MonoBehaviour
     {
         Animator.SetBool("IsMoving", state);
     }
+
+    private void Update()
+    {
+        Animator.SetFloat("RunSpeed", (BasicMovementController.WalkSpeed * BasicMovementController.MovementDirection).magnitude/16);
+    }
 }
