@@ -28,8 +28,6 @@ public class MIDI2EventUnity : MonoBehaviour
 
     Midi2Event eventPlayer;
     float beforeSamples = 0;
-    float startTimer = 0.5f;
-    bool firstPlay = false;
     float lastTime = 0;
 
     public Action OnPlay { get; set; }
@@ -74,20 +72,6 @@ public class MIDI2EventUnity : MonoBehaviour
     //update the event system every frame
     void Update()
     {
-        /*
-        if (startDelayTime > startTimer)
-        {
-            startTimer += Time.deltaTime;
-            return;
-        }
-
-        if (!firstPlay)
-        {
-            firstPlay = true;
-            Play();
-        }
-        */
-
         if (beforeSamples > audioSource.timeSamples)
         {
             //audio has ended/looped
