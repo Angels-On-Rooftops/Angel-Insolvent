@@ -4,6 +4,8 @@ using UnityEngine;
 using MIDI2EventSystem;
 using static MIDI2EventSystem.Midi2Event;
 using System;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
 
 //a wrapper class to make interfacing with the midi2event easier in the unity editor
 
@@ -11,7 +13,7 @@ public class MIDI2EventUnity : MonoBehaviour
 {
     //path to the midi file to use as a chart
     [SerializeField]
-    string chartPath;
+    string streamingAssetChartPath;
 
     //audio source containing audio associated with the chart
     [SerializeField]
@@ -21,10 +23,19 @@ public class MIDI2EventUnity : MonoBehaviour
     [SerializeField]
     int lowestOctave = -1;
 
+    [SerializeField]
+    bool playOnStart;
+
     Midi2Event eventPlayer;
+    float beforeSamples = 0;
+    float startTimer = 0.5f;
+    bool firstPlay = false;
+    float lastTime = 0;
 
     public Action OnPlay { get; set; }
     public Action OnStop { get; set; }
+    public Action OnRestart { get; set; }
+    public Action OnEnd { get; set; }
 
     public float SecPerBeat
     {
@@ -44,16 +55,54 @@ public class MIDI2EventUnity : MonoBehaviour
 
     void Awake()
     {
+        string chartPath = Application.streamingAssetsPath + "/" + streamingAssetChartPath;
         eventPlayer = new(chartPath, lowestOctave);
         audioSource.clip.LoadAudioData();
         OnPlay += () => { };
         OnStop += () => { };
+        OnRestart += () => { };
+    }
+
+    private void Start()
+    {
+        if (playOnStart)
+        {
+            Play();
+        }
     }
 
     //update the event system every frame
     void Update()
     {
-        eventPlayer.Update(Time.deltaTime);
+        /*
+        if (startDelayTime > startTimer)
+        {
+            startTimer += Time.deltaTime;
+            return;
+        }
+
+        if (!firstPlay)
+        {
+            firstPlay = true;
+            Play();
+        }
+        */
+
+        if (beforeSamples > audioSource.timeSamples)
+        {
+            //audio has ended/looped
+            if (!audioSource.loop)
+            {
+                return;
+            }
+            eventPlayer.Back();
+            eventPlayer.Play();
+            lastTime = 0;
+        }
+        beforeSamples = audioSource.timeSamples;
+
+        eventPlayer.Update(audioSource.time - lastTime);
+        lastTime = audioSource.time;
     }
 
     //plays the audio and chart
@@ -70,6 +119,12 @@ public class MIDI2EventUnity : MonoBehaviour
         eventPlayer.Stop();
         audioSource.Stop();
         OnStop.Invoke();
+    }
+
+    public void Restart()
+    {
+        Stop();
+        Play();
     }
 
     /*

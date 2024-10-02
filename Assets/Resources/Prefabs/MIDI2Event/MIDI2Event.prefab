@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7176092730672561289}
   - component: {fileID: 3899254757310960320}
+  - component: {fileID: 1509773263721761449}
   m_Layer: 0
   m_Name: MIDI2Event
   m_TagString: Untagged
@@ -24,14 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2422402724062971511}
-  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 785203942365645533}
+  m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3899254757310960320
 MonoBehaviour:
@@ -45,56 +45,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ef6f1718abf484b9cdd44a6df419ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chartPath: 
-  audioSource: {fileID: 5144054195140840519}
-  lowestOctave: -1
---- !u!1 &4455988348763524748
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 785203942365645533}
-  - component: {fileID: 5144054195140840519}
-  m_Layer: 0
-  m_Name: Audio Source
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &785203942365645533
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4455988348763524748}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.064455, y: -3.3361197, z: 1.2366786}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7176092730672561289}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &5144054195140840519
+  streamingAssetChartPath: Breaking out chart.mid
+  audioSource: {fileID: 1509773263721761449}
+  lowestOctave: -2
+  loops: 0
+--- !u!82 &1509773263721761449
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4455988348763524748}
+  m_GameObject: {fileID: 2422402724062971511}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: bf4de5fc535ea4377a1996b0226c1c3b, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.635
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
