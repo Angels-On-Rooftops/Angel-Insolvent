@@ -24,26 +24,24 @@ namespace Items.Collectables
 
         protected IEnumerator CollectionRoutine(GameObject character)
         {
-            if (OnCollection != null)
-            {
-                OnCollection(character);
-            }
+            OnCollection?.Invoke(character);
 
-            if (this.destroyOnCollect)
+            if (destroyOnCollect)
             {
-                //section that can be removed later
                 float timeSinceCollision = 0;
                 Vector3 positionWhenCollided = transform.position;
-                while (timeSinceCollision <= this.timeBeforeDestroyObj)
+
+                while (timeSinceCollision < timeBeforeDestroyObj)
                 {
-                    transform.position = new Vector3(positionWhenCollided.x,
-                        positionWhenCollided.y + this.speedFloatUpBeforeDestroy *
-        timeSinceCollision,
-                                positionWhenCollided.z);
+                    transform.position = new Vector3(
+                        positionWhenCollided.x,
+                        positionWhenCollided.y + speedFloatUpBeforeDestroy * timeSinceCollision,
+                        positionWhenCollided.z
+                    );
+
                     timeSinceCollision += Time.deltaTime;
                     yield return null;
                 }
-                //end section
 
                 Destroy(gameObject);
             } 
