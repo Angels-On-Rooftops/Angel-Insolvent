@@ -5,16 +5,17 @@ using UnityEngine;
 public class GraphMovement : MonoBehaviour
 {
     [SerializeField]
-    Pathfinding path; //pathfinding
-
-    [SerializeField]
     MarkGraph map; //all of the nodes
+
+    public float speed = 5.0f;
+
+    [Space(20)]
     public List<NodeMarker> pathway; //pathway that car follows
     public NodeMarker node1;
     public NodeMarker node2;
-    public float speed = 5.0f;
-
     public int position = 0;
+
+    Pathfinding path => GetComponent<Pathfinding>();
 
     // Start is called before the first frame update
     void Start()

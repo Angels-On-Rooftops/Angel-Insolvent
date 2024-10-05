@@ -12,7 +12,7 @@ public class CarCollision : MonoBehaviour
 
     float defaultSpeed;
 
-    GraphMovement Movement => GetComponent<GraphMovement>();
+    GraphMovement Movement => GetComponentInParent<GraphMovement>();
 
     private void Start()
     {
@@ -21,10 +21,15 @@ public class CarCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        float agentToVertexAngle = Vector3.Angle(other.transform.position, transform.position);
+        Vector3 toAngentFromCar = other.transform.position - transform.position;
+        Vector3 carForward = transform.forward;
+        float angleFromFrontOfCar = Vector3.Angle(toAngentFromCar, carForward);
 
-        if (agentToVertexAngle < VisionAngle)
+        Debug.Log(angleFromFrontOfCar);
+
+        if (angleFromFrontOfCar < VisionAngle / 2)
         {
+            Movement.speed = 0;
             return;
         }
 
@@ -46,6 +51,8 @@ public class CarCollision : MonoBehaviour
     {
         List<string> carStoppers = new() { "Car", "Person" };
 
+        // TODO: does not work because there could still be another person or car in the collider
+        // should instead check that all colliders have left
         if (carStoppers.Contains(other.tag))
         {
             Movement.speed = defaultSpeed;

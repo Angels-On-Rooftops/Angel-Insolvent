@@ -16,6 +16,7 @@ public class Pathfinding : MonoBehaviour
      * repeat if not
      */
 
+    // TODO does not work, will not find a path if the random node chosen doesn't have some path to the endNode not through the start node
     public List<NodeMarker> FindPath(NodeMarker startNode, NodeMarker endNode)
     {
         NodeMarker tempNode = startNode.nextNode[Random.Range(0, startNode.nextNode.Count)];
