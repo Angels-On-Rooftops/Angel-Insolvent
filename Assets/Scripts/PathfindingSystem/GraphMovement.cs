@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO make wording more generic, not just going to be used for cars
 public class GraphMovement : MonoBehaviour
 {
     [SerializeField]
