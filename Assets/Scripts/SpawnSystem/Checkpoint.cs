@@ -8,5 +8,5 @@ public class Checkpoint : MonoBehaviour
     Vector3 Offset;
 
     public bool Activated { get; set; }
-    public Vector3 Postion => Offset + transform.position;
+    public Vector3 RespawnPosition => Offset + transform.position;
 }

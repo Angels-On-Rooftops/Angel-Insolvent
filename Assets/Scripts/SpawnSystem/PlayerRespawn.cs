@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Inventory;
 using UnityEngine;
 
 //attach to player
@@ -13,18 +16,17 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     [SerializeField]
     private bool CanRevisitCheckpoints = true;
 
+    readonly Maid maid = new();
+
     private void OnEnable()
     {
-        //Subscribe save/load actions
-        DataPersistenceManager.Instance.onSaveTriggered += SaveData;
-        DataPersistenceManager.Instance.onLoadTriggered += LoadData;
+        maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", SaveData);
+        maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", LoadData);
     }
 
     private void OnDisable()
     {
-        //Unsubscribe save/load actions
-        DataPersistenceManager.Instance.onSaveTriggered -= SaveData;
-        DataPersistenceManager.Instance.onLoadTriggered -= LoadData;
+        maid.Cleanup();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -37,7 +39,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
         Checkpoint newSpawn = other.gameObject.GetComponent<Checkpoint>();
         if (!newSpawn.Activated || CanRevisitCheckpoints)
         {
-            respawnPoint = newSpawn.Postion;
+            respawnPoint = newSpawn.RespawnPosition;
             newSpawn.Activated = true;
         }
     }
@@ -50,16 +52,16 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
 
     public void SaveData()
     {
-        DataPersistenceManager.Instance.SaveData(new SerializablePlayerRespawn(this.respawnPoint));
+        DataPersistenceManager.SaveData(new SerializablePlayerRespawn(respawnPoint));
     }
 
+    // TODO what happens here if the player doesn't have a respawn point? do they just get teleported to 0,0,0 and fall through the map?
     public void LoadData()
     {
-        SerializablePlayerRespawn deserializedRespawn =
-            DataPersistenceManager.Instance.LoadData(
-                "respawnPoint",
-                typeof(SerializablePlayerRespawn)
-            ) as SerializablePlayerRespawn;
+        var deserializedRespawn =
+            DataPersistenceManager.LoadData("respawnPoint", typeof(SerializablePlayerRespawn))
+            as SerializablePlayerRespawn;
+
         respawnPoint = deserializedRespawn.respawnPoint;
         respawnPlayer();
     }

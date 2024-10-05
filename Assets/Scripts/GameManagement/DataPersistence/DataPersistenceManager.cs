@@ -1,7 +1,4 @@
-using Inventory;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -26,7 +23,7 @@ public class DataPersistenceManager
         this.fileDataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
 
         dataPersistenceActions = new GameManagementActions();
-        
+
         saveAction = dataPersistenceActions.Actions.SaveGame;
         saveAction.performed += SaveGame;
         saveAction.Enable();
@@ -74,12 +71,14 @@ public class DataPersistenceManager
         }
     }
 
-    public void SaveData(object data)
+    public static void SaveData(object data)
     {
-        if(data != null)
+        if (data == null)
         {
-            fileDataHandler.WriteObjectToJson(data);
+            return;
         }
+
+        Instance.fileDataHandler.WriteObjectToJson(data);
     }
 
     //Load methods
@@ -99,8 +98,8 @@ public class DataPersistenceManager
         }
     }
 
-    public object LoadData(string jsonTag, Type returnType)
+    public static object LoadData(string jsonTag, Type returnType)
     {
-        return fileDataHandler.ReadObjectFromJson(jsonTag, returnType);
+        return Instance.fileDataHandler.ReadObjectFromJson(jsonTag, returnType);
     }
 }
