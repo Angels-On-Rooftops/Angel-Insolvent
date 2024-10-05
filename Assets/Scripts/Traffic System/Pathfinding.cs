@@ -1,16 +1,13 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Pathfinding : MonoBehaviour
 {
     //path way from start node to end node
-    public List<NodeMarker> path;
-
-    private void Start()
-    {
-        path = new List<NodeMarker>();
-    }
+    [NonSerialized]
+    public List<NodeMarker> path = new();
 
     /*
      * take random node from neighbor list
@@ -19,22 +16,22 @@ public class Pathfinding : MonoBehaviour
      * repeat if not
      */
 
-    public List<NodeMarker> FindPath(NodeMarker currentNode, NodeMarker lastNode)
+    public List<NodeMarker> FindPath(NodeMarker startNode, NodeMarker endNode)
     {
-        NodeMarker tempNode = currentNode.nextNode[Random.Range(0, currentNode.nextNode.Count)];
+        NodeMarker tempNode = startNode.nextNode[Random.Range(0, startNode.nextNode.Count)];
 
         if (!path.Contains(tempNode))
         {
             path.Add(tempNode);
         }
-        else if (tempNode == lastNode)
+        else if (tempNode == endNode)
         {
             path.Add(tempNode);
         }
 
-        if (tempNode != lastNode)
+        if (tempNode != endNode)
         {
-            FindPath(tempNode, lastNode);
+            FindPath(tempNode, endNode);
         }
 
         return path;

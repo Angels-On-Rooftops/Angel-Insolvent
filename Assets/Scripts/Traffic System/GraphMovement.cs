@@ -30,7 +30,7 @@ public class GraphMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveCar();
+        Move();
     }
 
     private void OnDrawGizmos()
@@ -50,7 +50,7 @@ public class GraphMovement : MonoBehaviour
         }
     }
 
-    public void moveCar()
+    public void Move()
     {
         //move the car to current node
         if (this.transform.position != pathway[position].transform.position)

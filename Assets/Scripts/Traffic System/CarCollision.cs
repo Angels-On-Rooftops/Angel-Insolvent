@@ -5,50 +5,50 @@ using UnityEngine;
 public class CarCollision : MonoBehaviour
 {
     [SerializeField]
-    GraphMovement car;
-    float carSpeed;
+    float VisionAngle;
 
     [SerializeField]
-    float visionAngle; //radians
+    float Deceleration = 2;
+
+    float defaultSpeed;
+
+    GraphMovement Movement => GetComponent<GraphMovement>();
 
     private void Start()
     {
-        carSpeed = car.speed;
+        defaultSpeed = Movement.speed;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        float agentToVertexAngle = Vector3.Angle(
-            other.gameObject.transform.position,
-            car.transform.position
-        );
+        float agentToVertexAngle = Vector3.Angle(other.transform.position, transform.position);
 
-        if (agentToVertexAngle > visionAngle)
+        if (agentToVertexAngle < VisionAngle)
         {
-            if (other.gameObject.CompareTag("Car"))
-            {
-                float otherSpeed = other.gameObject.GetComponent<GraphMovement>().speed;
-                if (otherSpeed > 0)
-                {
-                    car.speed = otherSpeed - 2;
-                }
-                else
-                {
-                    car.speed = 0;
-                }
-            }
-            else if (other.gameObject.CompareTag("Person"))
-            {
-                car.speed = 0;
-            }
+            return;
+        }
+
+        if (other.gameObject.CompareTag("Person"))
+        {
+            Movement.speed = 0;
+            return;
+        }
+
+        if (other.gameObject.CompareTag("Car"))
+        {
+            float otherSpeed = other.GetComponent<GraphMovement>().speed;
+            Movement.speed = Mathf.Max(otherSpeed - Deceleration, 0);
+            return;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Car") || other.gameObject.CompareTag("Person"))
+        List<string> carStoppers = new() { "Car", "Person" };
+
+        if (carStoppers.Contains(other.tag))
         {
-            car.speed = carSpeed;
+            Movement.speed = defaultSpeed;
         }
     }
 }

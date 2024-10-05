@@ -118,8 +118,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b06cf6085c69d2544b262e383fba6ed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  car: {fileID: 1568978278439692476}
-  visionAngle: 2
+  VisionAngle: 180
+  VisionLength: 0
+  Deceleration: 2
 --- !u!1 &4778347182186800188
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,4 +288,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee877404e333fc4ba83f8b485aef739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: []

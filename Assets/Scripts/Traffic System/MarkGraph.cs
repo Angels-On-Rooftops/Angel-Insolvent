@@ -13,21 +13,15 @@ public class MarkGraph : MonoBehaviour
     private NodeMarker firstNode;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         map.Clear();
         map.Add(firstNode);
         PopulateMap(firstNode);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //PopulateMap(firstNode);
-    }
-
     //add every node in graph to list
-    private void PopulateMap(NodeMarker startingNode)
+    void PopulateMap(NodeMarker startingNode)
     {
         foreach (NodeMarker node in startingNode.nextNode)
         {
