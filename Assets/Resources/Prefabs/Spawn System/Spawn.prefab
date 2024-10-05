@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 420763090934970589}
   - component: {fileID: 6980541090694003897}
   - component: {fileID: 107756125134656445}
-  - component: {fileID: 7435160940704130963}
+  - component: {fileID: 5146175211136672145}
   m_Layer: 0
   m_Name: Spawn
   m_TagString: Spawn
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9d6690ab732b59e42b50214c32304646, type: 2}
+  - {fileID: 2100000, guid: 5be1227d4c2c05b4394035bcdfd568c8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -106,7 +106,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7435160940704130963
+--- !u!114 &5146175211136672145
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,9 +115,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8152515790599619863}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2e0efb99d10e564f8eba831b8e7a02c, type: 3}
+  m_Script: {fileID: 11500000, guid: c047675c4895d344ead3822908ef448f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasCheckPoint: 0
-  position: {x: 0, y: 0, z: 0}
-  height: 1
+  respawnPoint: {x: 0, y: 0, z: 0}
+  checkPoint: {fileID: 0}
+  CanRevisitCheckpoints: 1
