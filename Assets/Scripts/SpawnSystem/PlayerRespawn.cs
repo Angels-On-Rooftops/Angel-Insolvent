@@ -1,7 +1,4 @@
-using Inventory;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //attach to player
@@ -48,7 +45,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     //spawn character in
     public void respawnPlayer()
     {
-        this.transform.position = respawnPoint;
+        transform.position = respawnPoint;
     }
 
     public void SaveData()
@@ -58,7 +55,11 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
 
     public void LoadData()
     {
-        SerializablePlayerRespawn deserializedRespawn = DataPersistenceManager.Instance.LoadData("respawnPoint", typeof(SerializablePlayerRespawn)) as SerializablePlayerRespawn;
+        SerializablePlayerRespawn deserializedRespawn =
+            DataPersistenceManager.Instance.LoadData(
+                "respawnPoint",
+                typeof(SerializablePlayerRespawn)
+            ) as SerializablePlayerRespawn;
         respawnPoint = deserializedRespawn.respawnPoint;
         respawnPlayer();
     }
@@ -68,6 +69,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
 public class SerializablePlayerRespawn
 {
     public Vector3 respawnPoint;
+
     public SerializablePlayerRespawn(Vector3 respawnPoint)
     {
         this.respawnPoint = respawnPoint;

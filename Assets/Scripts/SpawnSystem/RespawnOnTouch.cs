@@ -8,7 +8,7 @@ public class RespawnOnTouch : MonoBehaviour
     {
         if (other.TryGetComponent(out PlayerRespawn respawn))
         {
-            if (other.TryGetComponent(out CharacterController controller))
+            if (other.TryGetComponent(out CharacterMovement controller))
             {
                 controller.enabled = false;
                 respawn.respawnPlayer();
