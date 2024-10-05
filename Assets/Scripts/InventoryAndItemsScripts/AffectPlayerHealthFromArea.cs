@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Inventory;
 using System.Threading;
+using Inventory;
+using UnityEngine;
 
 namespace Items.Collectables
 {
@@ -10,9 +10,14 @@ namespace Items.Collectables
     [RequireComponent(typeof(AreaThatChecksInventory))]
     public class AffectPlayerHealthFromArea : MonoBehaviour
     {
-        [SerializeField] int healthIncreaseWhenPass;
-        [SerializeField] int healthDecreaseWhenFail;
-        [SerializeField] PlayerManager player;
+        [SerializeField]
+        int healthIncreaseWhenPass;
+
+        [SerializeField]
+        int healthDecreaseWhenFail;
+
+        [SerializeField]
+        PlayerHealth player;
 
         private AreaThatChecksInventory area;
         private float elapsed = 3f;
@@ -40,7 +45,7 @@ namespace Items.Collectables
             if (this.healthIncreaseWhenPass > 0 && !wait)
             {
                 wait = true;
-                player.GetComponent<PlayerManager>().IncreaseHealth(healthIncreaseWhenPass);
+                player.GetComponent<PlayerHealth>().IncreaseHealth(healthIncreaseWhenPass);
                 Debug.Log("Yay! Health +" + this.healthIncreaseWhenPass);
             }
         }
@@ -50,7 +55,7 @@ namespace Items.Collectables
             if (this.healthDecreaseWhenFail > 0 && !wait)
             {
                 wait = true;
-                player.GetComponent<PlayerManager>().DecreaseHealth(healthDecreaseWhenFail);
+                player.GetComponent<PlayerHealth>().DecreaseHealth(healthDecreaseWhenFail);
                 Debug.Log("Ow! Health -" + this.healthDecreaseWhenFail);
             }
         }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4436699, g: 0.4930036, b: 0.5725586, a: 1}
+  m_IndirectSpecularColor: {r: 0.44367182, g: 0.49300444, b: 0.5725581, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093225ac0c4adaa4b863132739d6805b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 0, y: 0, z: 0}
+  Offset: {x: 0, y: 0, z: 0}
 --- !u!64 &84037394
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5603,7 +5603,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 84037393}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6271229541157187629, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+    - {fileID: 5123130382989221377, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+    - {fileID: 1695920457475109826, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+    - {fileID: 1155405398494295548, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+    - {fileID: 7217991243917889414, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
@@ -13723,7 +13728,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee877404e333fc4ba83f8b485aef739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: []
 --- !u!114 &1870312738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13736,12 +13740,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01dbad50fea6a2c4a90954bee89a0525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: {fileID: 1870312737}
   map: {fileID: 739360459}
+  speed: 30
   pathway: []
   node1: {fileID: 579300742}
   node2: {fileID: 667533926}
-  speed: 30
   position: 0
 --- !u!1 &1881018406
 GameObject:
@@ -15319,7 +15322,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee877404e333fc4ba83f8b485aef739, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: []
 --- !u!114 &1993154770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15332,12 +15334,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01dbad50fea6a2c4a90954bee89a0525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: {fileID: 1993154769}
   map: {fileID: 2127184524}
+  speed: 10
   pathway: []
   node1: {fileID: 312496613}
   node2: {fileID: 1524979015}
-  speed: 10
   position: 0
 --- !u!43 &2000129916
 Mesh:
