@@ -25,8 +25,6 @@ public class CarCollision : MonoBehaviour
         Vector3 carForward = transform.forward;
         float angleFromFrontOfCar = Vector3.Angle(toAngentFromCar, carForward);
 
-        Debug.Log(angleFromFrontOfCar);
-
         if (angleFromFrontOfCar < VisionAngle / 2)
         {
             Movement.speed = 0;
