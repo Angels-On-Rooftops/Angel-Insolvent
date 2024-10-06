@@ -53,6 +53,7 @@ public class MIDI2EventUnity : MonoBehaviour
             eventPlayers.Add(new(chartPath, info.lowestOctave));
             info.audioSource.clip.LoadAudioData();
         }
+
         OnPlay += () => { };
         OnStop += () => { };
         OnRestart += () => { };
@@ -103,19 +104,32 @@ public class MIDI2EventUnity : MonoBehaviour
     private void AdvanceTracks()
     {
         eventPlayers[currentTrackIndex].Back();
-        audioInfo[currentTrackIndex].audioSource.Stop();
+        //audioInfo[currentTrackIndex].audioSource.Stop();
 
         currentTrackIndex++;
 
         eventPlayers[currentTrackIndex].Play();
-        audioInfo[currentTrackIndex].audioSource.Play();
+        //audioInfo[currentTrackIndex].audioSource.Play();
     }
 
     //plays the audio and chart
     public void Play()
     {
-        eventPlayers[0].Play();
-        audioInfo[0].audioSource.Play();
+        currentTrackIndex = 0;
+        int i = 0;
+        double scheduledStartTime = AudioSettings.dspTime + 0.2;
+        audioInfo[i].audioSource.PlayScheduled(scheduledStartTime);
+        while (i < audioInfo.Count - 1 && !audioInfo[i].audioSource.loop)
+        {
+            AudioClip clip = audioInfo[i].audioSource.clip;
+            double currentDuration = (double)clip.samples / clip.frequency;
+
+            scheduledStartTime += currentDuration;
+
+            audioInfo[i + 1].audioSource.PlayScheduled(scheduledStartTime);
+            i++;
+        }
+        eventPlayers[currentTrackIndex].Play();
         OnPlay.Invoke();
     }
 
