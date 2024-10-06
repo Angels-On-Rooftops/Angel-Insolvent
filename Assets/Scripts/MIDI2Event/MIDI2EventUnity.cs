@@ -13,22 +13,15 @@ public class MIDI2EventUnity : MonoBehaviour
 {
     //path to the midi file to use as a chart
     [SerializeField]
-    string streamingAssetChartPath;
-
-    //audio source containing audio associated with the chart
-    [SerializeField]
-    AudioSource audioSource;
-
-    //the lowest octave present in the midi data
-    [SerializeField]
-    int lowestOctave = -1;
+    List<TrackChartInfo> audioInfo;
 
     [SerializeField]
     bool playOnStart;
 
-    Midi2Event eventPlayer;
+    List<Midi2Event> eventPlayers;
     float beforeSamples = 0;
     float lastTime = 0;
+    int currentTrackIndex = 0;
 
     public Action OnPlay { get; set; }
     public Action OnStop { get; set; }
@@ -37,25 +30,29 @@ public class MIDI2EventUnity : MonoBehaviour
 
     public float SecPerBeat
     {
-        get => (float)eventPlayer.SecPerBeat;
+        get => (float)eventPlayers[currentTrackIndex].SecPerBeat;
     }
 
     public float BeatPerSec
     {
-        get => (float)eventPlayer.BeatPerSec;
+        get => (float)eventPlayers[currentTrackIndex].BeatPerSec;
     }
 
     //returns whether the system is currently playing
     public bool IsPlaying
     {
-        get => eventPlayer.IsPlaying;
+        get => eventPlayers[currentTrackIndex].IsPlaying;
     }
 
     void Awake()
     {
-        string chartPath = Application.streamingAssetsPath + "/" + streamingAssetChartPath;
-        eventPlayer = new(chartPath, lowestOctave);
-        audioSource.clip.LoadAudioData();
+        eventPlayers = new();
+        foreach (TrackChartInfo info in audioInfo)
+        {
+            string chartPath = Application.streamingAssetsPath + "/" + info.streamingAssetChartPath;
+            eventPlayers.Add(new(chartPath, info.lowestOctave));
+            info.audioSource.clip.LoadAudioData();
+        }
         OnPlay += () => { };
         OnStop += () => { };
         OnRestart += () => { };
@@ -72,36 +69,38 @@ public class MIDI2EventUnity : MonoBehaviour
     //update the event system every frame
     void Update()
     {
-        if (beforeSamples > audioSource.timeSamples)
+        if (beforeSamples > audioInfo[currentTrackIndex].audioSource.timeSamples)
         {
             //audio has ended/looped
-            if (!audioSource.loop)
+            if (!audioInfo[currentTrackIndex].audioSource.loop)
             {
                 return;
             }
-            eventPlayer.Back();
-            eventPlayer.Play();
+            eventPlayers[currentTrackIndex].Back();
+            eventPlayers[currentTrackIndex].Play();
             lastTime = 0;
         }
-        beforeSamples = audioSource.timeSamples;
+        beforeSamples = audioInfo[currentTrackIndex].audioSource.timeSamples;
 
-        eventPlayer.Update(audioSource.time - lastTime);
-        lastTime = audioSource.time;
+        eventPlayers[currentTrackIndex].Update(
+            audioInfo[currentTrackIndex].audioSource.time - lastTime
+        );
+        lastTime = audioInfo[currentTrackIndex].audioSource.time;
     }
 
     //plays the audio and chart
     public void Play()
     {
-        eventPlayer.Play();
-        audioSource.Play();
+        eventPlayers[currentTrackIndex].Play();
+        audioInfo[currentTrackIndex].audioSource.Play();
         OnPlay.Invoke();
     }
 
     //stops the audio and chart from playing and resets them to the beginning
     public void Stop()
     {
-        eventPlayer.Stop();
-        audioSource.Stop();
+        eventPlayers[currentTrackIndex].Stop();
+        audioInfo[currentTrackIndex].audioSource.Stop();
         OnStop.Invoke();
     }
 
@@ -128,6 +127,30 @@ public class MIDI2EventUnity : MonoBehaviour
         SubType type = SubType.Start
     )
     {
-        return eventPlayer.Subscribe(action, note, octave, type);
+        Action result = () => { };
+        foreach (Midi2Event subsys in eventPlayers)
+        {
+            result += subsys.Subscribe(action, note, octave, type);
+        }
+        return result;
+    }
+
+    [Serializable]
+    internal struct TrackChartInfo
+    {
+        //path to the midi file to use as a chart
+        public string streamingAssetChartPath;
+
+        //audio source containing audio associated with the chart
+        public AudioSource audioSource;
+
+        //the lowest octave present in the midi data
+        public int lowestOctave;
+    }
+
+    internal enum PlayType
+    {
+        OnceThrough,
+        Loop
     }
 }
