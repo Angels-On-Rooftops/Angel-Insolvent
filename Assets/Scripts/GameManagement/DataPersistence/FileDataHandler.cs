@@ -62,6 +62,7 @@ public class FileDataHandler
         {
             string dataToStore = JsonUtility.ToJson(data, true);
             fileWriter.WriteLine(dataToStore);
+            Debug.Log(dataToStore);
         }
         catch (Exception e)
         {
@@ -76,6 +77,7 @@ public class FileDataHandler
             fileReader.DiscardBufferedData();
             fileReader.BaseStream.Seek(0, SeekOrigin.Begin);
             string data = GetSingleJsonObjectString(jsonTag);
+            Debug.Log(data);
             var method = typeof(JsonUtility).GetMethod("FromJson", new Type[] { typeof(string) });
             var genericMethod = method.MakeGenericMethod(returnType);
             return genericMethod.Invoke(null, new object[] { data });
