@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Inventory;
+using Unity.VisualScripting;
 using UnityEngine;
 
 //attach to player
@@ -22,6 +23,8 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     {
         maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", SaveData);
         maid.GiveEvent(DataPersistenceManager.Instance, "onLoadTriggered", LoadData);
+
+        respawnPlayer();
     }
 
     private void OnDisable()
@@ -39,7 +42,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
         Checkpoint newSpawn = other.gameObject.GetComponent<Checkpoint>();
         if (!newSpawn.Activated || CanRevisitCheckpoints)
         {
-            respawnPoint = newSpawn.RespawnPosition;
+            checkPoint = newSpawn;
             newSpawn.Activated = true;
         }
     }
@@ -47,22 +50,22 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     //spawn character in
     public void respawnPlayer()
     {
-        transform.position = respawnPoint;
+        transform.position = checkPoint.RespawnPosition;
     }
 
     public void SaveData()
     {
-        DataPersistenceManager.SaveData(new SerializablePlayerRespawn(respawnPoint));
+        DataPersistenceManager.SaveData(new SerializablePlayerRespawn(checkPoint.id));
     }
 
     // TODO what happens here if the player doesn't have a respawn point? do they just get teleported to 0,0,0 and fall through the map?
     public void LoadData()
     {
         var deserializedRespawn =
-            DataPersistenceManager.LoadData("respawnPoint", typeof(SerializablePlayerRespawn))
+            DataPersistenceManager.LoadData("checkpointID", typeof(SerializablePlayerRespawn))
             as SerializablePlayerRespawn;
 
-        respawnPoint = deserializedRespawn.respawnPoint;
+        checkPoint = Array.Find(FindObjectsByType<Checkpoint>(FindObjectsSortMode.InstanceID), c => c.id == deserializedRespawn.checkpointID);
         respawnPlayer();
     }
 }
@@ -70,10 +73,10 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
 [Serializable]
 public class SerializablePlayerRespawn
 {
-    public Vector3 respawnPoint;
+    public string checkpointID;
 
-    public SerializablePlayerRespawn(Vector3 respawnPoint)
+    public SerializablePlayerRespawn(string checkpointID)
     {
-        this.respawnPoint = respawnPoint;
+        this.checkpointID = checkpointID;
     }
 }
