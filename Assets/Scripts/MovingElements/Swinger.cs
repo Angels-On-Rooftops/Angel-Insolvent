@@ -47,8 +47,8 @@ public class Swinger : MonoBehaviour
 
     void Swing()
     {
-        (currentEuler, oppositeEuler) = (oppositeEuler, currentEuler);
         StartCoroutine(SmoothSwing(currentEuler, oppositeEuler));
+        (currentEuler, oppositeEuler) = (oppositeEuler, currentEuler);
     }
 
     IEnumerator SmoothSwing(Vector3 current, Vector3 target)
