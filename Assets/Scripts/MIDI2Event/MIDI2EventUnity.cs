@@ -74,12 +74,17 @@ public class MIDI2EventUnity : MonoBehaviour
             //audio has ended/looped
             if (!audioInfo[currentTrackIndex].audioSource.loop)
             {
+                AdvanceTracks();
                 return;
             }
-            eventPlayers[currentTrackIndex].Back();
-            eventPlayers[currentTrackIndex].Play();
-            lastTime = 0;
+
+            LoopCurrentTrack();
         }
+        UpdateTrackTime();
+    }
+
+    private void UpdateTrackTime()
+    {
         beforeSamples = audioInfo[currentTrackIndex].audioSource.timeSamples;
 
         eventPlayers[currentTrackIndex].Update(
@@ -88,11 +93,29 @@ public class MIDI2EventUnity : MonoBehaviour
         lastTime = audioInfo[currentTrackIndex].audioSource.time;
     }
 
+    private void LoopCurrentTrack()
+    {
+        eventPlayers[currentTrackIndex].Back();
+        eventPlayers[currentTrackIndex].Play();
+        lastTime = 0;
+    }
+
+    private void AdvanceTracks()
+    {
+        eventPlayers[currentTrackIndex].Back();
+        audioInfo[currentTrackIndex].audioSource.Stop();
+
+        currentTrackIndex++;
+
+        eventPlayers[currentTrackIndex].Play();
+        audioInfo[currentTrackIndex].audioSource.Play();
+    }
+
     //plays the audio and chart
     public void Play()
     {
-        eventPlayers[currentTrackIndex].Play();
-        audioInfo[currentTrackIndex].audioSource.Play();
+        eventPlayers[0].Play();
+        audioInfo[0].audioSource.Play();
         OnPlay.Invoke();
     }
 
