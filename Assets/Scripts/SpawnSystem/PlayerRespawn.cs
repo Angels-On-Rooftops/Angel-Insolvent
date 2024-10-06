@@ -21,7 +21,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     private void OnEnable()
     {
         maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", SaveData);
-        maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", LoadData);
+        maid.GiveEvent(DataPersistenceManager.Instance, "onLoadTriggered", LoadData);
     }
 
     private void OnDisable()
