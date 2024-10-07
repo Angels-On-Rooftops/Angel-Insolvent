@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     private static GameObject eventSystem;
 
+    private static GameObject inventory;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnBeforeSplashScreen()
     {
@@ -31,5 +33,8 @@ public class GameManager : MonoBehaviour
 
         escMenu = Instantiate(Resources.Load("Prefabs/UI/EscMenuPrefab")) as GameObject;
         escMenu.gameObject.transform.SetParent(gameCanvas.transform);
+
+        inventory = Instantiate(Resources.Load("Prefabs/UI/Inventory")) as GameObject;
+        inventory.gameObject.transform.SetParent(gameCanvas.transform);
     }
 }
