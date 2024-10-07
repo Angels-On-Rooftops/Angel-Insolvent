@@ -15,7 +15,13 @@ public class HighJump : MonoBehaviour, IAdvancedMovementStateSpec
             { AdvancedMovementState.Plunging, pushedActionButton && !Movement.IsOnGround() },
             { AdvancedMovementState.MoveStarting, movementStarted },
             { AdvancedMovementState.MoveStopping, movementEnded },
-            { AdvancedMovementState.Gliding, jumpedOffGround },
+            {
+                AdvancedMovementState.Gliding,
+                Movement.Jump.IsPressed()
+                    && !Movement.IsOnStableGround()
+                    && Movement.ExtraJumpsRemaining == 0
+                    && Movement.VerticalSpeed < 0
+            },
             { AdvancedMovementState.None, Movement.IsOnStableGround() }
         };
 
@@ -28,7 +34,6 @@ public class HighJump : MonoBehaviour, IAdvancedMovementStateSpec
     bool pushedActionButton = false;
     bool movementStarted = false;
     bool movementEnded = false;
-    bool jumpedOffGround = false;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
@@ -40,24 +45,10 @@ public class HighJump : MonoBehaviour, IAdvancedMovementStateSpec
 
         movementEnded = false;
         StateMaid.GiveEvent(Movement, "WalkStopRequested", () => movementEnded = true);
-
-        jumpedOffGround = false;
-        StateMaid.GiveEvent(
-            Movement,
-            "JumpRequested",
-            () =>
-            {
-                if (Movement.VerticalState != VerticalMovementState.Grounded)
-                {
-                    jumpedOffGround = true;
-                }
-            }
-        );
     }
 
     public void TransitioningFrom()
     {
         StateMaid.Cleanup();
     }
-
 }

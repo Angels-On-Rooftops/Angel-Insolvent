@@ -2,11 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
 {
     [SerializeField]
     float TerminalVelocity = 24;
+
+    [SerializeField]
+    float TurningSpeed = 5;
 
     [SerializeField]
     float DownSpeedContribCuttoff = 34;
@@ -25,11 +29,21 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     }
 
     public Dictionary<string, object> MovementProperties =>
-        new() { { "DownwardTerminalVelocity", TerminalVelocity }, };
+        new()
+        {
+            { "DownwardTerminalVelocity", TerminalVelocity },
+            {
+                "MovementDirectionMiddleware",
+                MovementMiddleware.FullSpeedAhead(Movement, TurningSpeed)
+            },
+        };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
         {
-            { AdvancedMovementState.Decelerating, Movement.IsOnStableGround() || jumpedOffGround },
+            {
+                AdvancedMovementState.Decelerating,
+                Movement.IsOnStableGround() || !Movement.Jump.IsPressed()
+            },
             { AdvancedMovementState.Plunging, !Movement.IsOnStableGround() && pushedActionButton },
         };
 
@@ -40,7 +54,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     readonly Maid StateMaid = new();
 
     bool pushedActionButton = false;
-    bool jumpedOffGround = false;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
@@ -65,19 +78,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
                 StopCoroutine(dampRoutine);
             }
         });
-
-        jumpedOffGround = false;
-        StateMaid.GiveEvent(
-            Movement,
-            "JumpRequested",
-            () =>
-            {
-                if (Movement.VerticalState != VerticalMovementState.Grounded)
-                {
-                    jumpedOffGround = true;
-                }
-            }
-        );
 
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);

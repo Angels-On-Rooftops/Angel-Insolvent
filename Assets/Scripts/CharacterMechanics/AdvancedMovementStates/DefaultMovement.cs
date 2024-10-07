@@ -16,7 +16,13 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
             { AdvancedMovementState.Plunging, pushedActionButton && !Movement.IsOnGround() },
             { AdvancedMovementState.MoveStarting, movementStarted },
             { AdvancedMovementState.MoveStopping, movementEnded },
-            { AdvancedMovementState.Gliding, jumpedOffGround },
+            {
+                AdvancedMovementState.Gliding,
+                Movement.Jump.IsPressed()
+                    && !Movement.IsOnStableGround()
+                    && Movement.ExtraJumpsRemaining == 0
+                    && Movement.VerticalSpeed < 0
+            },
         };
 
     public List<string> HoldFromPreviousState => new() { };
