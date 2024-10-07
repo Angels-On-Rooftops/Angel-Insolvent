@@ -34,7 +34,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
             { "DownwardTerminalVelocity", TerminalVelocity },
             {
                 "MovementDirectionMiddleware",
-                MovementMiddleware.FullSpeedAhead(Movement, TurningSpeed)
+                MovementMiddleware.NonZeroLimitedAdjust(Movement, TurningSpeed)
             },
         };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
