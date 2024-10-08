@@ -12,12 +12,6 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     public float RollDuration = 1;
 
     [SerializeField]
-    public float LongJumpHeight = 2;
-
-    [SerializeField]
-    public float HighJumpHeight = 7;
-
-    [SerializeField]
     public float HighJumpWindow = 0.25f;
 
     [SerializeField]
@@ -51,6 +45,9 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
+    float HighJumpHeight => GetComponent<HighJump>().HighJumpHeight;
+    float LongJumpHeight => GetComponent<LongJump>().LongJumpHeight;
+
     readonly Maid StateMaid = new();
 
     bool jumped = false;

@@ -5,6 +5,9 @@ using UnityEngine;
 public class HighJump : MonoBehaviour, IAdvancedMovementStateSpec
 {
     [SerializeField]
+    public float HighJumpHeight = 9;
+
+    [SerializeField]
     float HighJumpStrafeSpeed;
 
     public Dictionary<string, object> MovementProperties =>

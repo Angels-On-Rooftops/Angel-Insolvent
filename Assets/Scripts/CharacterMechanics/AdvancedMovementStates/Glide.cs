@@ -21,18 +21,10 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     [SerializeField]
     AnimationCurve UpSpeedDampAcceleration;
 
-    [SerializeField]
-    float HighJumpHeight = 9;
-
-    [SerializeField]
-    float HighJumpBufferDur = 0.1f;
-
-    float minWalkSpeed;
-
     void Start()
     {
-        minWalkSpeed = Movement.WalkSpeed;
         standardJumpHeight = Movement.JumpHeight;
+        jumpBufferDur = Movement.JumpBufferTime;
     }
 
     public Dictionary<string, object> MovementProperties =>
@@ -59,11 +51,14 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
+    float HighJumpHeight => GetComponent<HighJump>().HighJumpHeight;
+
     readonly Maid StateMaid = new();
     bool canHighJump = false;
     float timeStarted;
     bool pushedActionButton = false;
     float standardJumpHeight;
+    float jumpBufferDur;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
@@ -118,7 +113,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
 
     IEnumerator HighJumpTimer()
     {
-        while (Time.time - timeStarted <= HighJumpBufferDur)
+        while (Time.time - timeStarted <= jumpBufferDur)
         {
             yield return null;
         }

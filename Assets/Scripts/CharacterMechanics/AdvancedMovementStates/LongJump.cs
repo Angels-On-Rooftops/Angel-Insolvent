@@ -5,6 +5,9 @@ using UnityEngine;
 public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
 {
     [SerializeField]
+    public float LongJumpHeight = 3;
+
+    [SerializeField]
     AnimationCurve AccelerationCurve;
 
     [SerializeField]
@@ -29,7 +32,6 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
     public Dictionary<string, object> MovementProperties =>
         new()
         {
-            { "JumpHeight", GetComponent<Roll>().LongJumpHeight },
             { "MovementDirectionMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
             { "FacingDirectionMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
         };
