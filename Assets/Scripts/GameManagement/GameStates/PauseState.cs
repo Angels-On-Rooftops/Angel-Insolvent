@@ -15,6 +15,8 @@ namespace GameStateManagement
 
         public void EnterState()
         {
+            var characterCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CharacterCamera>();
+            characterCamera.CanOrbit = false;
             EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
             if (EscMenuController.audioSource != null) EscMenuController.audioSource.Pause();
@@ -22,7 +24,9 @@ namespace GameStateManagement
 
         public void ExitState()
         {
-            if(EscMenuController.getSettingsMenuPanel().activeSelf)
+            var characterCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CharacterCamera>();
+            characterCamera.CanOrbit = true;
+            if (EscMenuController.getSettingsMenuPanel().activeSelf)
             {
                 EscMenuController.CloseSettings();
             }
