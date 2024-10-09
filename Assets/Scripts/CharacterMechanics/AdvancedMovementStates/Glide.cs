@@ -24,7 +24,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     void Start()
     {
         standardJumpHeight = Movement.JumpHeight;
-        jumpBufferDur = Movement.JumpBufferTime;
     }
 
     public Dictionary<string, object> MovementProperties =>
@@ -50,20 +49,17 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     public List<string> HoldFromPreviousState => new() { "WalkSpeed", "VerticalSpeed" };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
+    float JumpBufferTime => GetComponent<CharacterMovement>().JumpBufferTime;
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
     float HighJumpHeight => GetComponent<HighJump>().HighJumpHeight;
 
     readonly Maid StateMaid = new();
     bool canHighJump = false;
-    float timeStarted;
     bool pushedActionButton = false;
     float standardJumpHeight;
-    float jumpBufferDur;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
-        timeStarted = Time.time;
-
         if (Movement.WalkSpeed < DownSpeedContribCuttoff)
         {
             Movement.WalkSpeed = Mathf.Clamp(
@@ -92,7 +88,16 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
         {
             canHighJump = true;
             Movement.JumpHeight = HighJumpHeight;
-            highJumpCounter = StartCoroutine(HighJumpTimer());
+            highJumpCounter = StartCoroutine(
+                CoroutineUtil.DoActionAfterTime(
+                    () =>
+                    {
+                        canHighJump = false;
+                        Movement.JumpHeight = standardJumpHeight;
+                    },
+                    JumpBufferTime
+                )
+            );
         }
         StateMaid.GiveTask(() =>
         {
@@ -109,16 +114,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     public void TransitioningFrom()
     {
         StateMaid.Cleanup();
-    }
-
-    IEnumerator HighJumpTimer()
-    {
-        while (Time.time - timeStarted <= jumpBufferDur)
-        {
-            yield return null;
-        }
-        canHighJump = false;
-        Movement.JumpHeight = standardJumpHeight;
     }
 
     IEnumerator DampVertical(AnimationCurve curve)

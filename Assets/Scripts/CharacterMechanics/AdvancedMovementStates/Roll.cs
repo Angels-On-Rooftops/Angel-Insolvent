@@ -83,7 +83,16 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         {
             canHighJump = true;
             Movement.JumpHeight = HighJumpHeight;
-            highJumpCounter = StartCoroutine(HighJumpTimer());
+            highJumpCounter = StartCoroutine(
+                CoroutineUtil.DoActionAfterTime(
+                    () =>
+                    {
+                        canHighJump = false;
+                        Movement.JumpHeight = LongJumpHeight;
+                    },
+                    HighJumpWindow
+                )
+            );
         }
         StateMaid.GiveTask(() =>
         {
@@ -104,16 +113,6 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     bool IsRollOver()
     {
         return Time.time - timeStarted >= RollDuration;
-    }
-
-    IEnumerator HighJumpTimer()
-    {
-        while (Time.time - timeStarted <= HighJumpWindow)
-        {
-            yield return null;
-        }
-        canHighJump = false;
-        Movement.JumpHeight = LongJumpHeight;
     }
 
     void LateUpdate()
