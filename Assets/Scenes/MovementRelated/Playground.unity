@@ -5556,12 +5556,116 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: MaxGlideSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: HighJumpBufferDur
       value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: DownSpeedContribCuttoff
-      value: 20
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[0].time
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[1].time
+      value: 10.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[2].time
+      value: 95.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[3].time
+      value: 96
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[0].value
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[1].value
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[2].value
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[3].value
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[1].inSlope
+      value: -0.012568347
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[2].inSlope
+      value: 0.4491482
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[0].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[1].outSlope
+      value: -0.012568347
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[2].inWeight
+      value: 0.050947905
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[2].outSlope
+      value: 0.4491482
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[3].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[1].outWeight
+      value: 0.018174756
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[2].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[3].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[0].tangentMode
+      value: 136
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[2].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallSpeedCurve.m_Curve.Array.data[3].tangentMode
+      value: 136
       objectReference: {fileID: 0}
     - target: {fileID: 2345459542665392382, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: GlideWhenHeld.m_Name
@@ -5614,6 +5718,14 @@ PrefabInstance:
     - target: {fileID: 5115961924326423927, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7158482044387499570, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FallAcceleration
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7158482044387499570, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: HorizAccelerationCurve.m_Curve.Array.data[1].time
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7875950330158587546, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: HighJumpHeight

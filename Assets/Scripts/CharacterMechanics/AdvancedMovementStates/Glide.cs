@@ -13,10 +13,10 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     float TurningSpeed = 5;
 
     [SerializeField]
-    float DownSpeedContribCuttoff = 34;
+    AnimationCurve FallSpeedCurve;
 
     [SerializeField]
-    float DownSpeedToHorizRate = 0.25f;
+    float MaxGlideSpeed = 34;
 
     [SerializeField]
     AnimationCurve UpSpeedDampAcceleration;
@@ -24,6 +24,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     void Start()
     {
         standardJumpHeight = Movement.JumpHeight;
+        standardMoveSpeed = Movement.WalkSpeed;
     }
 
     public Dictionary<string, object> MovementProperties =>
@@ -57,17 +58,15 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     bool canHighJump = false;
     bool pushedActionButton = false;
     float standardJumpHeight;
+    float standardMoveSpeed;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
-        if (Movement.WalkSpeed < DownSpeedContribCuttoff)
-        {
-            Movement.WalkSpeed = Mathf.Clamp(
-                Movement.WalkSpeed + (DownSpeedToHorizRate * -Movement.VerticalSpeed),
-                Movement.WalkSpeed,
-                DownSpeedContribCuttoff
-            );
-        }
+        Movement.WalkSpeed = Mathf.Clamp(
+            FallSpeedCurve.Evaluate(-Movement.VerticalSpeed),
+            Movement.WalkSpeed,
+            MaxGlideSpeed
+        );
 
         Coroutine dampRoutine = null;
         if (Movement.VerticalSpeed > 0)
