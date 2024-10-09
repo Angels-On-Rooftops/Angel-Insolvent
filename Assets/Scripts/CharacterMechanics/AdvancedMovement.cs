@@ -109,6 +109,7 @@ public class AdvancedMovement : MonoBehaviour
             );
 
         SetMovementProperties(DefaultMovementPropertiesMinusHoldProperties);
+        Debug.Log(newState);
     }
 
     // Transitions to a new state

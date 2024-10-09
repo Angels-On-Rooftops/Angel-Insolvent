@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
 {
@@ -9,49 +10,62 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     float TerminalVelocity = 24;
 
     [SerializeField]
-    float DownSpeedContribCuttoff = 34;
+    float TurningSpeed = 5;
+
+    //converts falling speed -> horizontal speed in glide
+    [SerializeField]
+    AnimationCurve FallSpeedCurve;
 
     [SerializeField]
-    float DownSpeedToHorizRate = 0.25f;
+    float MaxGlideSpeed = 34;
 
     [SerializeField]
     AnimationCurve UpSpeedDampAcceleration;
 
-    float minWalkSpeed;
-
     void Start()
     {
-        minWalkSpeed = Movement.WalkSpeed;
+        standardJumpHeight = Movement.JumpHeight;
     }
 
     public Dictionary<string, object> MovementProperties =>
-        new() { { "DownwardTerminalVelocity", TerminalVelocity }, };
+        new()
+        {
+            { "DownwardTerminalVelocity", TerminalVelocity },
+            {
+                "MovementDirectionMiddleware",
+                MovementMiddleware.NonZeroLimitedAdjust(Movement, TurningSpeed)
+            },
+        };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
         {
-            { AdvancedMovementState.Decelerating, Movement.IsOnStableGround() || jumpedOffGround },
+            {
+                AdvancedMovementState.Decelerating,
+                Movement.IsOnStableGround() && !canHighJump || !Movement.Jump.IsPressed()
+            },
             { AdvancedMovementState.Plunging, !Movement.IsOnStableGround() && pushedActionButton },
+            { AdvancedMovementState.HighJumping, Movement.IsOnStableGround() && canHighJump }
         };
 
     public List<string> HoldFromPreviousState => new() { "WalkSpeed", "VerticalSpeed" };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
+    float JumpBufferTime => GetComponent<CharacterMovement>().JumpBufferTime;
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
-    readonly Maid StateMaid = new();
+    float HighJumpHeight => GetComponent<HighJump>().HighJumpHeight;
 
+    readonly Maid StateMaid = new();
+    bool canHighJump = false;
     bool pushedActionButton = false;
-    bool jumpedOffGround = false;
+    float standardJumpHeight;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
-        if (Movement.WalkSpeed < DownSpeedContribCuttoff)
-        {
-            Movement.WalkSpeed = Mathf.Clamp(
-                Movement.WalkSpeed + (DownSpeedToHorizRate * -Movement.VerticalSpeed),
-                Movement.WalkSpeed,
-                DownSpeedContribCuttoff
-            );
-        }
+        Movement.WalkSpeed = Mathf.Clamp(
+            FallSpeedCurve.Evaluate(-Movement.VerticalSpeed),
+            Movement.WalkSpeed,
+            MaxGlideSpeed
+        );
 
         Coroutine dampRoutine = null;
         if (Movement.VerticalSpeed > 0)
@@ -66,18 +80,30 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
             }
         });
 
-        jumpedOffGround = false;
-        StateMaid.GiveEvent(
-            Movement,
-            "JumpRequested",
-            () =>
+        canHighJump = false;
+        Coroutine highJumpCounter = null;
+        if (fromState == AdvancedMovementState.Plunging)
+        {
+            canHighJump = true;
+            Movement.JumpHeight = HighJumpHeight;
+            highJumpCounter = StartCoroutine(
+                CoroutineUtil.DoActionAfterTime(
+                    () =>
+                    {
+                        canHighJump = false;
+                        Movement.JumpHeight = standardJumpHeight;
+                    },
+                    JumpBufferTime
+                )
+            );
+        }
+        StateMaid.GiveTask(() =>
+        {
+            if (highJumpCounter is not null)
             {
-                if (Movement.VerticalState != VerticalMovementState.Grounded)
-                {
-                    jumpedOffGround = true;
-                }
+                StopCoroutine(highJumpCounter);
             }
-        );
+        });
 
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
