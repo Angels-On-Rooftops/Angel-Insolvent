@@ -12,6 +12,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     [SerializeField]
     float TurningSpeed = 5;
 
+    //converts falling speed -> horizontal speed in glide
     [SerializeField]
     AnimationCurve FallSpeedCurve;
 
@@ -24,7 +25,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     void Start()
     {
         standardJumpHeight = Movement.JumpHeight;
-        standardMoveSpeed = Movement.WalkSpeed;
     }
 
     public Dictionary<string, object> MovementProperties =>
@@ -58,7 +58,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     bool canHighJump = false;
     bool pushedActionButton = false;
     float standardJumpHeight;
-    float standardMoveSpeed;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {

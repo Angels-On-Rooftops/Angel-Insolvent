@@ -42,7 +42,6 @@ public class Plunge : MonoBehaviour, IAdvancedMovementStateSpec
     public List<string> HoldFromPreviousState => new() { "WalkSpeed" };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
-    AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
 
     bool hitWall;
 
