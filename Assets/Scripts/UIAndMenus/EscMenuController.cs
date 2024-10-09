@@ -69,6 +69,11 @@ public class EscMenuController : MonoBehaviour
         pauseMenuPanel.SetActive(true);
     }
 
+    public void CloseSavePrompt()
+    {
+        savePromptPanel.SetActive(false);
+    }
+
     public void QuitToMainMenu()
     {
         savePromptPanel.SetActive(true);

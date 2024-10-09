@@ -26,10 +26,16 @@ namespace GameStateManagement
         {
             var characterCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CharacterCamera>();
             characterCamera.CanOrbit = true;
+
             if (EscMenuController.getSettingsMenuPanel().activeSelf)
             {
                 EscMenuController.CloseSettings();
             }
+            if(EscMenuController.getSavePromptPanel().activeSelf)
+            {
+                EscMenuController.CloseSavePrompt();
+            }
+
             EscMenuController.getPauseMenuPanel().SetActive(false);
             Time.timeScale = 1f;
             if (EscMenuController.audioSource != null) EscMenuController.audioSource.Play();
