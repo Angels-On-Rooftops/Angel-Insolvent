@@ -12,8 +12,10 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.InputSystem.InputAction;
 
-public class InventoryController : MonoBehaviour
+public class ShopController : MonoBehaviour
 {
+    public List<ItemData> shopItems; // place items to be displayed in shop
+
     [SerializeField]
     [Tooltip("The keybind that controls opening and closing the inventory.")]
     InputAction InventoryAction;
@@ -40,11 +42,10 @@ public class InventoryController : MonoBehaviour
     InputAction NavDown;
 
     [SerializeField]
-    private GameObject inventory; // canvas game object
+    private GameObject shopInv; // canvas game object
 
     private GameObject invPanel; // main inventory panel within canvas
-    private GameObject coins; // coin counter and icon
-    private GameObject health; // health icon
+    private GameObject coins; // Player coins
     private GameObject itemInfo; // item name & description parent (holds the two fields below)
     private GameObject itemName;
     private GameObject itemDescription;
@@ -57,20 +58,19 @@ public class InventoryController : MonoBehaviour
     private int inventoryRowSize;
     private UnityEngine.UI.Image selectedSlot;
 
-    public GameObject GetInventoryPanel() { return inventory; }
+    public GameObject GetShopInventoryPanel() { return shopInv; }
 
     private void Start()
     {
         pInv = PlayerInventory.Instance;
-        invPanel = inventory.transform.GetChild(0).gameObject;
-        coins = inventory.transform.GetChild(1).gameObject;
-        health = inventory.transform.GetChild(2).gameObject;
-        itemInfo = inventory.transform.GetChild(3).gameObject;
+        invPanel = shopInv.transform.GetChild(0).gameObject;
+        coins = shopInv.transform.GetChild(1).gameObject;
+        itemInfo = shopInv.transform.GetChild(2).gameObject;
 
-        inventory.SetActive(true);
+        shopInv.SetActive(true);
         itemName = GameObject.FindWithTag("InventoryItemName");
         itemDescription = GameObject.FindWithTag("InventoryItemDescription");
-        inventory.SetActive(false);
+        shopInv.SetActive(false);
 
         inventorySlots = new List<GameObject>();
         itemsInInventory = new List<ItemData>();
@@ -88,7 +88,7 @@ public class InventoryController : MonoBehaviour
     {
         InventoryAction.performed += OpenInventory;
         InventoryAction.Enable();
-        SelectItem.performed += EquipItem;
+        SelectItem.performed += BuyItem;
         SelectItem.Enable();
 
         // Navigating inventory
@@ -108,7 +108,7 @@ public class InventoryController : MonoBehaviour
     {
         InventoryAction.performed -= OpenInventory;
         InventoryAction.Disable();
-        SelectItem.performed -= EquipItem;
+        SelectItem.performed -= BuyItem;
         SelectItem.Disable();
 
         // Navigating inventory
@@ -125,7 +125,7 @@ public class InventoryController : MonoBehaviour
 
     void OpenInventory(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (shopInv.activeSelf)
         {
             GameStateManager.Instance.SetState(new PlayingState());
         }
@@ -133,23 +133,16 @@ public class InventoryController : MonoBehaviour
         {
             // make sure something else isn't already pausing the game
             var state = GameStateManager.Instance.CurrentState;
-            if (state is not PauseState && state is not ShopState) {
-                GameStateManager.Instance.SetState(new GameStateManagement.InventoryState(this));
+            if (state is not PauseState && state is not InventoryState) {
+                GameStateManager.Instance.SetState(new GameStateManagement.ShopState(this));
             }
         }
     }
 
-    void EquipItem(CallbackContext c)
-    {
-        if (inventory.activeSelf && itemsInInventory[inventoryIndex] != null)
-        {
-            pInv.EquipItem(itemsInInventory[inventoryIndex]);
-        }
-    }
-
+    #region Inventory Navigation
     void NavInvLeft(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (shopInv.activeSelf)
         {
             if (inventoryIndex > 0 && inventoryIndex % inventoryRowSize != 0) 
             {
@@ -163,7 +156,7 @@ public class InventoryController : MonoBehaviour
 
     void NavInvRight(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (shopInv.activeSelf)
         {
             if (inventoryIndex < inventorySlots.Count && inventoryIndex % inventoryRowSize != inventoryRowSize - 1)
             {
@@ -177,7 +170,7 @@ public class InventoryController : MonoBehaviour
 
     void NavInvUp(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (shopInv.activeSelf)
         {
             if (inventoryIndex > inventoryRowSize - 1) inventoryIndex -= inventoryRowSize;
             selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
@@ -188,7 +181,7 @@ public class InventoryController : MonoBehaviour
 
     void NavInvDown(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (shopInv.activeSelf)
         {
             if (inventoryIndex < inventorySlots.Count - inventoryRowSize) inventoryIndex += inventoryRowSize;
             selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
@@ -196,7 +189,16 @@ public class InventoryController : MonoBehaviour
             Debug.Log(inventoryIndex);
         }
     }
-
+    #endregion
+    
+    void BuyItem(CallbackContext c)
+    {
+        // TODO
+        // if player has enough coins, add item to inventory,
+        // subtract amt. of coins from player's coins.
+        // maybe add a confirmation box before purchasing
+    }
+    
     private void Update()
     {
         List<ItemData> keysToRemove = new List<ItemData>();
