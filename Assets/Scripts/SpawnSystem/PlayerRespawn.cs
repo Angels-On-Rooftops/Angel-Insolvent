@@ -58,7 +58,6 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
         DataPersistenceManager.SaveData(new SerializablePlayerRespawn(checkPoint.id));
     }
 
-    // TODO what happens here if the player doesn't have a respawn point? do they just get teleported to 0,0,0 and fall through the map?
     public void LoadData()
     {
         var deserializedRespawn =
