@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CarCollision : MonoBehaviour
 {
-    [SerializeField] GraphMovement car;
+    [SerializeField] moveObject car;
     float carSpeed;
     [SerializeField] float visionAngle; //radians
     
@@ -16,21 +16,22 @@ public class CarCollision : MonoBehaviour
         agentToVVertex.Normalize();
         if (Vector3.Dot(agentToVVertex, car.transform.forward) > Mathf.Cos(visionAngle)) {
             if (other.gameObject.CompareTag("Car")) {
-                float otherSpeed = other.gameObject.GetComponent<GraphMovement>().speed;
+                float otherSpeed = other.gameObject.GetComponent<moveObject>().speed;
                 if (otherSpeed > 0) {
                     car.speed = otherSpeed - 2;
                     }
                 else {
                     car.speed = 0;
                     }
-                    
-
-
                 }
             else if (other.gameObject.CompareTag("Person")) {
                 car.speed = 0;
                 }
-            
+            }
+        }
+    private void OnTriggerStay(Collider other) {
+        if (other.gameObject.CompareTag("Person")) {
+            car.speed = 0;
             }
         }
     private void OnTriggerExit(Collider other) {
