@@ -69,7 +69,7 @@ public class moveObject : MonoBehaviour
         if (this.transform.position == pathway[position].transform.position) {
             //increment to next point
             if (position < pathway.Count - 1) {
-                if (!pathway[position + 1].isOccupied) {
+                if (!pathway[position + 1].Occupied) {
                     position++;
                     }
                 

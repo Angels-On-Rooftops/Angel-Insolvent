@@ -5,8 +5,9 @@ using UnityEngine;
 public class CarCollision : MonoBehaviour
 {
     [SerializeField] moveObject car;
-    float carSpeed;
+    private float carSpeed;
     [SerializeField] float visionAngle; //radians
+    [SerializeField] float changeSpeed = 2;
     
     private void Start() {
         carSpeed = car.speed;
@@ -18,7 +19,7 @@ public class CarCollision : MonoBehaviour
             if (other.gameObject.CompareTag("Car")) {
                 float otherSpeed = other.gameObject.GetComponent<moveObject>().speed;
                 if (otherSpeed > 0) {
-                    car.speed = otherSpeed - 2;
+                    car.speed = otherSpeed - changeSpeed;
                     }
                 else {
                     car.speed = 0;
