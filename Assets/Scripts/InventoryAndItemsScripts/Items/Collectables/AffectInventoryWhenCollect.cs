@@ -8,7 +8,7 @@ namespace Items.Collectables
     [RequireComponent(typeof(Collectable))]
     public class AffectInventoryWhenCollect : MonoBehaviour
     {
-        [SerializeField] private ItemData item;
+        [SerializeField] public ItemData item;
 
         [Tooltip("Amount of the item")]
         [SerializeField] private int stackSize = 1;
