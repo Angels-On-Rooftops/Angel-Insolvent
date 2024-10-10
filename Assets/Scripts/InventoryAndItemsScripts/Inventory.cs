@@ -132,6 +132,8 @@ namespace Inventory
                     }
                 }
             }
+
+            NonRespawnableItemsRemover.Instance.RemoveNonRespawnableItems();
         }
     }
 
