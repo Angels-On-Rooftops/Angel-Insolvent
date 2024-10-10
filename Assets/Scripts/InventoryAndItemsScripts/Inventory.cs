@@ -87,6 +87,11 @@ namespace Inventory
             this.Remove(item.Data, item.StackSize);
         }
 
+        public virtual bool HasItem(string itemId)
+        {
+            return itemDictionary.Keys.Any(itemData => itemData.itemID == itemId);
+        }
+
         public void SaveData()
         {
             List<SerializableInventoryItem> items = new List<SerializableInventoryItem>();
