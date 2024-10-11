@@ -6,20 +6,24 @@ using UnityEngine;
 namespace Items.Interactables
 {
     //This class should eventually be updated to better match how the rest of the UI is set up
-    public class UIInteractable : MonoBehaviour, IInteractable
+    public class OldUIInteractable : MonoBehaviour, IInteractable
     {
-        [SerializeField] protected GameObject UIObject;
+        [SerializeField] protected GameObject UIPrefab;
+        [SerializeField] private GameObject player;
 
         protected bool isActive = false;
+        protected GameObject instantiatedUIPrefab;
         protected InteractableOverlayHelper interactableOverlay;
 
         public bool DestroyAfterInteracting { get { return false; } }
 
-        protected virtual void Awake()
+        void Awake()
         {
             GetInteractableOverlayComponent();
 
-            this.UIObject.SetActive(false);
+            //Creates prefab in the center
+            this.instantiatedUIPrefab = Instantiate(this.UIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            this.instantiatedUIPrefab.SetActive(false);
         }
 
         protected void GetInteractableOverlayComponent()
@@ -47,13 +51,13 @@ namespace Items.Interactables
 
             if (this.isActive)
             {
-                this.UIObject?.SetActive(true);
+                this.instantiatedUIPrefab?.SetActive(true);
 
                 FreezeCharacterMovement();
             }
             else
             {
-                this.UIObject?.SetActive(false);
+                this.instantiatedUIPrefab?.SetActive(false);
 
                 UnFreezeCharacterMovement();
             }

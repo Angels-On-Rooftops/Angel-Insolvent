@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Unity;
+using UnityEngine;
 namespace Assets.Scripts.Dialogue_System.DialogueSamples
 {
-    public interface DialogueFile
+    public abstract class DialogueFile : MonoBehaviour
     {
-        public DialogueTree Dialogue { get; }
+        public abstract DialogueTree Dialogue { get; }
     }
 
     public class SampleDialogue1 : DialogueFile
     {
-        public DialogueTree Dialogue =>
+        public override DialogueTree Dialogue =>
             new(
                 new List<DialogueNode>()
                 {
