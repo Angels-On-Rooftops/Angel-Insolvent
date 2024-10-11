@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Threading;
 using Inventory;
+using UnityEngine;
 
 namespace Items.Collectables
 {
@@ -9,10 +10,18 @@ namespace Items.Collectables
     [RequireComponent(typeof(AreaThatChecksInventory))]
     public class AffectPlayerHealthFromArea : MonoBehaviour
     {
-        [SerializeField] int healthIncreaseWhenPass;
-        [SerializeField] int healthDecreaseWhenFail;
+        [SerializeField]
+        int healthIncreaseWhenPass;
+
+        [SerializeField]
+        int healthDecreaseWhenFail;
+
+        [SerializeField]
+        PlayerHealth player;
 
         private AreaThatChecksInventory area;
+        private float elapsed = 3f;
+        private bool wait = false;
 
         private void Awake()
         {
@@ -33,19 +42,31 @@ namespace Items.Collectables
 
         void IncreaseHealth(GameObject player)
         {
-            if (this.healthIncreaseWhenPass > 0)
+            if (this.healthIncreaseWhenPass > 0 && !wait)
             {
-                //Would replace with call to player and update player health
+                wait = true;
+                player.GetComponent<PlayerHealth>().IncreaseHealth(healthIncreaseWhenPass);
                 Debug.Log("Yay! Health +" + this.healthIncreaseWhenPass);
             }
         }
 
         void DecreaseHealth(GameObject player)
         {
-            if (this.healthDecreaseWhenFail > 0)
+            if (this.healthDecreaseWhenFail > 0 && !wait)
             {
-                //Would replace with call to player and update player health
+                wait = true;
+                player.GetComponent<PlayerHealth>().DecreaseHealth(healthDecreaseWhenFail);
                 Debug.Log("Ow! Health -" + this.healthDecreaseWhenFail);
+            }
+        }
+
+        private void Update()
+        {
+            elapsed -= Time.deltaTime;
+            if (elapsed <= 0)
+            {
+                elapsed = 3f;
+                wait = false;
             }
         }
     }

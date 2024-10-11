@@ -17,7 +17,7 @@ namespace GameStateManagement
         {
             EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
-            EscMenuController.audioSource.Pause();
+            if (EscMenuController.audioSource != null) EscMenuController.audioSource.Pause();
         }
 
         public void ExitState()
@@ -28,7 +28,7 @@ namespace GameStateManagement
             }
             EscMenuController.getPauseMenuPanel().SetActive(false);
             Time.timeScale = 1f;
-            EscMenuController.audioSource.Play();
+            if (EscMenuController.audioSource != null) EscMenuController.audioSource.Play();
         }
     }
 }
