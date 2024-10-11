@@ -20,7 +20,7 @@ public class DialogueHandler : MonoBehaviour
     [SerializeField] private GameObject parentCanvas;
 
     [SerializeField]
-    [Tooltip("The keybinds that allow the player to move forward in the dialogue (when not choosing a specific response).")]
+    [Tooltip("The keybinds that allow the player to move forward in the dialogue (when not choosing a specific response), as well as to select an answer")]
     InputAction InteractAction;
 
     [Tooltip("Text should have the first character's name")]
@@ -110,6 +110,7 @@ public class DialogueHandler : MonoBehaviour
         {
             Destroy(this.currentButtons[i]);
         }
+        this.currentButtons.Clear();
             
         this.currentDialogueText.text = this.currentDialogueNodeData.DialogueText;
 
@@ -125,6 +126,12 @@ public class DialogueHandler : MonoBehaviour
 
                 buttonPosition += this.buttonDisplacement;
             } 
+        }
+
+        if (this.currentButtons.Count > 0)
+        {
+            Button firstButton = this.currentButtons[0].GetComponentInChildren<Button>();
+            firstButton.Select();
         }
     }
 
@@ -184,10 +191,56 @@ public class DialogueHandler : MonoBehaviour
         newButton.GetComponentInChildren<TMP_Text>().text = childNode.PortName;
 
         this.currentButtons.Add(newButton);
+
+        SetLastButtonNavigation();
+    }
+
+    private void SetLastButtonNavigation()
+    {
+        int index = this.currentButtons.Count - 1;
+
+        if (index <= 0)
+        {
+            return;
+        }
+
+        Button lastButton = this.currentButtons[index].GetComponentInChildren<Button>();
+        Button prevButton = this.currentButtons[index - 1].GetComponentInChildren<Button>();
+
+        Navigation lastButtonNav = new Navigation();
+        lastButtonNav.mode = Navigation.Mode.Explicit;
+
+        Navigation prevButtonNav;
+        if (index == 1)
+        {
+            prevButtonNav = new Navigation();
+            prevButtonNav.mode = Navigation.Mode.Explicit;
+        }
+        else
+        {
+            prevButtonNav = prevButton.navigation;
+        }
+
+        lastButtonNav.selectOnLeft = prevButton;
+        prevButtonNav.selectOnRight = lastButton;
+
+        lastButtonNav.selectOnUp = prevButton;
+        prevButtonNav.selectOnDown = lastButton;
+
+        lastButton.navigation = lastButtonNav;
+        prevButton.navigation = prevButtonNav;
     }
 
     void OnButtonPress(GameObject button)
     {
+        StartCoroutine(MoveToNextScreenAfterDelay(button));
+    }
+
+    IEnumerator MoveToNextScreenAfterDelay(GameObject button)
+    {
+        //After change pause, change to: yield return new WaitForSeconds(.5f);
+        yield return new WaitForSecondsRealtime(.5f);
+
         //Update current node with node button port goes to
         string buttonPortName = button.GetComponentInChildren<TMP_Text>().text;
         UpdateCurrentNode(buttonPortName);
