@@ -25,6 +25,8 @@ namespace Assets.Scripts.Dialogue_System
 
     public record DialogueFireEvent(string EventName) : DialogueNode();
 
+    public record DialogueSetFlag(string Flag, bool value) : DialogueNode();
+
     public record DialogueBranch(DialogueTree OnTrue, DialogueTree OnFalse) : DialogueNode();
 
     public record HasItem(string ItemId, DialogueTree YesItem, DialogueTree NoItem)
@@ -32,6 +34,15 @@ namespace Assets.Scripts.Dialogue_System
 
     public record ItemEquipped(string ItemId, DialogueTree Equipped, DialogueTree NotEquipped)
         : DialogueBranch(Equipped, NotEquipped);
+
+    public record FlagValue(string Flag, DialogueTree OnTrue, DialogueTree OnFalse)
+        : DialogueBranch(OnTrue, OnFalse);
+
+    public record CheckDialogueCondition(
+        string ItemId,
+        DialogueTree Equipped,
+        DialogueTree NotEquipped
+    ) : DialogueBranch(Equipped, NotEquipped);
 
     //
 
