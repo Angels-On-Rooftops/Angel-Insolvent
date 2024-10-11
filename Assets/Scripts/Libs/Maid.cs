@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
+// Maid is a library that makes coding destruction of objects easier
+// You don't need to worry about it for Design 4104
+
 public class Maid
 {
     List<Action> ToRunOnCleanup = new();
@@ -24,7 +27,7 @@ public class Maid
         );
 
         Assert.IsTrue(
-            eventHolder.GetType().GetEvent(eventName).EventHandlerType.Equals(funcToBind.GetType()), 
+            eventHolder.GetType().GetEvent(eventName).EventHandlerType.Equals(funcToBind.GetType()),
             $"Event {eventName} is not compatible with type {funcToBind.GetType()}"
         );
 
@@ -43,6 +46,19 @@ public class Maid
         GiveEventDelegate(eventHolder, eventName, funcToBind);
     }
 
+    public Coroutine GiveCoroutine(MonoBehaviour hasCoroutine, Coroutine coroutineRunning)
+    {
+        GiveTask(() =>
+        {
+            if (coroutineRunning is not null)
+            {
+                hasCoroutine.StopCoroutine(coroutineRunning);
+            }
+        });
+
+        return coroutineRunning;
+    }
+
     private Action GetFinalizer<T>(T task)
     {
         return task switch
@@ -50,7 +66,13 @@ public class Maid
             Action action => action,
             GameObject gameObject => () => UnityEngine.Object.Destroy(gameObject),
             Maid maid => () => maid.Cleanup(),
-            _ => throw new NotImplementedException($"Maid is unable to cleanup object of type {task.GetType()}"),
+            Coroutine coroutine => throw new NotSupportedException(
+                "Use Maid.GiveCouroutine to clean up a coroutine. "
+                    + "StopCoroutine needs a reference to the MonoBehaviour."
+            ),
+            _ => throw new NotImplementedException(
+                $"Maid is unable to cleanup object of type {task.GetType()}"
+            ),
         };
     }
 
@@ -82,7 +104,7 @@ public class Maid
         ToRunOnCleanup = new();
     }
 
-    #region extra handlers for events with parameters 
+    #region extra handlers for events with parameters
     public void GiveEvent<T, A>(T eventHolder, string eventName, Action<A> funcToBind)
     {
         GiveEventDelegate(eventHolder, eventName, funcToBind);
@@ -98,7 +120,11 @@ public class Maid
         GiveEventDelegate(eventHolder, eventName, funcToBind);
     }
 
-    public void GiveEvent<T, A, B, C, D>(T eventHolder, string eventName, Action<A, B, C, D> funcToBind)
+    public void GiveEvent<T, A, B, C, D>(
+        T eventHolder,
+        string eventName,
+        Action<A, B, C, D> funcToBind
+    )
     {
         GiveEventDelegate(eventHolder, eventName, funcToBind);
     }
