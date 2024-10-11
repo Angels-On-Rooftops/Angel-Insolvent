@@ -16,7 +16,7 @@ namespace GameStateManagement
         public void EnterState()
         {
             var characterCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CharacterCamera>();
-            characterCamera.CanOrbit = false;
+            if(characterCamera != null) characterCamera.CanOrbit = false;
             EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
             if (EscMenuController.audioSource != null) EscMenuController.audioSource.Pause();
