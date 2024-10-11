@@ -175,8 +175,7 @@ namespace Assets.Scripts.Dialogue_System
             this.currentUIElements.characterNameText.text = frame.Character.Name;
             // play audio
 
-            // wait until the continue condition is satisfied
-            this.conditionSatisfiedStack.Push(false);          
+            // wait until the continue condition is satisfied        
 
             if (frame.ContinueCondition is ContinueButtonHit)
             {
