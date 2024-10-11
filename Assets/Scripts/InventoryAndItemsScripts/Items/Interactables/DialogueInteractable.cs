@@ -27,8 +27,23 @@ namespace Items.Interactables
         }
 
         public override void Interact()
-        {          
-            DialogueSystem.Instance.PlayDialogue(this.dialogueFile, this.dialogueUIElements);
+        {
+            if (this.isActive == false)
+            {
+                DialogueSystem.Instance.PlayDialogue(this.dialogueFile, this.dialogueUIElements);
+                Debug.Log("Playing Dialogue");
+
+                FreezeCharacterMovement();
+                this.isActive = true;
+                DialogueSystem.Instance.EndOfDialogueReached += OnEndOfDialogue;
+            }         
+        }
+
+        void OnEndOfDialogue()
+        {
+            UnFreezeCharacterMovement();
+            this.isActive = false;
+            DialogueSystem.Instance.EndOfDialogueReached -= OnEndOfDialogue;
         }
 
         IEnumerator CreateDialogueHandler()
