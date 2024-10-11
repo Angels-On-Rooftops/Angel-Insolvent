@@ -17,6 +17,12 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     AnimationCurve FallSpeedCurve;
 
     [SerializeField]
+    AnimationCurve GlideSpeedTransitionCurve;
+
+    [SerializeField]
+    AnimationCurve TerminalVelocityTransitionCurve;
+
+    [SerializeField]
     float MaxGlideSpeed = 34;
 
     [SerializeField]
@@ -30,7 +36,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     public Dictionary<string, object> MovementProperties =>
         new()
         {
-            { "DownwardTerminalVelocity", TerminalVelocity },
             {
                 "MovementDirectionMiddleware",
                 MovementMiddleware.NonZeroLimitedAdjust(Movement, TurningSpeed)
@@ -47,7 +52,8 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
             { AdvancedMovementState.HighJumping, Movement.IsOnStableGround() && canHighJump }
         };
 
-    public List<string> HoldFromPreviousState => new() { "WalkSpeed", "VerticalSpeed" };
+    public List<string> HoldFromPreviousState =>
+        new() { "WalkSpeed", "VerticalSpeed", "DownwardTerminalVelocity" };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     float JumpBufferTime => GetComponent<CharacterMovement>().JumpBufferTime;
@@ -58,10 +64,15 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     bool canHighJump = false;
     bool pushedActionButton = false;
     float standardJumpHeight;
+    float glideSpeedTarget;
+    float initialGlideSpeed;
+    float initialTerminalVelocity;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
-        Movement.WalkSpeed = Mathf.Clamp(
+        initialGlideSpeed = Movement.WalkSpeed;
+        initialTerminalVelocity = Mathf.Max(-Movement.VerticalSpeed, TerminalVelocity);
+        glideSpeedTarget = Mathf.Clamp(
             FallSpeedCurve.Evaluate(-Movement.VerticalSpeed),
             Movement.WalkSpeed,
             MaxGlideSpeed
@@ -77,6 +88,15 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
             if (dampRoutine is not null)
             {
                 StopCoroutine(dampRoutine);
+            }
+        });
+
+        Coroutine glideTransitionRoutine = StartCoroutine(TransitionToGlide());
+        StateMaid.GiveTask(() =>
+        {
+            if (glideTransitionRoutine is not null)
+            {
+                StopCoroutine(glideTransitionRoutine);
             }
         });
 
@@ -124,5 +144,28 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
             yield return null;
         }
         Movement.VerticalSpeed = 0;
+    }
+
+    IEnumerator TransitionToGlide()
+    {
+        float timeElapsed = 0;
+        while (
+            TerminalVelocityTransitionCurve.keys[TerminalVelocityTransitionCurve.length - 1].time
+            > timeElapsed
+        )
+        {
+            Movement.WalkSpeed = Mathf.Lerp(
+                initialGlideSpeed,
+                glideSpeedTarget,
+                GlideSpeedTransitionCurve.Evaluate(timeElapsed)
+            );
+            Movement.DownwardTerminalVelocity = Mathf.Lerp(
+                initialTerminalVelocity,
+                TerminalVelocity,
+                TerminalVelocityTransitionCurve.Evaluate(timeElapsed)
+            );
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
     }
 }
