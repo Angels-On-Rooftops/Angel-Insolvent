@@ -8,6 +8,7 @@ using Assets.Scripts.Dialogue_System.DialogueSamples;
 using Inventory;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
@@ -45,6 +46,8 @@ namespace Assets.Scripts.Dialogue_System
         //private readonly object conditionLock = new(); //whoops i thought co-routines were separate threads and they are not
 
         private DialogueUIElements currentUIElements = new DialogueUIElements();
+
+        private List<GameObject> currentButtons = new List<GameObject>();
 
         private void Awake()
         {
@@ -87,8 +90,10 @@ namespace Assets.Scripts.Dialogue_System
             {
                 uniqueUIElements = new DialogueUIElements();
             }
-            
-            FillCurrentUIElements(uniqueUIElements);
+
+            //FillCurrentUIElements(uniqueUIElements);
+
+            this.currentUIElements = this.defaultUIElements;
 
             this.currentUIElements.dialogueUIParent.SetActive(true);
 
@@ -177,14 +182,6 @@ namespace Assets.Scripts.Dialogue_System
             {
                 InteractAction.performed += OnContinueButtonHit;
                 InteractAction.Enable();
-
-                //while (!InteractAction.triggered) { }
-
-                //StartCoroutine(WaitThenEndPlayFrame(.5f));
-
-                //StartCoroutine(EnableButtonHitActionOnNewThread());
-                //Check for button needs to be on a different thread than this one
-                //because this thread will get blocked until the condition is met
             }
             else if (frame.ContinueCondition is TimedContinue)
             {
@@ -193,67 +190,95 @@ namespace Assets.Scripts.Dialogue_System
             }
             else if (frame.ContinueCondition is Choice)
             {
-
+                CreateButtons(((Choice)frame.ContinueCondition).Choices);
             }
             else
             {
                 throw new NotImplementedException();
-            }
-
-            /*bool shouldBreakLoop = false;
-            while(!shouldBreakLoop)
-            {
-                bool conditionSatisfied = this.conditionSatisfiedStack.Pop();
-
-                if (conditionSatisfied)
-                {
-                    shouldBreakLoop = true;
-                }
-                else
-                {
-                    this.conditionSatisfiedStack.Push(false);
-                }
-
-                yield return null;
-
-                /*lock (this.conditionLock)
-                {
-                    bool conditionSatisfied = this.conditionSatisfiedStack.Pop();
-
-                    if (conditionSatisfied)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        this.conditionSatisfiedStack.Push(false);
-                    }
-                }
-
-                //wait briefly to make sure other threads get a chance to get the lock
-                double time = 0;
-                double timeStart = Time.realtimeSinceStartupAsDouble;
-                while (time <= 0.05)
-                {
-                    time = Time.realtimeSinceStartup - timeStart;
-                }*/
-            //}
-            
-            //while (!this.conditionSatisfied) { }
-            //may need to lock this variable since it shows up in multiple threads at the same time,
-            //but I don't think it's needed in this particular case because it is not written to here
-            //and if the code leaves the while loop a little later from needing to read the variable an extra time, it won't make a difference
-            //(but I could see it causing a problem if the compiler/os makes a bad decision on what to cache, but I don't think it will)
+            }            
 
             // stop audio
             // play dialogue tree from choice if that's something you have
         }
 
-        /*IEnumerator EnableButtonHitActionOnNewThread()
+        private void CreateButtons(List<(string, DialogueTree)> choices)
         {
-            InteractAction.performed += OnContinueButtonHit;
-            yield return null;
-        }*/
+            Vector2 buttonPosition = this.currentUIElements.firstButtonPosition;
+            foreach((string, DialogueTree) choice in choices)
+            {
+                CreateButton(buttonPosition, choice);
+                buttonPosition += this.currentUIElements.buttonDisplacement;
+            }
+
+            if (this.currentButtons.Count > 0)
+            {
+                Button firstButton = this.currentButtons[0].GetComponentInChildren<Button>();
+                firstButton.Select();
+            }
+        }
+
+        private void CreateButton(Vector2 buttonPosition, (string choiceText, DialogueTree tree) choice)
+        {
+            GameObject newButton = Instantiate(this.currentUIElements.buttonPrefab, 
+                buttonPosition, Quaternion.identity, this.currentUIElements.buttonParent.transform);
+
+            Button buttonComponent = newButton.GetComponentInChildren<Button>();
+            buttonComponent.onClick.AddListener(delegate { OnChoiceButtonPress(choice); });
+
+            newButton.GetComponentInChildren<TMP_Text>().text = choice.choiceText;
+
+            this.currentButtons.Add(newButton);
+
+            SetLastButtonNavigation();
+        }
+
+        private void SetLastButtonNavigation()
+        {
+            int index = this.currentButtons.Count - 1;
+
+            if (index <= 0)
+            {
+                return;
+            }
+
+            Button lastButton = this.currentButtons[index].GetComponentInChildren<Button>();
+            Button prevButton = this.currentButtons[index - 1].GetComponentInChildren<Button>();
+
+            Navigation lastButtonNav = new Navigation();
+            lastButtonNav.mode = Navigation.Mode.Explicit;
+
+            Navigation prevButtonNav;
+            if (index == 1)
+            {
+                prevButtonNav = new Navigation();
+                prevButtonNav.mode = Navigation.Mode.Explicit;
+            }
+            else
+            {
+                prevButtonNav = prevButton.navigation;
+            }
+
+            lastButtonNav.selectOnLeft = prevButton;
+            prevButtonNav.selectOnRight = lastButton;
+
+            lastButtonNav.selectOnUp = prevButton;
+            prevButtonNav.selectOnDown = lastButton;
+
+            lastButton.navigation = lastButtonNav;
+            prevButton.navigation = prevButtonNav;
+        }
+
+        void OnChoiceButtonPress((string choiceText, DialogueTree tree) choice)
+        {
+            StartCoroutine(WaitThenEndPlayFrame(.5f, choice.tree));
+
+            //Clear buttons
+            for (int i = this.currentButtons.Count - 1; i >= 0; i--)
+            {
+                Destroy(this.currentButtons[i]);
+            }
+            this.currentButtons.Clear();
+        }
 
         void OnContinueButtonHit(CallbackContext c)
         {
@@ -266,7 +291,7 @@ namespace Assets.Scripts.Dialogue_System
             }
         }
 
-        IEnumerator WaitThenEndPlayFrame(float secondsToWait, DialogueFile fileChosen = null)
+        IEnumerator WaitThenEndPlayFrame(float secondsToWait, DialogueTree fileChosenTree = null)
         {
             /*float time = 0;
             float timeStart = Time.realtimeSinceStartup; //remove after change pause
@@ -279,20 +304,14 @@ namespace Assets.Scripts.Dialogue_System
             //After change pause, change to: yield return new WaitForSeconds(secondsToWait);
             yield return new WaitForSecondsRealtime(secondsToWait);
 
+            SetConditionSatisfiedToTrue(); //<- needs to be before PlayDialogueTree so that after playing the new branch, the system knows to finish the current tree
+
             // stop audio
             // play dialogue tree from choice if that's something you have
-            if (fileChosen != null)
+            if (fileChosenTree != null)
             {
-                //Needs to NOT be a coroutine so that this.conditionSatisfied is not set to true until file is done being played
-                PlayDialogueTree(fileChosen.Dialogue);
+                yield return StartCoroutine(PlayDialogueTree(fileChosenTree)); //wait for this to finish
             }
-
-            SetConditionSatisfiedToTrue();
-
-            /*lock (this.conditionLock)
-            {
-                this.conditionSatisfiedStack.Push(true);
-            }*/
         }
 
         private void FireOffEvent(DialogueFireEvent fireEvent)
@@ -311,9 +330,11 @@ namespace Assets.Scripts.Dialogue_System
                 _ => throw new NotImplementedException(),
             };
 
-            SetConditionSatisfiedToTrue(); //<- needs to be before PlayDialogueTree so that after playing the new branch, the system knows to finish the current tree
+            StartCoroutine(WaitThenEndPlayFrame(0, result ? branch.OnTrue : branch.OnFalse));
+
+            //SetConditionSatisfiedToTrue(); //<- needs to be before PlayDialogueTree so that after playing the new branch, the system knows to finish the current tree
             
-            PlayDialogueTree(result ? branch.OnTrue : branch.OnFalse);
+            //PlayDialogueTree(result ? branch.OnTrue : branch.OnFalse);
         }
     }
 }
