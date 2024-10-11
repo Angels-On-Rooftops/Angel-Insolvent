@@ -13,6 +13,7 @@ namespace Assets.Scripts.Dialogue_System
         public void OnEnable()
         {
             maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", SaveData);
+            maid.GiveEvent(DataPersistenceManager.Instance, "onLoadTriggered", LoadData);
         }
 
         public void OnDisable()

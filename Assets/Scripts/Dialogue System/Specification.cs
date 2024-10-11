@@ -25,7 +25,7 @@ namespace Assets.Scripts.Dialogue_System
 
     public record DialogueFireEvent(string EventName) : DialogueNode();
 
-    public record DialogueSetFlag(string Flag, bool value) : DialogueNode();
+    public record DialogueSetFlag(string Flag, bool Value) : DialogueNode();
 
     public record DialogueBranch(DialogueTree OnTrue, DialogueTree OnFalse) : DialogueNode();
 
