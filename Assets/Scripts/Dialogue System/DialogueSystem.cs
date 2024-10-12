@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Assets.Scripts.Dialogue_System.DialogueLayouts;
-using Assets.Scripts.Dialogue_System.DialogueSamples;
 using Inventory;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
@@ -89,8 +83,6 @@ namespace Assets.Scripts.Dialogue_System
 
         private static IEnumerator PlayFrame(DialogueFrame frame, IDialogueLayout layout)
         {
-            Debug.Log($"Text played: {frame.BodyText}");
-
             // edit text for this frame
             layout.SetCharacter(frame.Character);
             layout.SetBodyText(frame.BodyText);
@@ -114,13 +106,14 @@ namespace Assets.Scripts.Dialogue_System
                         continueMaid,
                         (int n) =>
                         {
+                            Debug.Log(n);
                             selectedChoice = n;
                         }
                     ),
                 _ => throw new NotImplementedException(),
             };
 
-            yield return waitFor();
+            yield return Instance.StartCoroutine(waitFor());
 
             continueMaid.Cleanup();
 
@@ -179,8 +172,20 @@ namespace Assets.Scripts.Dialogue_System
         {
             bool choiceSelected = false;
 
-            // TODO bind events to button hits
-            // TODO set selected choice
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                Debug.Log(i);
+
+                int current = i; // we have to have this because we need to use the number in the event listener after the loop is complete
+                buttons[i]
+                    .onClick.AddListener(() =>
+                    {
+                        setSelectedChoice(current);
+                        choiceSelected = true;
+                    });
+
+                continueMaid.GiveTask(buttons[current].onClick.RemoveAllListeners);
+            }
 
             yield return new WaitUntil(() => choiceSelected);
         }

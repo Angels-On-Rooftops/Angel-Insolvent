@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
@@ -13,6 +9,12 @@ namespace Assets.Scripts.Dialogue_System.DialogueLayouts
     {
         [SerializeField]
         Canvas UILayout;
+
+        [SerializeField]
+        TMP_Text CharacterName;
+
+        [SerializeField]
+        TMP_Text BodyText;
 
         [SerializeField]
         Button[] ChoiceButtons;
@@ -29,12 +31,12 @@ namespace Assets.Scripts.Dialogue_System.DialogueLayouts
 
         public void SetBodyText(string bodyText)
         {
-            // TODO set body text
+            BodyText.text = bodyText;
         }
 
         public void SetCharacter(NarrativeCharacter character)
         {
-            // TODO set character name tag
+            CharacterName.text = character.Name;
         }
 
         public Button[] SetChoiceButtons(Choice choice, Maid buttonCleaner)
@@ -50,12 +52,18 @@ namespace Assets.Scripts.Dialogue_System.DialogueLayouts
             for (int i = 0; i < choice.Choices.Count; i++)
             {
                 // TODO
-                // (string choiceText, DialogueTree _) = choice.Choices[i]
-                // ChoiceButtons[i].text = choiceText
+                (string choiceText, DialogueTree _) = choice.Choices[i];
+                ChoiceButtons[i].GetComponentInChildren<TMP_Text>().text = choiceText;
 
-                // button.SetActive(true);
-                // buttonCleaner.GiveTask(() => button.SetActive(false);
+                Button button = ChoiceButtons[i];
+
+                button.gameObject.SetActive(true);
+                buttonCleaner.GiveTask(() => button.gameObject.SetActive(false));
+
+                buttonsEnabled[i] = ChoiceButtons[i];
             }
+
+            buttonsEnabled[0].Select();
 
             return buttonsEnabled;
         }

@@ -35,7 +35,7 @@ namespace Assets.Scripts.Dialogue_System.DialogueSamples
                     new DialogueFrame(
                         Characters.OverheadSpeaker,
                         "THE POLICE ARE ON THEIR WAY!!!!!",
-                        new TimedContinue(5)
+                        new TimedContinue(2f)
                     ),
                 }
             );

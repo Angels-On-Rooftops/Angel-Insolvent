@@ -62,7 +62,8 @@ namespace Items.Interactables
         protected void FreezeCharacterMovement()
         {
             //Pause game (should later replace with game's pause system)
-            Time.timeScale = 0;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMovement>().enabled =
+                false;
             //set character controller not active
             //this.player.GetComponent<CharacterController>().enabled = false;
         }
@@ -70,7 +71,8 @@ namespace Items.Interactables
         protected void UnFreezeCharacterMovement()
         {
             //Pause game (should later replace with game's pause system)
-            Time.timeScale = 1;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMovement>().enabled =
+                true;
             //set character controller active
             //this.player.GetComponent<CharacterController>().enabled = true;
         }
