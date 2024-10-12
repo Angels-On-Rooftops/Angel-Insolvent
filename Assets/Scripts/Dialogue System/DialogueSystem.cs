@@ -203,6 +203,7 @@ namespace Assets.Scripts.Dialogue_System
                 HasItem hasItem => PlayerInventory.Instance.HasItem(hasItem.ItemId),
                 ItemEquipped isEquipped => PlayerInventory.Instance.CurrentlyEquippedItem.itemID
                     == isEquipped.ItemId,
+                FlagValue flagValue => flags.FlagIsSet(flagValue.Flag),
                 _ => throw new NotImplementedException(),
             };
 
