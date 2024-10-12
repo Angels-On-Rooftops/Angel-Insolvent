@@ -6,7 +6,7 @@ using System;
 public class MusicSampler : MonoBehaviour
 {
     [SerializeField]
-    AudioSource Audio;
+    MIDI2EventUnity Track;
 
     [SerializeField]
     [Range(6, 13)]
@@ -46,7 +46,7 @@ public class MusicSampler : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= CacheUpdateDelay)
         {
-            Audio.GetSpectrumData(cache, 0, WindowType);
+            Track.AudioSource.GetSpectrumData(cache, 0, WindowType);
             Updated.Invoke();
             timer = 0;
         }

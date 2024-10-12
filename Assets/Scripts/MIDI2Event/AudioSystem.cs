@@ -19,6 +19,9 @@ public class AudioSystem : MonoBehaviour
     [SerializeField]
     float fadeTime = 1;
 
+    [SerializeField]
+    float fadedDB = -40;
+
     MIDI2EventUnity current;
     public MIDI2EventUnity CurrentSystem
     {
@@ -35,7 +38,7 @@ public class AudioSystem : MonoBehaviour
     {
         if (index >= 0 && index < Songs.Count)
         {
-            FadeToNext(current, Songs[index]);
+            StartCoroutine(FadeToNext(current, Songs[index]));
         }
         else
         {
@@ -48,8 +51,9 @@ public class AudioSystem : MonoBehaviour
         FadeToNext(current, null);
     }
 
-    IEnumerable FadeToNext(MIDI2EventUnity previous, MIDI2EventUnity next)
+    IEnumerator FadeToNext(MIDI2EventUnity previous, MIDI2EventUnity next)
     {
+        Debug.Log(previous.VolumeSliderName);
         if (previous == null)
         {
             StartNextIfRelevant(next);
@@ -60,7 +64,7 @@ public class AudioSystem : MonoBehaviour
         Mixer.GetFloat(previous.VolumeSliderName, out float startingVol);
         while (elapsedTime < fadeTime)
         {
-            float volStep = Mathf.Lerp(startingVol, 0, elapsedTime / fadeTime);
+            float volStep = Mathf.Lerp(startingVol, fadedDB, elapsedTime / fadeTime);
             Mixer.SetFloat(previous.VolumeSliderName, volStep);
             elapsedTime += Time.deltaTime;
             yield return null;

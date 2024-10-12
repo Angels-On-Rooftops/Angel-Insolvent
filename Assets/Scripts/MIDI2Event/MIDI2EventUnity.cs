@@ -60,6 +60,11 @@ public class MIDI2EventUnity : MonoBehaviour
         get => mixerVolumeName;
     }
 
+    public AudioSource AudioSource
+    {
+        get => audioInfo[currentTrackIndex].audioSource;
+    }
+
     void Awake()
     {
         eventPlayers = new();
@@ -168,9 +173,7 @@ public class MIDI2EventUnity : MonoBehaviour
 
             scheduledStartTime += currentDuration;
 
-            audioInfo[i + 1].audioSource.PlayScheduled(
-                scheduledStartTime + (AudioSettings.dspTime - initDsp)
-            );
+            audioInfo[i + 1].audioSource.PlayScheduled(scheduledStartTime);
             i++;
         }
         eventPlayers[currentTrackIndex].Play();
