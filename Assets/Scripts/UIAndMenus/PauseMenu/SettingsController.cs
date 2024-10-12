@@ -72,8 +72,6 @@ public class SettingsController : MonoBehaviour
         doneLabel.text = "Done";
 
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
-        categoryButtonsDictionary.Keys.First().onClick.Invoke();
-        categoryButtonsDictionary.Keys.First().Select();
     }
 
     private void SwitchSettingsCategory(Button categoryButton)
