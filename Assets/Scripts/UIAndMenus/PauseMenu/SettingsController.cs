@@ -65,16 +65,6 @@ public class SettingsController : MonoBehaviour
             categoryButtonsDictionary.Add(categoryButton, newSettingsPanel);
         }
 
-        var allCategoryButtons = categoryButtonsDictionary.Keys;
-        for (int i = 0; i < allCategoryButtons.Count ; i++)
-        {
-            var button = allCategoryButtons.ElementAt(i);
-            var navigation = button.navigation;
-            navigation.mode = Navigation.Mode.Explicit;
-            navigation.selectOnUp = i > 0 ? allCategoryButtons.ElementAt(i - 1) : null;
-            navigation.selectOnDown = i < allCategoryButtons.Count - 1 ? allCategoryButtons.ElementAt(i + 1) : null;
-        }
-
         //Setup done button
         Button doneButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
         doneButton.onClick.AddListener(delegate { doneBehavior.Invoke(); });
@@ -82,7 +72,8 @@ public class SettingsController : MonoBehaviour
         doneLabel.text = "Done";
 
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
-        allCategoryButtons.First().Select();
+        categoryButtonsDictionary.Keys.First().onClick.Invoke();
+        categoryButtonsDictionary.Keys.First().Select();
     }
 
     private void SwitchSettingsCategory(Button categoryButton)
@@ -134,7 +125,7 @@ public class SettingsController : MonoBehaviour
 
     public void SetVolume(float vol)
     {
-        AudioSource audioSource = this.transform.parent.parent.GetComponent<EscMenuController>().audioSource;
+        AudioSource audioSource = this.transform.parent.GetComponent<EscMenuController>().audioSource;
         if (audioSource != null)
         {
             audioSource.volume = vol;
