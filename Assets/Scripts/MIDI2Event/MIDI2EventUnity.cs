@@ -24,6 +24,9 @@ public class MIDI2EventUnity : MonoBehaviour
     [SerializeField]
     bool playOnStart;
 
+    [SerializeField]
+    string mixerVolumeName;
+
     List<Midi2Event> eventPlayers;
     float beforeSamples = 0;
     float lastTime = 0;
@@ -49,6 +52,12 @@ public class MIDI2EventUnity : MonoBehaviour
     public bool IsPlaying
     {
         get => eventPlayers[currentTrackIndex].IsPlaying;
+    }
+
+    //returns the name of the volume slider associated with this track
+    public string VolumeSliderName
+    {
+        get => mixerVolumeName;
     }
 
     void Awake()
@@ -133,7 +142,7 @@ public class MIDI2EventUnity : MonoBehaviour
         advancesScheduled++;
     }
 
-    public void AdvanceIfScheduled()
+    private void AdvanceIfScheduled()
     {
         if (advancesScheduled <= 0 || currentTrackIndex == audioInfo.Count - 1)
         {
@@ -149,7 +158,8 @@ public class MIDI2EventUnity : MonoBehaviour
     {
         currentTrackIndex = 0;
         int i = 0;
-        double scheduledStartTime = AudioSettings.dspTime;
+        double initDsp = AudioSettings.dspTime;
+        double scheduledStartTime = initDsp;
         audioInfo[i].audioSource.PlayScheduled(scheduledStartTime);
         while (i < audioInfo.Count - 1 && !audioInfo[i].audioSource.loop)
         {
@@ -158,7 +168,9 @@ public class MIDI2EventUnity : MonoBehaviour
 
             scheduledStartTime += currentDuration;
 
-            audioInfo[i + 1].audioSource.PlayScheduled(scheduledStartTime);
+            audioInfo[i + 1].audioSource.PlayScheduled(
+                scheduledStartTime + (AudioSettings.dspTime - initDsp)
+            );
             i++;
         }
         eventPlayers[currentTrackIndex].Play();

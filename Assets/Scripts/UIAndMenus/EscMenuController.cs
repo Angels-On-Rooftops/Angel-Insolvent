@@ -8,17 +8,32 @@ using static UnityEngine.InputSystem.InputAction;
 
 public class EscMenuController : MonoBehaviour
 {
-    [SerializeField] private InputAction pauseAction;
+    [SerializeField]
+    private InputAction pauseAction;
 
-    [SerializeField] private GameObject pauseMenuPanel;
-    [SerializeField] private GameObject settingsMenuPanel;
-    [SerializeField] private GameObject savePromptPanel;
+    [SerializeField]
+    private GameObject pauseMenuPanel;
 
-    [SerializeField] public AudioSource audioSource { get; private set; }
+    [SerializeField]
+    private GameObject settingsMenuPanel;
 
-    public GameObject getPauseMenuPanel() { return pauseMenuPanel; }
-    public GameObject getSettingsMenuPanel() { return settingsMenuPanel; }
-    public GameObject getSavePromptPanel() { return savePromptPanel; }
+    [SerializeField]
+    private GameObject savePromptPanel;
+
+    public GameObject getPauseMenuPanel()
+    {
+        return pauseMenuPanel;
+    }
+
+    public GameObject getSettingsMenuPanel()
+    {
+        return settingsMenuPanel;
+    }
+
+    public GameObject getSavePromptPanel()
+    {
+        return savePromptPanel;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -42,11 +57,11 @@ public class EscMenuController : MonoBehaviour
 
     public void PauseToggle(CallbackContext c)
     {
-        audioSource = FindFirstObjectByType<AudioSource>();
         if (GameStateManager.Instance.CurrentState is PlayingState)
         {
             GameStateManager.Instance.SetState(new GameStateManagement.PauseState(this));
-        } else if(GameStateManager.Instance.CurrentState is not MainMenuState)
+        }
+        else if (GameStateManager.Instance.CurrentState is not MainMenuState)
         {
             GameStateManager.Instance.SetState(new PlayingState());
         }
