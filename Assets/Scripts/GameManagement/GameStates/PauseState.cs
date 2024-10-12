@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GameStateManagement
 {
@@ -20,6 +21,7 @@ namespace GameStateManagement
             EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
             if (EscMenuController.audioSource != null) EscMenuController.audioSource.Pause();
+            EscMenuController.getPauseMenuPanel().GetComponentInChildren<Button>().Select();
         }
 
         public void ExitState()

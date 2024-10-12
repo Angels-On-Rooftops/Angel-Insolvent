@@ -35,7 +35,7 @@ public class SettingsController : MonoBehaviour
     void Start()
     {
         categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/Settings/SettingCategoryButton");
-        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SettingsPanelPrefab");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/VerticalPanelPrefab");
         singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SingleSettingPrefab");
 
         categoriesPanel = this.gameObject.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
@@ -65,6 +65,16 @@ public class SettingsController : MonoBehaviour
             categoryButtonsDictionary.Add(categoryButton, newSettingsPanel);
         }
 
+        var allCategoryButtons = categoryButtonsDictionary.Keys;
+        for (int i = 0; i < allCategoryButtons.Count ; i++)
+        {
+            var button = allCategoryButtons.ElementAt(i);
+            var navigation = button.navigation;
+            navigation.mode = Navigation.Mode.Explicit;
+            navigation.selectOnUp = i > 0 ? allCategoryButtons.ElementAt(i - 1) : null;
+            navigation.selectOnDown = i < allCategoryButtons.Count - 1 ? allCategoryButtons.ElementAt(i + 1) : null;
+        }
+
         //Setup done button
         Button doneButton = Instantiate(categoryButtonPrefab, categoriesPanel.gameObject.transform);
         doneButton.onClick.AddListener(delegate { doneBehavior.Invoke(); });
@@ -72,6 +82,7 @@ public class SettingsController : MonoBehaviour
         doneLabel.text = "Done";
 
         activeCategory = categoryButtonsDictionary.Values.FirstOrDefault();
+        allCategoryButtons.First().Select();
     }
 
     private void SwitchSettingsCategory(Button categoryButton)
