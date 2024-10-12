@@ -47,9 +47,13 @@ public class ShopController : MonoBehaviour
     [SerializeField]
     private GameObject invObj; // canvas game object
 
+    [SerializeField]
+    private GameObject playerInvObj; // player's inventory
+
     // Canvas children
     private GameObject invPanel; // main inventory panel within canvas
-    private GameObject coins; // Player coins
+    private GameObject playerCoins; // Player coins
+    private GameObject coins; // coin UI object in shop
     private GameObject itemInfo; // item name & description parent (holds the two fields below)
     private GameObject itemName;
     private GameObject itemDescription;
@@ -71,7 +75,12 @@ public class ShopController : MonoBehaviour
         pInv = PlayerInventory.Instance;
         shopInv = ShopInventory.Instance;
         invPanel = invObj.transform.GetChild(0).gameObject;
-        coins = invObj.transform.GetChild(1).gameObject;
+
+        playerInvObj.SetActive(true);
+        playerCoins = GameObject.FindWithTag("Coins"); // get coins from player
+        playerInvObj.SetActive(false);
+
+        coins = invObj.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
         itemInfo = invObj.transform.GetChild(2).gameObject;
 
         invObj.SetActive(true);
@@ -88,6 +97,7 @@ public class ShopController : MonoBehaviour
         }
 
         LoadShopItems();
+        itemsInInventory = shopItems;
 
         inventoryRowSize = invPanel.GetComponent<GridLayoutGroup>().constraintCount;
         selectedSlot = invPanel.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Image>();
@@ -216,6 +226,26 @@ public class ShopController : MonoBehaviour
         // if player has enough coins, add item to inventory,
         // subtract amt. of coins from player's coins.
         // maybe add a confirmation box before purchasing
+
+        int playerCoinAmt = int.Parse(playerCoins.GetComponent<TextMeshProUGUI>().text);
+        if (invObj.activeSelf && itemsInInventory[inventoryIndex] != null)
+        {
+            int currentItemPrice = itemsInInventory[inventoryIndex].price;
+            if (playerCoinAmt < currentItemPrice)
+            {
+                Debug.Log("Cannot buy - come back when you're a little, mmm, richer!");
+            }
+            else
+            {
+                playerCoinAmt -= currentItemPrice;
+                playerCoins.GetComponent<TextMeshProUGUI>().text = playerCoinAmt.ToString();
+                coins.GetComponent<TextMeshProUGUI>().text = playerCoinAmt.ToString();
+
+                pInv.Add(itemsInInventory[inventoryIndex]);
+                // shopInv.PurchaseItem(itemsInInventory[inventoryIndex]); // Remove item from shop
+            }
+        }
+        
     }
     
     private void Update()
@@ -223,12 +253,14 @@ public class ShopController : MonoBehaviour
         if (shopItems.Count > inventoryIndex)
         {
             itemInfo.SetActive(true);
-            itemName.GetComponent<TextMeshProUGUI>().text = shopItems[inventoryIndex].itemName;
-            itemDescription.GetComponent<TextMeshProUGUI>().text = shopItems[inventoryIndex].itemDesc;
+            itemName.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemName;
+            itemDescription.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemDesc;
+            itemPrice.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].price.ToString();
         }
         else
         {
             itemInfo.SetActive(false);
         }
+        coins.GetComponent<TextMeshProUGUI>().text = playerCoins.GetComponent<TextMeshProUGUI>().text;
     }
 }

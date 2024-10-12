@@ -48,9 +48,9 @@ namespace Inventory
             base.Remove(item);
         }
 
-        public void PurchaseItem(InventoryItem item)
+        public void PurchaseItem(ItemData item, int amount = 1)
         {
-            this.Remove(item);
+            this.Remove(item, amount);
         }
     }
 }
