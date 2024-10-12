@@ -78,7 +78,7 @@ public class AudioSystem : MonoBehaviour
     {
         if (toStart != null)
         {
-            toStart.Play();
+            toStart.Restart();
         }
         current = toStart;
     }

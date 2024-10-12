@@ -155,12 +155,15 @@ public class MIDI2EventUnity : MonoBehaviour
         }
         audioInfo[currentTrackIndex + 1].audioSource.PlayScheduled(AudioSettings.dspTime);
         audioInfo[currentTrackIndex].audioSource.Stop();
+        advancesScheduled--;
         AdvanceEventSys();
     }
 
     //plays the audio and chart
     public void Play()
     {
+        beforeSamples = 0;
+        lastTime = 0;
         currentTrackIndex = 0;
         int i = 0;
         double initDsp = AudioSettings.dspTime;

@@ -5,19 +5,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ChangeTrackOnCollide : MonoBehaviour
+public class ScheduleAdvanceOnCollide : MonoBehaviour
 {
     [SerializeField]
-    AudioSystem sys;
-
-    [SerializeField]
-    int SongIndex;
+    MIDI2EventUnity sys;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent(out CharacterController controller))
         {
-            sys.SwitchToSong(SongIndex);
+            sys.ScheduleAdvance();
         }
     }
 }
