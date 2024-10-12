@@ -10,13 +10,13 @@ namespace Assets.Scripts.Dialogue_System
 
         Maid maid = new();
 
-        public void OnEnable()
+        public void Enable()
         {
             maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", SaveData);
             maid.GiveEvent(DataPersistenceManager.Instance, "onLoadTriggered", LoadData);
         }
 
-        public void OnDisable()
+        public void Disable()
         {
             maid.Cleanup();
         }

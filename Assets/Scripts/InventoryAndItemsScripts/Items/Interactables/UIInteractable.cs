@@ -1,6 +1,6 @@
-using Inventory;
 using System.Collections;
 using System.Collections.Generic;
+using Inventory;
 using UnityEngine;
 
 namespace Items.Interactables
@@ -8,18 +8,17 @@ namespace Items.Interactables
     //This class should eventually be updated to better match how the rest of the UI is set up
     public class UIInteractable : MonoBehaviour, IInteractable
     {
-        [SerializeField] protected GameObject UIObject;
-
         protected bool isActive = false;
         protected InteractableOverlayHelper interactableOverlay;
 
-        public bool DestroyAfterInteracting { get { return false; } }
+        public bool DestroyAfterInteracting
+        {
+            get { return false; }
+        }
 
         protected virtual void Awake()
         {
             GetInteractableOverlayComponent();
-
-            this.UIObject.SetActive(false);
         }
 
         protected void GetInteractableOverlayComponent()
@@ -47,14 +46,10 @@ namespace Items.Interactables
 
             if (this.isActive)
             {
-                this.UIObject?.SetActive(true);
-
                 FreezeCharacterMovement();
             }
             else
             {
-                this.UIObject?.SetActive(false);
-
                 UnFreezeCharacterMovement();
             }
         }

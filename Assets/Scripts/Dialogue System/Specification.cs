@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace System.Runtime.CompilerServices
 {
@@ -12,6 +13,27 @@ namespace System.Runtime.CompilerServices
 
 namespace Assets.Scripts.Dialogue_System
 {
+    public abstract class DialogueFile : MonoBehaviour
+    {
+        public abstract DialogueTree Dialogue { get; }
+        public abstract DialogueLayoutType LayoutType { get; }
+    }
+
+    public enum DialogueLayoutType
+    {
+        Talk,
+        PopUp,
+    }
+
+    public interface IDialogueLayout
+    {
+        void Enable();
+        void Disable();
+        void SetCharacter(NarrativeCharacter character);
+        void SetBodyText(string bodyText);
+        Button[] SetChoiceButtons(Choice choice, Maid buttonCleaner);
+    }
+
     public record DialogueTree(List<DialogueNode> Nodes) { }
 
     public record DialogueNode();

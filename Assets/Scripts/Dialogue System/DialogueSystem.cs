@@ -4,322 +4,194 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assets.Scripts.Dialogue_System.DialogueLayouts;
 using Assets.Scripts.Dialogue_System.DialogueSamples;
 using Inventory;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 
 namespace Assets.Scripts.Dialogue_System
 {
-    /// <summary>
-    /// If you want to use the default for a field, leave it null
-    /// </summary>
-    [Serializable]
-    public class DialogueUIElements
-    {
-        public GameObject dialogueUIParent;
-        public TMP_Text dialogueText;
-        public TMP_Text characterNameText;
-        [Space]
-        public GameObject buttonPrefab;
-        public GameObject buttonParent;
-        public Vector2 firstButtonPosition;
-        public Vector2 buttonDisplacement;
-    }
-    
+    [RequireComponent(typeof(TalkLayout), typeof(PopUpLayout))]
     class DialogueSystem : MonoBehaviour
     {
-        [SerializeField] private DialogueUIElements defaultUIElements;
-        [Space]
         [SerializeField]
-        [Tooltip("The keybinds that allow the player to move forward in the dialogue (when not choosing a specific response)")]
+        [Tooltip(
+            "The keybinds that allow the player to move forward in dialogue (when not choosing a specific response)"
+        )]
         InputAction InteractAction;
 
-        public static DialogueSystem Instance { get; private set; }
+        public static event Action EndOfDialogueReached;
 
-        public event Action EndOfDialogueReached;
+        static readonly DialogueFlags flags = new();
+        static DialogueSystem Instance { get; set; }
 
-        private Stack<bool> conditionSatisfiedStack = new Stack<bool>(); //needs to be a stack to handle choices implementation
-        //private readonly object conditionLock = new(); //whoops i thought co-routines were separate threads and they are not
-
-        private DialogueUIElements currentUIElements = new DialogueUIElements();
-
-        private List<GameObject> currentButtons = new List<GameObject>();
+        AudioSource DialogueAudio => GetComponent<AudioSource>();
 
         private void Awake()
         {
-            // If there is an instance, and it's not me, delete myself.
+            InteractAction.Enable();
 
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this);
-            }
-            else
-            {
-                Instance = this;
-            }
-
-            this.defaultUIElements.dialogueUIParent.SetActive(false);
+            Assert.IsNull(Instance, "More than 1 dialogue system detected!!!");
+            Instance = this;
         }
 
-        private void FillCurrentUIElements(DialogueUIElements uniqueUIElements)
+        private void OnEnable()
         {
-            this.currentUIElements.dialogueUIParent
-                = uniqueUIElements.dialogueUIParent != null ? uniqueUIElements.dialogueUIParent : this.defaultUIElements.dialogueUIParent;
-            this.currentUIElements.dialogueText
-                = uniqueUIElements.dialogueText != null ? uniqueUIElements.dialogueText : this.defaultUIElements.dialogueText;
-            this.currentUIElements.characterNameText
-                = uniqueUIElements.characterNameText != null ? uniqueUIElements.characterNameText : this.defaultUIElements.characterNameText;
-            
-            this.currentUIElements.buttonPrefab
-                = uniqueUIElements.buttonPrefab != null ? uniqueUIElements.buttonPrefab : this.defaultUIElements.buttonPrefab;
-            this.currentUIElements.buttonParent
-                = uniqueUIElements.buttonParent != null ? uniqueUIElements.buttonParent : this.defaultUIElements.buttonParent;
-            this.currentUIElements.firstButtonPosition
-                = uniqueUIElements.firstButtonPosition != null ? uniqueUIElements.firstButtonPosition : this.defaultUIElements.firstButtonPosition;
-            this.currentUIElements.buttonDisplacement
-                = uniqueUIElements.buttonDisplacement != null ? uniqueUIElements.buttonDisplacement : this.defaultUIElements.buttonDisplacement;
+            flags.Enable();
         }
 
-        public void PlayDialogue(DialogueFile file, DialogueUIElements uniqueUIElements = null)
+        private void OnDisable()
         {
-            if (uniqueUIElements == null)
+            flags.Disable();
+        }
+
+        public static IEnumerator PlayDialogue(DialogueFile file)
+        {
+            IDialogueLayout layout = file.LayoutType switch
             {
-                uniqueUIElements = new DialogueUIElements();
-            }
-
-            //FillCurrentUIElements(uniqueUIElements);
-
-            this.currentUIElements = this.defaultUIElements;
-
-            this.currentUIElements.dialogueUIParent.SetActive(true);
-
-            //StartCoroutine(PlayDialogueInCoroutine(file)); 
-            //PlayDialogueInCoroutine(file);
-            StartCoroutine(PlayDialogueTree(file.Dialogue, true));
-        }
-
-        //needs to be a co-routine since it has to wait
-        //(ends the dialogue, so do not use for for branching files in the middle of the dialogue)
-        private void PlayDialogueInCoroutine(DialogueFile file)
-        {
-            StartCoroutine(PlayDialogueTree(file.Dialogue, true));
-
-            //this.currentUIElements.dialogueUIParent.SetActive(false);
-            //EndOfDialogueReached?.Invoke();
-
-            //yield return null;
-        }
-
-        IEnumerator PlayDialogueTree(DialogueTree tree, bool endDialogue = false)
-        {
-            foreach (DialogueNode d in tree.Nodes)
-            {
-                this.conditionSatisfiedStack.Push(false);
-
-                PlayDialogueNode(d);
-
-                //Do not play next dialogue node until condition is met by a routine in PlayDialogueNode
-                bool shouldBreakLoop = false;
-                while (!shouldBreakLoop)
-                {
-                    bool conditionSatisfied = this.conditionSatisfiedStack.Pop();
-
-                    if (conditionSatisfied)
-                    {
-                        shouldBreakLoop = true;
-                    }
-                    else
-                    {
-                        this.conditionSatisfiedStack.Push(false);
-                    }
-
-                    yield return null;
-                }
-            }
-
-            if (endDialogue)
-            {
-                this.currentUIElements.dialogueUIParent.SetActive(false);
-                EndOfDialogueReached?.Invoke();
-            }
-        }
-
-        private void SetConditionSatisfiedToTrue()
-        {
-            this.conditionSatisfiedStack.Pop();
-            this.conditionSatisfiedStack.Push(true);
-        }
-
-        private void PlayDialogueNode(DialogueNode node)
-        {
-            Action toPlay = node switch
-            {
-                DialogueFrame frame => () => PlayFrame(frame),
-                DialogueFireEvent dialogueEvent => () => FireOffEvent(dialogueEvent),
-                DialogueBranch branch => () => DoBranch(branch),
+                DialogueLayoutType.Talk => Instance.GetComponent<TalkLayout>(),
+                DialogueLayoutType.PopUp => Instance.GetComponent<PopUpLayout>(),
                 _ => throw new NotImplementedException(),
             };
 
-            toPlay();
+            layout.Enable();
+            yield return Instance.StartCoroutine(PlayDialogueTree(file.Dialogue, layout));
+            EndOfDialogueReached?.Invoke();
+            layout.Disable();
         }
 
-        private void PlayFrame(DialogueFrame frame)
+        public static IEnumerator PlayDialogueTree(DialogueTree tree, IDialogueLayout layout)
         {
-            // edit the dialogue text
-            this.currentUIElements.dialogueText.text = frame.BodyText;
-            // edit the character name
-            this.currentUIElements.characterNameText.text = frame.Character.Name;
+            foreach (DialogueNode node in tree.Nodes)
+            {
+                yield return PlayDialogueNode(node, layout);
+            }
+        }
+
+        private static IEnumerator PlayDialogueNode(DialogueNode node, IDialogueLayout layout)
+        {
+            Func<IEnumerator> toPlay = node switch
+            {
+                DialogueFrame frame => () => PlayFrame(frame, layout),
+                DialogueFireEvent dialogueEvent => () => FireOffEvent(dialogueEvent),
+                DialogueBranch branch => () => DoBranch(branch, layout),
+                DialogueSetFlag setFlag => () => DoFlagNode(setFlag),
+                _ => throw new NotImplementedException(),
+            };
+
+            yield return toPlay();
+        }
+
+        private static IEnumerator PlayFrame(DialogueFrame frame, IDialogueLayout layout)
+        {
+            Debug.Log($"Text played: {frame.BodyText}");
+
+            // edit text for this frame
+            layout.SetCharacter(frame.Character);
+            layout.SetBodyText(frame.BodyText);
+
             // play audio
+            //Instance.DialogueAudio.clip = null; // TODO get clip
+            Instance.DialogueAudio.Play();
 
-            // wait until the continue condition is satisfied        
+            // wait until the continue condition is satisfied
+            Maid continueMaid = new();
+            int selectedChoice = -1;
 
-            if (frame.ContinueCondition is ContinueButtonHit)
+            Func<IEnumerator> waitFor = frame.ContinueCondition switch
             {
-                InteractAction.performed += OnContinueButtonHit;
-                InteractAction.Enable();
-            }
-            else if (frame.ContinueCondition is TimedContinue)
-            {
-                StartCoroutine( WaitThenEndPlayFrame(
-                    ((TimedContinue)frame.ContinueCondition).Duration ) );
-            }
-            else if (frame.ContinueCondition is Choice)
-            {
-                CreateButtons(((Choice)frame.ContinueCondition).Choices);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }            
+                ContinueButtonHit button => () => WaitForContinueButton(continueMaid),
+                TimedContinue timedContinue => () => WaitForTimer(timedContinue),
+                Choice choiceContinue => () =>
+                    DoChoiceSelection(
+                        choiceContinue,
+                        layout,
+                        continueMaid,
+                        (int n) =>
+                        {
+                            selectedChoice = n;
+                        }
+                    ),
+                _ => throw new NotImplementedException(),
+            };
+
+            yield return waitFor();
+
+            continueMaid.Cleanup();
 
             // stop audio
+            Instance.DialogueAudio.Stop();
+
             // play dialogue tree from choice if that's something you have
+            if (frame.ContinueCondition is Choice)
+            {
+                (string choiceText, DialogueTree tree) = (
+                    frame.ContinueCondition as Choice
+                ).Choices[selectedChoice];
+
+                yield return PlayDialogueTree(tree, layout);
+            }
         }
 
-        private void CreateButtons(List<(string, DialogueTree)> choices)
+        static IEnumerator WaitForContinueButton(Maid continueMaid)
         {
-            Vector2 buttonPosition = this.currentUIElements.firstButtonPosition;
-            foreach((string, DialogueTree) choice in choices)
-            {
-                CreateButton(buttonPosition, choice);
-                buttonPosition += this.currentUIElements.buttonDisplacement;
-            }
-
-            if (this.currentButtons.Count > 0)
-            {
-                Button firstButton = this.currentButtons[0].GetComponentInChildren<Button>();
-                firstButton.Select();
-            }
+            bool continueButtonHit = false;
+            continueMaid.GiveEvent(
+                Instance.InteractAction,
+                "performed",
+                (CallbackContext c) =>
+                {
+                    continueButtonHit = true;
+                }
+            );
+            yield return new WaitUntil(() => continueButtonHit);
         }
 
-        private void CreateButton(Vector2 buttonPosition, (string choiceText, DialogueTree tree) choice)
+        static IEnumerator WaitForTimer(TimedContinue timedContinue)
         {
-            GameObject newButton = Instantiate(this.currentUIElements.buttonPrefab, 
-                buttonPosition, Quaternion.identity, this.currentUIElements.buttonParent.transform);
-
-            Button buttonComponent = newButton.GetComponentInChildren<Button>();
-            buttonComponent.onClick.AddListener(delegate { OnChoiceButtonPress(choice); });
-
-            newButton.GetComponentInChildren<TMP_Text>().text = choice.choiceText;
-
-            this.currentButtons.Add(newButton);
-
-            SetLastButtonNavigation();
+            yield return new WaitForSeconds(timedContinue.Duration);
         }
 
-        private void SetLastButtonNavigation()
+        static IEnumerator DoChoiceSelection(
+            Choice choice,
+            IDialogueLayout layout,
+            Maid continueMaid,
+            Action<int> setSelectedChoice
+        )
         {
-            int index = this.currentButtons.Count - 1;
-
-            if (index <= 0)
-            {
-                return;
-            }
-
-            Button lastButton = this.currentButtons[index].GetComponentInChildren<Button>();
-            Button prevButton = this.currentButtons[index - 1].GetComponentInChildren<Button>();
-
-            Navigation lastButtonNav = new Navigation();
-            lastButtonNav.mode = Navigation.Mode.Explicit;
-
-            Navigation prevButtonNav;
-            if (index == 1)
-            {
-                prevButtonNav = new Navigation();
-                prevButtonNav.mode = Navigation.Mode.Explicit;
-            }
-            else
-            {
-                prevButtonNav = prevButton.navigation;
-            }
-
-            lastButtonNav.selectOnLeft = prevButton;
-            prevButtonNav.selectOnRight = lastButton;
-
-            lastButtonNav.selectOnUp = prevButton;
-            prevButtonNav.selectOnDown = lastButton;
-
-            lastButton.navigation = lastButtonNav;
-            prevButton.navigation = prevButtonNav;
+            yield return WaitForChoiceSelection(
+                layout.SetChoiceButtons(choice, continueMaid),
+                continueMaid,
+                setSelectedChoice
+            );
         }
 
-        void OnChoiceButtonPress((string choiceText, DialogueTree tree) choice)
+        static IEnumerator WaitForChoiceSelection(
+            Button[] buttons,
+            Maid continueMaid,
+            Action<int> setSelectedChoice
+        )
         {
-            StartCoroutine(WaitThenEndPlayFrame(.5f, choice.tree));
+            bool choiceSelected = false;
 
-            //Clear buttons
-            for (int i = this.currentButtons.Count - 1; i >= 0; i--)
-            {
-                Destroy(this.currentButtons[i]);
-            }
-            this.currentButtons.Clear();
+            // TODO bind events to button hits
+            // TODO set selected choice
+
+            yield return new WaitUntil(() => choiceSelected);
         }
 
-        void OnContinueButtonHit(CallbackContext c)
-        {
-            if (c.performed) //wait for full performance of action (ex. both a press and release of a button)
-            {
-                InteractAction.performed -= OnContinueButtonHit;
-                InteractAction.Disable();
-
-                StartCoroutine(WaitThenEndPlayFrame(.5f));
-            }
-        }
-
-        IEnumerator WaitThenEndPlayFrame(float secondsToWait, DialogueTree fileChosenTree = null)
-        {
-            /*float time = 0;
-            float timeStart = Time.realtimeSinceStartup; //remove after change pause
-            while (time <= secondsToWait)
-            {
-                //After change pause, change to: time += Time.deltaTime;
-                time = Time.realtimeSinceStartup - timeStart;
-            }*/
-
-            //After change pause, change to: yield return new WaitForSeconds(secondsToWait);
-            yield return new WaitForSecondsRealtime(secondsToWait);
-
-            SetConditionSatisfiedToTrue(); //<- needs to be before PlayDialogueTree so that after playing the new branch, the system knows to finish the current tree
-
-            // stop audio
-            // play dialogue tree from choice if that's something you have
-            if (fileChosenTree != null)
-            {
-                yield return StartCoroutine(PlayDialogueTree(fileChosenTree)); //wait for this to finish
-            }
-        }
-
-        private void FireOffEvent(DialogueFireEvent fireEvent)
+        private static IEnumerator FireOffEvent(DialogueFireEvent fireEvent)
         {
             DialogueEvents.FireEvent(fireEvent.EventName);
-            SetConditionSatisfiedToTrue();
+            yield return null;
         }
 
-        private void DoBranch(DialogueBranch branch)
+        private static IEnumerator DoBranch(DialogueBranch branch, IDialogueLayout layout)
         {
             bool result = branch switch
             {
@@ -329,11 +201,13 @@ namespace Assets.Scripts.Dialogue_System
                 _ => throw new NotImplementedException(),
             };
 
-            StartCoroutine(WaitThenEndPlayFrame(0, result ? branch.OnTrue : branch.OnFalse));
+            yield return PlayDialogueTree(result ? branch.OnTrue : branch.OnFalse, layout);
+        }
 
-            //SetConditionSatisfiedToTrue(); //<- needs to be before PlayDialogueTree so that after playing the new branch, the system knows to finish the current tree
-            
-            //PlayDialogueTree(result ? branch.OnTrue : branch.OnFalse);
+        private static IEnumerator DoFlagNode(DialogueSetFlag setFlag)
+        {
+            flags.SetFlag(setFlag.Flag, setFlag.Value);
+            yield return null;
         }
     }
 }

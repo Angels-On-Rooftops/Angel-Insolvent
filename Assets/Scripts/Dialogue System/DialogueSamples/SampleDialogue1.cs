@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity;
-using UnityEngine;
+﻿using System.Collections.Generic;
+
 namespace Assets.Scripts.Dialogue_System.DialogueSamples
 {
-    public abstract class DialogueFile : MonoBehaviour
-    {
-        public abstract DialogueTree Dialogue { get; }
-    }
-
     public class SampleDialogue1 : DialogueFile
     {
+        public override DialogueLayoutType LayoutType => DialogueLayoutType.Talk;
+
         public override DialogueTree Dialogue =>
             new(
                 new List<DialogueNode>()
