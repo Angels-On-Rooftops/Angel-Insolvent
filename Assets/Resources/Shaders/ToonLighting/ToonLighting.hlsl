@@ -25,6 +25,7 @@ struct ToonLightingParams
     bool isToon;
     float diffuseSteps;
     float specularSteps;
+    float stepOffset;
 };
 
 float GetShininessPower(float shininess)
@@ -36,7 +37,8 @@ float GetShininessPower(float shininess)
 float Posterize(float value, float steps)
 {
     //posterize with offset to account for floor cutting off too much by default
-    return saturate(floor((value + (0.5 / steps)) * steps) * (1 / steps));
+    //saturate(floor((value + (0.5 / steps)) * steps) * (1 / steps));
+    return saturate(floor(value * steps) * (1 / steps));
 }
 
 #ifndef SHADERGRAPH_PREVIEW
@@ -55,8 +57,8 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     if (params.isToon)
     {
         //posterize lighting contributions
-        diffuse = Posterize(diffuse, params.diffuseSteps);
-        specular = Posterize(specular, params.specularSteps);
+        diffuse = Posterize(diffuse + (params.stepOffset/ params.diffuseSteps), params.diffuseSteps);
+        specular = Posterize(specular + (params.stepOffset/ params.specularSteps), params.specularSteps);
     }
 
     //calc light total
@@ -87,8 +89,8 @@ float3 CalculateLighting(ToonLightingParams params)
         if (params.isToon)
         {
             //posterize lighting contributions
-            diffuse = Posterize(diffuse, params.diffuseSteps);
-            specular = Posterize(specular, params.specularSteps);
+            diffuse = Posterize(diffuse, params.diffuseSteps + (params.stepOffset/ params.diffuseSteps));
+            specular = Posterize(specular, params.diffuseSteps + (params.stepOffset/ params.diffuseSteps));
         }
     
         return params.albedo * (diffuse+specular);
@@ -169,6 +171,7 @@ void ToonLighting_float(
     bool IsToon,
     float DiffuseSteps,
     float SpecularSteps,
+    float StepOffset,
     out float3 Color
 ){ 
     ToonLightingParams params;
@@ -186,6 +189,7 @@ void ToonLighting_float(
     params.isToon = IsToon;
     params.diffuseSteps = DiffuseSteps;
     params.specularSteps = SpecularSteps;
+    params.stepOffset = StepOffset;
     
     Color = CalculateLighting(params);
 }

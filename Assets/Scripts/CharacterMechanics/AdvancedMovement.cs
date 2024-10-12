@@ -27,6 +27,7 @@ public class AdvancedMovement : MonoBehaviour
             { AdvancedMovementState.MoveStarting, GetComponent<MoveSpeedUp>() },
             { AdvancedMovementState.MoveStopping, GetComponent<MoveSpeedDown>() },
             { AdvancedMovementState.Gliding, GetComponent<Glide>() },
+            { AdvancedMovementState.HighJumping, GetComponent<HighJump>() },
         };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();

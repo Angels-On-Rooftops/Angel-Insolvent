@@ -4,36 +4,34 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Camera))]
 public class CharacterCamera : MonoBehaviour
 {
-
-
     [SerializeField]
-    [Tooltip("The transform the camera should be positioned relative to. " +
-        "Traditionally the character or a fixed point.")]
+    [Tooltip(
+        "The transform the camera should be positioned relative to. "
+            + "Traditionally the character or a fixed point."
+    )]
     public Transform FocusOn;
+
     [SerializeField]
-    [Tooltip("Shifts the focus relative to the focus transform. " +
-        "The camera will still move relative to the original focus, but will " +
-        "be looking at a different point.")]
+    [Tooltip(
+        "Shifts the focus relative to the focus transform. "
+            + "The camera will still move relative to the original focus, but will "
+            + "be looking at a different point."
+    )]
     public Vector3 FocusOffset = Vector3.zero;
 
     [Space(20)]
-
     [SerializeField]
-    [Tooltip("Whether the camera can move in a fixed radius around " +
-    "the character, controlled by the mouse or right stick on a gamepad.")]
+    [Tooltip(
+        "Whether the camera can move in a fixed radius around "
+            + "the character, controlled by the mouse or right stick on a gamepad."
+    )]
     public bool CanOrbit = true;
 
     [SerializeField]
     [Tooltip("Whether the user can zoom in and out with the scroll wheel.")]
     public bool CanZoom = true;
 
-    [SerializeField]
-    [Tooltip("If set, the camera's position will be confined to points within this volume. Useful for 2D " +
-    "games where the camera might not want to follow the player to the edge of the playable area.")]
-    public Collider LimitingVolume;
-
     [Space(20)]
-
     [SerializeField]
     [Tooltip("The current distance from the focus with the offset applied.")]
     public float ZoomLevel = 20f;
@@ -50,7 +48,6 @@ public class CharacterCamera : MonoBehaviour
     public float ControllerZoomIncrement = 5f;
 
     [Space(10)]
-
     [SerializeField]
     [Tooltip("The camera's orbiting sensitivity from moving the mouse.")]
     float MouseRotationSensitivity = 1;
@@ -64,10 +61,11 @@ public class CharacterCamera : MonoBehaviour
     float ZoomSensitivity = 1;
 
     [Space(20)]
-
     [SerializeField]
-    [Tooltip("Whether or not the camera should push inwards to avoid intersecting with level geometry.\n\n" +
-        "Note: Clipping will only be avoided on objects with colliders attached.")]
+    [Tooltip(
+        "Whether or not the camera should push inwards to avoid intersecting with level geometry.\n\n"
+            + "Note: Clipping will only be avoided on objects with colliders attached."
+    )]
     bool MitigateClipping = true;
 
     [SerializeField]
@@ -75,7 +73,6 @@ public class CharacterCamera : MonoBehaviour
 
     [SerializeField]
     InputAction Zoom;
-
 
     Vector2 RawOrbitDelta;
     string OrbitInput;
@@ -90,7 +87,6 @@ public class CharacterCamera : MonoBehaviour
 
     Camera Camera => GetComponent<Camera>();
 
-
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -99,23 +95,29 @@ public class CharacterCamera : MonoBehaviour
         NextTransform = maid.GiveTask(new GameObject()).transform;
         NextTransform.name = "CameraHelper";
 
-        maid.GiveEvent(Rotate, "performed", (InputAction.CallbackContext context) => OrbitInput = context.control.device.description.deviceClass);
+        maid.GiveEvent(
+            Rotate,
+            "performed",
+            (InputAction.CallbackContext context) =>
+                OrbitInput = context.control.device.description.deviceClass
+        );
 
-        maid.GiveEvent(Zoom, "performed", (InputAction.CallbackContext context) =>
+        maid.GiveEvent(
+            Zoom,
+            "performed",
+            (InputAction.CallbackContext context) =>
             {
                 if (!CanZoom)
                 {
                     return;
                 }
 
-                float zoomDelta = context.ReadValueAsObject() is Vector2 
-                    ? context.ReadValue<Vector2>().normalized.y 
-                    : Mathf.Sign(context.ReadValue<float>()) * ControllerZoomIncrement;
+                float zoomDelta =
+                    context.ReadValueAsObject() is Vector2
+                        ? context.ReadValue<Vector2>().normalized.y
+                        : Mathf.Sign(context.ReadValue<float>()) * ControllerZoomIncrement;
 
-                ZoomLevel = Mathf.Clamp(
-                    ZoomLevel - zoomDelta * ZoomSensitivity,
-                    MinZoom, MaxZoom
-                );
+                ZoomLevel = Mathf.Clamp(ZoomLevel - zoomDelta * ZoomSensitivity, MinZoom, MaxZoom);
             }
         );
 
@@ -138,10 +140,17 @@ public class CharacterCamera : MonoBehaviour
         if (OrbitInput == "Mouse")
         {
             Vector2 mouseDelta = new(-Rotate.ReadValue<Vector2>().y, Rotate.ReadValue<Vector2>().x);
-            return MouseRotationSensitivity * Vector2.Scale(mouseDelta, new Vector2(1f / Camera.pixelHeight, 1f / Camera.pixelWidth)) * Time.deltaTime * 100;
+            return MouseRotationSensitivity
+                * Vector2.Scale(
+                    mouseDelta,
+                    new Vector2(1f / Camera.pixelHeight, 1f / Camera.pixelWidth)
+                )
+                * Time.deltaTime
+                * 100;
         }
 
-        Vector2 controllerDelta = new(-Rotate.ReadValue<Vector2>().y, Rotate.ReadValue<Vector2>().x);
+        Vector2 controllerDelta =
+            new(-Rotate.ReadValue<Vector2>().y, Rotate.ReadValue<Vector2>().x);
         return controllerDelta * GamepadRotationSensitivity * Time.deltaTime;
     }
 
@@ -149,9 +158,7 @@ public class CharacterCamera : MonoBehaviour
     {
         // limit rotation around the x axis between Y_LIMIT and -Y_LIMIT
         CurrentOrbitRotation = new Vector3(
-            Mathf.Clamp(
-                CurrentOrbitRotation.x + delta.x, -Y_LIMIT, Y_LIMIT
-            ),
+            Mathf.Clamp(CurrentOrbitRotation.x + delta.x, -Y_LIMIT, Y_LIMIT),
             CurrentOrbitRotation.y + delta.y,
             CurrentOrbitRotation.z + delta.z
         );
@@ -161,15 +168,18 @@ public class CharacterCamera : MonoBehaviour
     void SnapForwardToAvoidClipping(Transform t)
     {
         bool didHit = Physics.Raycast(
-            Focus(), t.position - Focus(),
-            out RaycastHit hit, ZoomLevel, ControlConstants.RAYCAST_MASK, QueryTriggerInteraction.Ignore
+            Focus(),
+            t.position - Focus(),
+            out RaycastHit hit,
+            ZoomLevel,
+            ControlConstants.RAYCAST_MASK,
+            QueryTriggerInteraction.Ignore
         );
 
         if (didHit)
         {
             t.position = hit.point - (t.position - Focus()) * GetComponent<Camera>().nearClipPlane;
         }
-
     }
 
     public Vector3 Focus()
@@ -179,7 +189,8 @@ public class CharacterCamera : MonoBehaviour
 
     public Transform GetNextCameraTransform()
     {
-        NextTransform.position = Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
+        NextTransform.position =
+            Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
 
         if (MitigateClipping)
         {
@@ -204,11 +215,6 @@ public class CharacterCamera : MonoBehaviour
         GetNextCameraTransform();
 
         Vector3 nextPosition = NextTransform.position;
-
-        if (LimitingVolume != null)
-        {
-            nextPosition = LimitingVolume.ClosestPoint(nextPosition);
-        }
 
         transform.SetPositionAndRotation(nextPosition, NextTransform.rotation);
     }

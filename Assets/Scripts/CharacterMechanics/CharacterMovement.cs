@@ -496,7 +496,7 @@ public class CharacterMovement : MonoBehaviour
             );
 
             // Snap to ground if we can, if character is moving upwards we don't want to snap them back down
-            if (SnapToGround && isGroundWithinSnappingDistance && !IsRising)
+            if (SnapToGround && isGroundWithinSnappingDistance && !IsRising && GroundAngle(MaximumSnappingDistance) < Controller.slopeLimit)
             {
                 SnapCharacterToGround();
                 return;

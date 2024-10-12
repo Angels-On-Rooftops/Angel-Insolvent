@@ -9,11 +9,11 @@ namespace Items.Collectables
 {
     public class InteractCollectable : Collectable, IInteractable
     {
-        [SerializeField] private int numberOfTimesCanInteract = 1;
+        [SerializeField] private int timesCanInteract = 1;
         [SerializeField] private GameObject player;
         
-        private int numberOfTimesHasInteracted = 0;
-        private bool willDestroyWhenDoneCollecting;
+        private int numberTimesInteracted = 0;
+        private bool destroyWhenDone;
         private InteractableOverlayHelper interactableOverlay;
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Items.Collectables
 
         void Awake()
         {
-            this.willDestroyWhenDoneCollecting = this.destroyOnCollect;
+            this.destroyWhenDone = this.destroyOnCollect;
             this.destroyOnCollect = false;
 
             this.interactableOverlay = this.GetComponentInChildren<InteractableOverlayHelper>();
@@ -51,14 +51,14 @@ namespace Items.Collectables
 
         public void Interact()
         {
-            this.numberOfTimesHasInteracted++;
+            this.numberTimesInteracted++;
 
-            if (this.numberOfTimesHasInteracted >= this.numberOfTimesCanInteract)
+            if (this.numberTimesInteracted >= this.timesCanInteract)
             {
-                this.destroyOnCollect = this.willDestroyWhenDoneCollecting;
+                this.destroyOnCollect = this.destroyWhenDone;
             }
 
-            if (this.numberOfTimesHasInteracted <= this.numberOfTimesCanInteract)
+            if (this.numberTimesInteracted <= this.timesCanInteract)
             {
                 StartCoroutine(CollectionRoutine(this.player));
             }

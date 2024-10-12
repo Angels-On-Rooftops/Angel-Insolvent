@@ -70,6 +70,7 @@ public class DialogueHandler : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log(this.dialogueContainer);
         //Get the first node link, which has the PortName "Next"
         NodeLinkData firstNodeLink = this.dialogueContainer.NodeLinks.First(node => node.PortName == "Next");
             
