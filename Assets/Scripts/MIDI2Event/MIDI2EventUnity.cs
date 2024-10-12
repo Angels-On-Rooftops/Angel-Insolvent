@@ -16,12 +16,19 @@ public class MIDI2EventUnity : MonoBehaviour
     List<TrackChartInfo> audioInfo;
 
     [SerializeField]
+    public Notes scheduleableAdvanceNote = Notes.G;
+
+    [SerializeField]
+    public int scheduleableAdvanceOctave = 9;
+
+    [SerializeField]
     bool playOnStart;
 
     List<Midi2Event> eventPlayers;
     float beforeSamples = 0;
     float lastTime = 0;
     int currentTrackIndex = 0;
+    int advancesScheduled = 0;
 
     public Action OnPlay { get; set; }
     public Action OnStop { get; set; }
@@ -53,7 +60,7 @@ public class MIDI2EventUnity : MonoBehaviour
             eventPlayers.Add(new(chartPath, info.lowestOctave));
             info.audioSource.clip.LoadAudioData();
         }
-
+        Subscribe(AdvanceIfScheduled, scheduleableAdvanceNote, scheduleableAdvanceOctave);
         OnPlay += () => { };
         OnStop += () => { };
         OnRestart += () => { };
@@ -70,17 +77,26 @@ public class MIDI2EventUnity : MonoBehaviour
     //update the event system every frame
     void Update()
     {
+        //track has passed end
         if (beforeSamples > audioInfo[currentTrackIndex].audioSource.timeSamples)
         {
-            //audio has ended/looped
-            if (!audioInfo[currentTrackIndex].audioSource.loop)
+            //no more track to play
+            if (currentTrackIndex == audioInfo.Count - 1)
             {
-                AdvanceTracks();
                 return;
             }
 
+            //audio has ended, and need to advance to next track
+            if (!audioInfo[currentTrackIndex].audioSource.loop)
+            {
+                AdvanceEventSys();
+                return;
+            }
+
+            //need to loop current track
             LoopCurrentTrack();
         }
+
         UpdateTrackTime();
     }
 
@@ -101,7 +117,7 @@ public class MIDI2EventUnity : MonoBehaviour
         lastTime = 0;
     }
 
-    private void AdvanceTracks()
+    private void AdvanceEventSys()
     {
         eventPlayers[currentTrackIndex].Back();
         //audioInfo[currentTrackIndex].audioSource.Stop();
@@ -110,6 +126,22 @@ public class MIDI2EventUnity : MonoBehaviour
 
         eventPlayers[currentTrackIndex].Play();
         //audioInfo[currentTrackIndex].audioSource.Play();
+    }
+
+    public void ScheduleAdvance()
+    {
+        advancesScheduled++;
+    }
+
+    public void AdvanceIfScheduled()
+    {
+        if (advancesScheduled <= 0 || currentTrackIndex == audioInfo.Count - 1)
+        {
+            return;
+        }
+        audioInfo[currentTrackIndex + 1].audioSource.PlayScheduled(AudioSettings.dspTime);
+        audioInfo[currentTrackIndex].audioSource.Stop();
+        AdvanceEventSys();
     }
 
     //plays the audio and chart
