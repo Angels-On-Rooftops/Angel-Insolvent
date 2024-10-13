@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Dialogue_System;
-using Assets.Scripts.Dialogue_System.DialogueSamples;
+using Assets.Scripts.DialogueSystem;
+using Assets.Scripts.DialogueSystem.DialogueSamples;
 using Inventory;
 using UnityEngine;
 using UnityEngine.Assertions;

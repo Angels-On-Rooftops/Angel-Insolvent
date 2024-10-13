@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Scripts.Dialogue_System
+namespace Assets.Scripts.DialogueSystem
 {
     static class Characters
     {

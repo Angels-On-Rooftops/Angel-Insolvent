@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets.Scripts.Dialogue_System
+namespace Assets.Scripts.DialogueSystem
 {
     class DialogueFlags : IPersistableData
     {

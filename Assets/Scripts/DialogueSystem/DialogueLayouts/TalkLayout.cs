@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Dialogue_System.DialogueLayouts
+namespace Assets.Scripts.DialogueSystem.DialogueLayouts
 {
     class TalkLayout : MonoBehaviour, IDialogueLayout
     {

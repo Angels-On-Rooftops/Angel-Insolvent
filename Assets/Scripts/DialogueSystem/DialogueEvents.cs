@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine.Assertions;
 
-namespace Assets.Scripts.Dialogue_System
+namespace Assets.Scripts.DialogueSystem
 {
     public class DialogueEvents
     {

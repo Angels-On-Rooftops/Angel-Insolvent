@@ -3586,8 +3586,8 @@ GameObject:
   - component: {fileID: 1169366409}
   - component: {fileID: 1169366408}
   - component: {fileID: 1169366407}
-  - component: {fileID: 1169366410}
   - component: {fileID: 1169366411}
+  - component: {fileID: 1169366412}
   m_Layer: 0
   m_Name: TestNPC (1)
   m_TagString: Untagged
@@ -3686,18 +3686,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169366404}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1169366410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1169366404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 20f77b15cf2fe404e8a8b38e5bbef220, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1169366411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3708,6 +3696,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0bf17456e4633b544886e0abd411f583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1169366412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169366404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20f77b15cf2fe404e8a8b38e5bbef220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1177774035

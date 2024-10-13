@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Dialogue_System.DialogueLayouts
+namespace Assets.Scripts.DialogueSystem.DialogueLayouts
 {
     class PopUpLayout : MonoBehaviour, IDialogueLayout
     {

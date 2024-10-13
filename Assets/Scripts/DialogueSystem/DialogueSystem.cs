@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using Assets.Scripts.Dialogue_System.DialogueLayouts;
+using Assets.Scripts.DialogueSystem.DialogueLayouts;
 using Inventory;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 
-namespace Assets.Scripts.Dialogue_System
+namespace Assets.Scripts.DialogueSystem
 {
     [RequireComponent(typeof(TalkLayout), typeof(PopUpLayout))]
     class DialogueSystem : MonoBehaviour
@@ -203,7 +203,7 @@ namespace Assets.Scripts.Dialogue_System
                 HasItem hasItem => PlayerInventory.Instance.HasItem(hasItem.ItemId),
                 ItemEquipped isEquipped => PlayerInventory.Instance.CurrentlyEquippedItem.itemID
                     == isEquipped.ItemId,
-                FlagValue flagValue => flags.FlagIsSet(flagValue.Flag),
+                FlagCheck flagCheck => flags.FlagIsSet(flagCheck.Flag),
                 _ => throw new NotImplementedException(),
             };
 

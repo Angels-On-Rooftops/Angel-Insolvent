@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Assets.Scripts.Dialogue_System.DialogueSamples
+namespace Assets.Scripts.DialogueSystem.DialogueSamples
 {
     public class SampleDialogue1 : DialogueFile
     {

@@ -7,7 +7,7 @@ namespace System.Runtime.CompilerServices
     internal static class IsExternalInit { }
 }
 
-namespace Assets.Scripts.Dialogue_System
+namespace Assets.Scripts.DialogueSystem
 {
     public abstract class DialogueFile : MonoBehaviour
     {
@@ -53,14 +53,8 @@ namespace Assets.Scripts.Dialogue_System
     public record ItemEquipped(string ItemId, DialogueTree Equipped, DialogueTree NotEquipped)
         : DialogueBranch(Equipped, NotEquipped);
 
-    public record FlagValue(string Flag, DialogueTree OnTrue, DialogueTree OnFalse)
+    public record FlagCheck(string Flag, DialogueTree OnTrue, DialogueTree OnFalse)
         : DialogueBranch(OnTrue, OnFalse);
-
-    public record CheckDialogueCondition(
-        string ItemId,
-        DialogueTree Equipped,
-        DialogueTree NotEquipped
-    ) : DialogueBranch(Equipped, NotEquipped);
 
     //
 
