@@ -24,7 +24,10 @@ namespace Assets.Scripts.DialogueSystem
         static readonly DialogueFlags flags = new();
         static DialogueSystem Instance { get; set; }
 
+        private static readonly float inputWaitTime = 0.5f; //delay before allow input to prevent previous input from affecting the next input
+
         AudioSource DialogueAudio => GetComponent<AudioSource>();
+        private static readonly string audioFolderName = "Audio/DialogueAudio"; //Must be in Assets/Resources
 
         private void Awake()
         {
@@ -42,6 +45,11 @@ namespace Assets.Scripts.DialogueSystem
         private void OnDisable()
         {
             flags.Disable();
+        }
+
+        public static void SetDialogueVolume(float volume)
+        {
+            Instance.DialogueAudio.volume = volume;
         }
 
         public static IEnumerator PlayDialogue(DialogueFile file)
@@ -81,6 +89,24 @@ namespace Assets.Scripts.DialogueSystem
             yield return toPlay();
         }
 
+        private static void PlayDialogueAudio(DialogueFrame frame)
+        {
+            if (frame.AudioFileName != null)
+            {
+                string audioFilePath = audioFolderName + "/" + frame.AudioFileName;
+                AudioClip audioClip = Resources.Load<AudioClip>(audioFilePath);
+
+                if (audioClip == null)
+                {
+                    Debug.LogError("Audio File at \"" + audioFilePath + "\" Not Found");
+                }
+
+                Instance.DialogueAudio.clip = audioClip;
+
+                Instance.DialogueAudio.Play();
+            }    
+        }
+
         private static IEnumerator PlayFrame(DialogueFrame frame, IDialogueLayout layout)
         {
             // edit text for this frame
@@ -88,8 +114,7 @@ namespace Assets.Scripts.DialogueSystem
             layout.SetBodyText(frame.BodyText);
 
             // play audio
-            //Instance.DialogueAudio.clip = null; // TODO get clip
-            Instance.DialogueAudio.Play();
+            PlayDialogueAudio(frame);
 
             // wait until the continue condition is satisfied
             Maid continueMaid = new();
@@ -133,6 +158,8 @@ namespace Assets.Scripts.DialogueSystem
 
         static IEnumerator WaitForContinueButton(Maid continueMaid)
         {
+            yield return new WaitForSeconds(inputWaitTime); // wait to prevent previous input from counting as a button press
+            
             bool continueButtonHit = false;
             continueMaid.GiveEvent(
                 Instance.InteractAction,
@@ -157,6 +184,8 @@ namespace Assets.Scripts.DialogueSystem
             Action<int> setSelectedChoice
         )
         {
+            yield return new WaitForSeconds(inputWaitTime); // wait to prevent previous input from counting as a button press
+            
             yield return WaitForChoiceSelection(
                 layout.SetChoiceButtons(choice, continueMaid),
                 continueMaid,
