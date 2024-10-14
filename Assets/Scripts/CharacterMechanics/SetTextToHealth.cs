@@ -11,6 +11,6 @@ public class SetTextToHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetComponent<TMP_Text>().text = "" + PlayerHealth.Health;
+        //GetComponent<TMP_Text>().text = "" + PlayerHealth.Health;
     }
 }

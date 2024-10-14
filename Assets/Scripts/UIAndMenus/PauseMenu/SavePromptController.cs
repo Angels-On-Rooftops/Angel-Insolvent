@@ -1,10 +1,14 @@
 using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SavePromptController : MonoBehaviour
 {
+    [SerializeField] private EscMenuController escMenuController;
+
     public void SaveAndExit()
     {
         DataPersistenceManager.Instance.SaveGame(new UnityEngine.InputSystem.InputAction.CallbackContext());
@@ -14,6 +18,6 @@ public class SavePromptController : MonoBehaviour
 
     public void Cancel()
     {
-        this.gameObject.SetActive(false);
+        escMenuController.CloseSavePrompt();
     }
 }
