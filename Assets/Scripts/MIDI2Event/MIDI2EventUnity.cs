@@ -187,7 +187,10 @@ public class MIDI2EventUnity : MonoBehaviour
     public void Stop()
     {
         eventPlayers[currentTrackIndex].Stop();
-        audioInfo[currentTrackIndex].audioSource.Stop();
+        foreach (TrackChartInfo i in audioInfo)
+        {
+            i.audioSource.Stop();
+        }
         OnStop.Invoke();
     }
 
