@@ -14,7 +14,10 @@ public class ScheduleAdvanceOnCollide : MonoBehaviour
     {
         if (other.TryGetComponent(out CharacterController controller))
         {
-            sys.ScheduleAdvance();
+            if (sys.IsPlaying)
+            {
+                sys.ScheduleAdvance();
+            }
         }
     }
 }

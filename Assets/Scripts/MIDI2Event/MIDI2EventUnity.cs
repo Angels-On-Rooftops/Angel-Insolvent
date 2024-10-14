@@ -186,6 +186,7 @@ public class MIDI2EventUnity : MonoBehaviour
     //stops the audio and chart from playing and resets them to the beginning
     public void Stop()
     {
+        advancesScheduled = 0;
         eventPlayers[currentTrackIndex].Stop();
         foreach (TrackChartInfo i in audioInfo)
         {
