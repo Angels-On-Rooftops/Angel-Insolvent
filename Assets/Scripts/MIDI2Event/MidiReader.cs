@@ -118,34 +118,34 @@ namespace MIDI2EventSystem
             }
 
             //create the correct MTrkEvent type and advance the file
-            switch (status)
+            if (status == (byte)StatusTypes.MetaEvent)
             {
-                case (byte)StatusTypes.NoteOn:
+                return ReadMetaEvent(fileStream, delta);
+            }
+            switch (status >> 4)
+            {
+                case (byte)StatusTypes.NoteOn >> 4:
                 {
                     byte noteNum = (byte)fileStream.ReadByte();
                     byte vel = (byte)fileStream.ReadByte();
                     return new NoteOnEvent(delta, noteNum, vel);
                 }
-                case (byte)StatusTypes.NoteOff:
+                case (byte)StatusTypes.NoteOff >> 4:
                 {
                     byte noteNum = (byte)fileStream.ReadByte();
                     byte vel = (byte)fileStream.ReadByte();
                     return new NoteOffEvent(delta, noteNum, vel);
                 }
-                case (byte)StatusTypes.PolyKeyPres:
-                case (byte)StatusTypes.CtrlChange:
-                case (byte)StatusTypes.PitchWheel:
+                case (byte)StatusTypes.PolyKeyPres >> 4:
+                case (byte)StatusTypes.CtrlChange >> 4:
+                case (byte)StatusTypes.PitchWheel >> 4:
                     fileStream.ReadByte();
                     fileStream.ReadByte();
                     return new MTrkEvent(delta);
-                case (byte)StatusTypes.ProgChange:
-                case (byte)StatusTypes.ChannelPres:
+                case (byte)StatusTypes.ProgChange >> 4:
+                case (byte)StatusTypes.ChannelPres >> 4:
                     fileStream.ReadByte();
                     return new MTrkEvent(delta);
-                case (byte)StatusTypes.MetaEvent:
-                {
-                    return ReadMetaEvent(fileStream, delta);
-                }
                 default:
                     throw new Exception(
                         "Unsupported chunk "

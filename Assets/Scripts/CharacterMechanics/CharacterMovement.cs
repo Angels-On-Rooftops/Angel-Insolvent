@@ -46,7 +46,7 @@ public class CharacterMovement : MonoBehaviour
     [Space(10)]
     [SerializeField]
     [Tooltip("The keybinds that make the character jump.")]
-    InputAction Jump;
+    public InputAction Jump;
 
     [SerializeField]
     [Tooltip("The maximum amount of jumps the character has before they touch the ground again.")]
@@ -496,7 +496,12 @@ public class CharacterMovement : MonoBehaviour
             );
 
             // Snap to ground if we can, if character is moving upwards we don't want to snap them back down
-            if (SnapToGround && isGroundWithinSnappingDistance && !IsRising && GroundAngle(MaximumSnappingDistance) < Controller.slopeLimit)
+            if (
+                SnapToGround
+                && isGroundWithinSnappingDistance
+                && !IsRising
+                && GroundAngle(MaximumSnappingDistance) < Controller.slopeLimit
+            )
             {
                 SnapCharacterToGround();
                 return;
