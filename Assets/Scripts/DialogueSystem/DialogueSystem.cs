@@ -19,6 +19,7 @@ namespace Assets.Scripts.DialogueSystem
         )]
         InputAction InteractAction;
 
+        public static event Action<string> EventFired;
         public static event Action EndOfDialogueReached;
 
         static readonly DialogueFlags flags = new();
@@ -192,8 +193,20 @@ namespace Assets.Scripts.DialogueSystem
 
         private static IEnumerator FireOffEvent(DialogueFireEvent fireEvent)
         {
-            DialogueEvents.FireEvent(fireEvent.EventName);
+            EventFired?.Invoke(fireEvent.EventName);
             yield return null;
+        }
+
+        public static Action BindToEvent(string desiredEvent, Action method)
+        {
+            Action<string> callMethod = (string eventName) =>
+            {
+                if (eventName == desiredEvent) method();
+            };
+
+            EventFired += callMethod;
+
+            return () => EventFired -= callMethod;
         }
 
         private static IEnumerator DoBranch(DialogueBranch branch, IDialogueLayout layout)

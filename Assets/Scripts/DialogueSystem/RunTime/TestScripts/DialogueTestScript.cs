@@ -15,7 +15,7 @@ public class DialogueTestScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        testText.text = "The dialogue will update this using a Unity Event method call.";       
+        //testText.text = "The dialogue will update this using a Unity Event method call.";       
     }
 
     public void TestEventMethod1()
@@ -32,18 +32,20 @@ public class DialogueTestScript : MonoBehaviour
 
     void OnEnable()
     {
-        this.dialogueHandler.NewCharacterName += TestCharacterEvent;
+        //this.dialogueHandler.NewCharacterName += TestCharacterEvent;
 
-        DialogueEvents.RancidVibes += OnRancidVibes;
+        Debug.Log("hi");
+
+        maid.GiveTask(DialogueSystem.BindToEvent("RancidVibes", OnRancidVibes));
         //maid.GiveEvent(DialogueEvents, "RancidVibes", () => Debug.Log("Event Fired"));
     }
 
     void OnDisable()
     {
-        this.dialogueHandler.NewCharacterName -= TestCharacterEvent;
+        //this.dialogueHandler.NewCharacterName -= TestCharacterEvent;
 
-        DialogueEvents.RancidVibes -= OnRancidVibes;
-        //maid.Cleanup();
+        //DialogueEvents.RancidVibes -= OnRancidVibes;
+        maid.Cleanup();
     }
 
     void TestCharacterEvent(string newName)
