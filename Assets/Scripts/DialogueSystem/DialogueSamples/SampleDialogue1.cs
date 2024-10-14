@@ -34,6 +34,31 @@ namespace Assets.Scripts.DialogueSystem.DialogueSamples
                     ),
                     new DialogueFrame(
                         Characters.OverheadSpeaker,
+                        "Check flag (should get Deny):",
+                        new ContinueButtonHit()
+                    ),
+                    new FlagCheck( "sampleCheckSeen",
+                        AcceptMission,
+                        DenyMission
+                    ),
+                    new DialogueSetFlag("sampleCheckSeen", true),
+                    new DialogueFrame(
+                        Characters.OverheadSpeaker,
+                        "Check flag (should get Accept):",
+                        new ContinueButtonHit()
+                    ),
+                    new FlagCheck( "sampleCheckSeen",
+                        AcceptMission,
+                        DenyMission
+                    ),
+                    new DialogueFrame(
+                        Characters.OverheadSpeaker,
+                        "Should fire event:",
+                        new ContinueButtonHit()
+                    ),
+                    new DialogueFireEvent("RancidVibes"),
+                    new DialogueFrame(
+                        Characters.OverheadSpeaker,
                         "THE POLICE ARE ON THEIR WAY!!!!!",
                         new TimedContinue(2f)
                     ),
