@@ -35,13 +35,13 @@ public class Plunge : MonoBehaviour, IAdvancedMovementStateSpec
         {
             { "GravityMultiplier", FallAcceleration },
             { "DownwardTerminalVelocity", TerminalVelocity },
-            { "JumpHeight", 0 }
+            { "JumpHeight", 0 },
+            { "VerticalState", VerticalMovementState.Falling },
         };
 
     public List<string> HoldFromPreviousState => new() { "WalkSpeed" };
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
-    AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
 
     bool hitWall;
 
