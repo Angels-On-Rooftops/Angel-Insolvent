@@ -2,7 +2,7 @@
 
 namespace Assets.Scripts.DialogueSystem.DialogueSamples
 {
-    public class ExampleInput : DialogueFile
+    /*public class ExampleInput : DialogueFile
     {
         public override DialogueLayoutType LayoutType => DialogueLayoutType.Talk;
 
@@ -40,5 +40,5 @@ namespace Assets.Scripts.DialogueSystem.DialogueSamples
                     new FlagCheck("TestFlag", TestFlagTrue, TestFlagFalse),
                 }
             );
-    }
+    }*/
 }
