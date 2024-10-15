@@ -18,7 +18,8 @@ namespace Assets.Scripts.DialogueSystem.DialogueSamples
                     new DialogueFrame(
                         Characters.OverheadSpeaker,
                         "Code Yellow, break-in from suspected Angel, take precautions.",
-                        new ContinueButtonHit()
+                        new ContinueButtonHit(),
+                        "30 second groov"
                     ),
                     new DialogueFrame(
                         Characters.Opus,
@@ -30,7 +31,8 @@ namespace Assets.Scripts.DialogueSystem.DialogueSamples
                                 ("Okay!", AcceptMission),
                                 ("No.", DenyMission),
                             }
-                        )
+                        ),
+                        "intro level"
                     ),
                     new DialogueFrame(
                         Characters.OverheadSpeaker,
