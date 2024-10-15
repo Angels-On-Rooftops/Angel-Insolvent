@@ -18,12 +18,14 @@ namespace GameStateManagement
         {
             shopController.GetShopInventoryPanel().SetActive(true);
             Time.timeScale = 0f;
+            AudioListener.pause = true;
         }
 
         public void ExitState()
         {
             shopController.GetShopInventoryPanel().SetActive(false);
             Time.timeScale = 1f;
+            AudioListener.pause = false;
         }
     }
 }
