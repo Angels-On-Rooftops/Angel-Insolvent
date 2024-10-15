@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class GameManager : MonoBehaviour
 
         gameCanvas = Instantiate(Resources.Load("Prefabs/UI/GameCanvas")) as GameObject;
         gameCanvas.gameObject.transform.SetParent(gameObject.transform);
+        gameCanvas.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+        gameCanvas.GetComponent<RectTransform>().offsetMin = Vector2.zero;
 
         escMenu = Instantiate(Resources.Load("Prefabs/UI/EscMenuPrefab")) as GameObject;
         escMenu.gameObject.transform.SetParent(gameCanvas.transform);
