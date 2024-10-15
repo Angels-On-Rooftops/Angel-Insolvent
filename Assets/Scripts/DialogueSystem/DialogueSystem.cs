@@ -11,7 +11,7 @@ using static UnityEngine.InputSystem.InputAction;
 namespace Assets.Scripts.DialogueSystem
 {
     [RequireComponent(typeof(TalkLayout), typeof(PopUpLayout))]
-    class DialogueSystem : MonoBehaviour
+    public class DialogueSystem : MonoBehaviour
     {
         [SerializeField]
         [Tooltip(
