@@ -44,7 +44,7 @@ namespace Assets.Scripts.DialogueSystem.DialogueSamples
             new(
                 new List<DialogueNode>()
                 {
-                    new DialogueFireEvent("RancidVibes"),
+                    new DialogueFireEvent("ChangeMaterial"),
                     new DialogueFrame(
                         Characters.Resonara,
                         "As you can observe, an event was fired to alter my appearance.",
