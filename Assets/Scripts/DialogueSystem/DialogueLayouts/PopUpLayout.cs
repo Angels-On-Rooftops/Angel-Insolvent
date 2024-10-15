@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,12 @@ namespace Assets.Scripts.DialogueSystem.DialogueLayouts
     {
         [SerializeField]
         Canvas UILayout;
+
+        [SerializeField]
+        TMP_Text CharacterName;
+
+        [SerializeField]
+        TMP_Text BodyText;
 
         public void Disable()
         {
@@ -21,12 +28,12 @@ namespace Assets.Scripts.DialogueSystem.DialogueLayouts
 
         public void SetBodyText(string bodyText)
         {
-            throw new NotImplementedException();
+            BodyText.text = bodyText;
         }
 
         public void SetCharacter(NarrativeCharacter character)
         {
-            throw new NotImplementedException();
+            CharacterName.text = character.Name;
         }
 
         public Button[] SetChoiceButtons(Choice choice, Maid buttonCleaner)

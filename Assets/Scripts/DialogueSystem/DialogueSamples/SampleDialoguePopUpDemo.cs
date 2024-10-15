@@ -4,8 +4,7 @@ namespace Assets.Scripts.DialogueSystem.DialogueSamples
 {
     public class SampleDialoguePopUpDemo : DialogueFile
     {
-        public override DialogueLayoutType LayoutType => DialogueLayoutType.Talk;
-        //public override DialogueLayoutType LayoutType => DialogueLayoutType.PopUp;
+        public override DialogueLayoutType LayoutType => DialogueLayoutType.PopUp;
 
         public override DialogueTree Dialogue =>
             new(
@@ -14,49 +13,32 @@ namespace Assets.Scripts.DialogueSystem.DialogueSamples
                     new DialogueFrame(
                         Characters.Coda,
                         "Hey, can they see what I'm saying now?",
-                        new TimedContinue(4f)
+                        new TimedContinue(4.5f),
+                        "PopUpDemo_1"
                     ),
                     new DialogueFrame(
                         Characters.Opus,
                         "Yes, they should be receiving these messages now.",
-                        new TimedContinue(4f)
+                        new TimedContinue(4f),
+                        "PopUpDemo_2"
                     ),
                     new DialogueFrame(
                         Characters.Opus,
-                        "You have fifteen security guards headed your way. "
-                            + "I’ll find you a path out – you need to hurry.",
-                        new Choice(
-                            new List<(string, DialogueTree)>()
-                            {
-                                ("Okay!", AcceptMission),
-                                ("No.", DenyMission),
-                            }
-                        )
+                        "Addtionally, these messages will play in sequence without them needing to input anything on their end,",
+                        new TimedContinue(7f),
+                        "PopUpDemo_3"
                     ),
-                    new DialogueFrame(
-                        Characters.OverheadSpeaker,
-                        "THE POLICE ARE ON THEIR WAY!!!!!",
-                        new TimedContinue(2f)
-                    ),
-                }
-            );
-
-        DialogueTree AcceptMission =
-            new(
-                new List<DialogueNode>()
-                {
-                    new DialogueFrame(Characters.Opus, "Cool!", new ContinueButtonHit()),
-                }
-            );
-
-        DialogueTree DenyMission =
-            new(
-                new List<DialogueNode>()
-                {
                     new DialogueFrame(
                         Characters.Opus,
-                        "Don't play games with me.",
-                        new ContinueButtonHit()
+                        "and they can see which of us is speaking by looking at the name on the display.",
+                        new TimedContinue(5f),
+                        "PopUpDemo_4"
+                    ),
+                    new DialogueFrame(
+                        Characters.Coda,
+                        "Awesome!",
+                        new TimedContinue(2f),
+                        "PopUpDemo_5"
                     ),
                 }
             );
