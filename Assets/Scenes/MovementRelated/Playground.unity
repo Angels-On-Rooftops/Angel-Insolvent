@@ -4418,6 +4418,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 99769947-9fed-463e-890e-3ff1e5dfb003
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[2].m_Id
+      value: 5b6fc147-1343-425d-b77e-40a109473341
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[3].m_Id
+      value: 5b6fc147-1343-425d-b77e-40a109473341
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/buttonNorth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[2].m_Path
+      value: <Gamepad>/buttonSouth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[3].m_Path
+      value: <Gamepad>/buttonSouth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Interact
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[2].m_Action
+      value: Interact
+      objectReference: {fileID: 0}
+    - target: {fileID: 6934595462000481480, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[3].m_Action
+      value: Interact
+      objectReference: {fileID: 0}
     - target: {fileID: 7756008005760276823, guid: 6a2460f0572fc2b49adf5e112572ddb9, type: 3}
       propertyPath: m_Name
       value: DialogueSystem
@@ -7420,6 +7460,22 @@ PrefabInstance:
     - target: {fileID: 32382484689701876, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_TagString
       value: Coins
+      objectReference: {fileID: 0}
+    - target: {fileID: 33960059321502823, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 33960059321502823, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 5d35c65f-f9ee-4442-bb8e-99e8650e9b34
+      objectReference: {fileID: 0}
+    - target: {fileID: 33960059321502823, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/buttonNorth
+      objectReference: {fileID: 0}
+    - target: {fileID: 33960059321502823, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: InteractAction.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Interact
       objectReference: {fileID: 0}
     - target: {fileID: 193965447886615002, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: IntoGlideTransitionCurve.m_Curve.Array.size
@@ -11285,6 +11341,102 @@ PrefabInstance:
       propertyPath: playerInvObj
       value: 
       objectReference: {fileID: 671825093}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavUp.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavDown.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavLeft.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavRight.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: SelectItem.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavUp.m_SingletonActionBindings.Array.data[1].m_Id
+      value: c7a9fa21-e39e-4742-8b6d-ecb1b4bf2b7b
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: InventoryAction.m_SingletonActionBindings.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavDown.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 2d42d413-eb5c-4fe2-a038-b5056ddc726e
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavLeft.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 0d85cbcb-e28f-41c6-9269-af066061e85b
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavUp.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/leftStick/up
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavRight.m_SingletonActionBindings.Array.data[1].m_Id
+      value: beaae1c6-81c4-42ca-831a-0627ac1affdd
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavDown.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/leftStick/down
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavLeft.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/leftStick/left
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavUp.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Nav Up
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavRight.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/leftStick/right
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: SelectItem.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 1103e5ca-f667-41d7-b177-313be318135c
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavDown.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Nav Down
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavLeft.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Nav Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: NavRight.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Nav Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: SelectItem.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/buttonSouth
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: SelectItem.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Select Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: InventoryAction.m_SingletonActionBindings.Array.data[1].m_Id
+      value: 9f58cbd8-f472-451c-9a86-8f09ca7cce1f
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: InventoryAction.m_SingletonActionBindings.Array.data[1].m_Path
+      value: <Gamepad>/dpad/down
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191180329586597020, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
+      propertyPath: InventoryAction.m_SingletonActionBindings.Array.data[1].m_Action
+      value: Inventory
+      objectReference: {fileID: 0}
     - target: {fileID: 7991187239155840708, guid: 946ff5d63c203414e8860feda1eb9a5a, type: 3}
       propertyPath: m_Name
       value: DemoShopPrefab

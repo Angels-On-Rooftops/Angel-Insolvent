@@ -61,6 +61,7 @@ public class AnimateAdvancedMovementStates : MonoBehaviour
             "StateChanged", 
             (AdvancedMovementState last, AdvancedMovementState next) =>
             {
+                Debug.Log($"{last} {next}");
                 if (last == AdvancedMovementState.Rolling)
                 {
                     SetTrigger("RollStop");
