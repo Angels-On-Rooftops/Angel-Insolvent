@@ -656,12 +656,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 10.1
       value: 12
-      inSlope: -0.012568347
-      outSlope: -0.012568347
+      inSlope: 0.08264431
+      outSlope: 0.08264431
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.018174756
+      outWeight: 0.07779239
     - serializedVersion: 3
       time: 95.9
       value: 30
@@ -674,6 +674,54 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 96
       value: 30
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  GlideSpeedTransitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  TerminalVelocityTransitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 11.623356
+      outSlope: 11.623356
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.08246575
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 136
