@@ -15,7 +15,10 @@ public class ChangeTrackOnCollide : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out CharacterController controller))
+        if (
+            other.TryGetComponent(out CharacterController controller)
+            && sys.CurrentIndex != SongIndex
+        )
         {
             sys.SwitchToSong(SongIndex);
         }

@@ -28,6 +28,11 @@ public class AudioSystem : MonoBehaviour
         get => current;
     }
 
+    public int CurrentIndex
+    {
+        get => Songs.IndexOf(current);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
