@@ -1,6 +1,6 @@
-using Inventory;
 using System.Collections;
 using System.Collections.Generic;
+using Inventory;
 using UnityEngine;
 
 namespace Items.Interactables
@@ -8,22 +8,17 @@ namespace Items.Interactables
     //This class should eventually be updated to better match how the rest of the UI is set up
     public class UIInteractable : MonoBehaviour, IInteractable
     {
-        [SerializeField] protected GameObject UIPrefab;
-        [SerializeField] private GameObject player;
-
         protected bool isActive = false;
-        protected GameObject instantiatedUIPrefab;
         protected InteractableOverlayHelper interactableOverlay;
 
-        public bool DestroyAfterInteracting { get { return false; } }
+        public bool DestroyAfterInteracting
+        {
+            get { return false; }
+        }
 
-        void Awake()
+        protected virtual void Awake()
         {
             GetInteractableOverlayComponent();
-
-            //Creates prefab in the center
-            this.instantiatedUIPrefab = Instantiate(this.UIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            this.instantiatedUIPrefab.SetActive(false);
         }
 
         protected void GetInteractableOverlayComponent()
@@ -51,14 +46,10 @@ namespace Items.Interactables
 
             if (this.isActive)
             {
-                this.instantiatedUIPrefab?.SetActive(true);
-
                 FreezeCharacterMovement();
             }
             else
             {
-                this.instantiatedUIPrefab?.SetActive(false);
-
                 UnFreezeCharacterMovement();
             }
         }
@@ -71,7 +62,8 @@ namespace Items.Interactables
         protected void FreezeCharacterMovement()
         {
             //Pause game (should later replace with game's pause system)
-            Time.timeScale = 0;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMovement>().enabled =
+                false;
             //set character controller not active
             //this.player.GetComponent<CharacterController>().enabled = false;
         }
@@ -79,7 +71,8 @@ namespace Items.Interactables
         protected void UnFreezeCharacterMovement()
         {
             //Pause game (should later replace with game's pause system)
-            Time.timeScale = 1;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterMovement>().enabled =
+                true;
             //set character controller active
             //this.player.GetComponent<CharacterController>().enabled = true;
         }

@@ -104,6 +104,11 @@ public class DataPersistenceManager
         }
     }
 
+    public static T LoadData<T>(string jsonTag)
+    {
+        return (T)Instance.fileDataHandler.ReadObjectFromJson(jsonTag, typeof(T));
+    }
+
     public static object LoadData(string jsonTag, Type returnType)
     {
         return Instance.fileDataHandler.ReadObjectFromJson(jsonTag, returnType);
