@@ -23,7 +23,6 @@ public class Swinger : MonoBehaviour
     float SwingSpeed = 0.2f;
 
     private Action unsub;
-    int dir = -1;
 
     private void OnEnable()
     {
@@ -35,19 +34,21 @@ public class Swinger : MonoBehaviour
         unsub();
     }
 
+    Vector3 currentEuler;
+    Vector3 oppositeEuler;
+
     // Start is called before the first frame update
     void Start()
     {
         this.transform.Rotate(Vector3.forward, Angle);
+        currentEuler = this.transform.localEulerAngles;
+        oppositeEuler = currentEuler + Vector3.forward * -2 * Angle;
     }
-
-    // Update is called once per frame
-    void Update() { }
 
     void Swing()
     {
-        Vector3 currentEuler = this.transform.localEulerAngles;
-        StartCoroutine(SmoothSwing(currentEuler, currentEuler + Vector3.forward * 2 * dir * Angle));
+        StartCoroutine(SmoothSwing(currentEuler, oppositeEuler));
+        (currentEuler, oppositeEuler) = (oppositeEuler, currentEuler);
     }
 
     IEnumerator SmoothSwing(Vector3 current, Vector3 target)
@@ -63,6 +64,5 @@ public class Swinger : MonoBehaviour
             );
             yield return null;
         }
-        dir = -dir;
     }
 }

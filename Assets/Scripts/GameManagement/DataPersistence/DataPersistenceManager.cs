@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -68,6 +69,7 @@ public class DataPersistenceManager
         catch (Exception e)
         {
             Debug.Log("Game not saved: " + e.Message);
+            fileDataHandler.CloseFileSave();
         }
     }
 
@@ -92,10 +94,19 @@ public class DataPersistenceManager
 
             Debug.Log("Game loaded");
         }
-        catch (Exception e)
+        catch (FileNotFoundException)
+        {
+            Debug.Log("Save file not found, starting new game");
+        } catch(Exception e)
         {
             Debug.Log("Game not loaded: " + e.Message);
+            fileDataHandler.CloseFileLoad();
         }
+    }
+
+    public static T LoadData<T>(string jsonTag)
+    {
+        return (T)Instance.fileDataHandler.ReadObjectFromJson(jsonTag, typeof(T));
     }
 
     public static object LoadData(string jsonTag, Type returnType)

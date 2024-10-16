@@ -20,8 +20,7 @@ namespace GameStateManagement
             if(characterCamera != null) characterCamera.CanOrbit = false;
             EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
-            if (EscMenuController.audioSource != null) EscMenuController.audioSource.Pause();
-            EscMenuController.getPauseMenuPanel().GetComponentInChildren<Button>().Select();
+            AudioListener.pause = true;
         }
 
         public void ExitState()
@@ -40,7 +39,7 @@ namespace GameStateManagement
 
             EscMenuController.getPauseMenuPanel().SetActive(false);
             Time.timeScale = 1f;
-            if (EscMenuController.audioSource != null) EscMenuController.audioSource.Play();
+            AudioListener.pause = false;
         }
     }
 }

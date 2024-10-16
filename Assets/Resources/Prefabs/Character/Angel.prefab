@@ -281,7 +281,7 @@ MonoBehaviour:
       m_Action: Walk
       m_Flags: 0
     m_Flags: 1
-  WalkSpeed: 16
+  WalkSpeed: 12
   GravityMultiplier: 8
   Jump:
     m_Name: Jump
@@ -380,7 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 713daf6daf8ef4b4d870a1923bc6ed4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StandardSpeed: 16
+  StandardSpeed: 12
 --- !u!114 &5891208845454704529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,10 +393,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b69777f6532f143beafc733f9fc11f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RollingSpeed: 28
+  RollingSpeed: 20
   RollDuration: 0.5
-  LongJumpHeight: 3
-  HighJumpHeight: 9
   HighJumpWindow: 0.1
   ColliderHeight: 1
   RollingDirection: {x: 0, y: 0, z: 0}
@@ -412,6 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae70987223ef9f428ce981676e28403, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LongJumpHeight: 3
   AccelerationCurve:
     serializedVersion: 2
     m_Curve:
@@ -436,8 +435,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  PushOffSpeed: 30
-  MaxSpeedFromLongJump: 34
+  PushOffSpeed: 20
+  MaxSpeedFromLongJump: 24
 --- !u!114 &7158482044387499570
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,7 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc1b62e1873dba745adcdc1c01cdb6dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FallAcceleration: 30
+  FallAcceleration: 20
   MinAdjustSpeed: 5
   TerminalVelocity: 96
   DownwardsBoost: 10
@@ -467,7 +466,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.05
+      time: 0.1
       value: -60
       inSlope: 0
       outSlope: 0
@@ -640,9 +639,99 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cef16da5a082c54db5215f455ce4c5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TerminalVelocity: 16
-  DownSpeedContribCuttoff: 28
-  DownSpeedToHorizRate: 0.1
+  TerminalVelocity: 6
+  TurningSpeed: 5
+  FallSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 10
+      value: 12
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 10.1
+      value: 12
+      inSlope: 0.08264431
+      outSlope: 0.08264431
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.07779239
+    - serializedVersion: 3
+      time: 95.9
+      value: 30
+      inSlope: 0.4491482
+      outSlope: 0.4491482
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.050947905
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 96
+      value: 30
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  GlideSpeedTransitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  TerminalVelocityTransitionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 11.623356
+      outSlope: 11.623356
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.08246575
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  MaxGlideSpeed: 30
   UpSpeedDampAcceleration:
     serializedVersion: 2
     m_Curve:
@@ -679,6 +768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3eb659fc4f564d96800c2545d9a5e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HighJumpHeight: 9
   HighJumpStrafeSpeed: 8
 --- !u!114 &2741847641750837081
 MonoBehaviour:
@@ -1830,7 +1920,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4780934635577708469}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58c4eb8c34dac3f45b6291754bca536b, type: 3}
   m_Name: 
@@ -2919,6 +3009,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 565035587448329236, guid: c51080746ab471f419bf3f2a4a8401ed, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5298714273561350981}
+    - targetCorrespondingSourceObject: {fileID: 565035587448329236, guid: c51080746ab471f419bf3f2a4a8401ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6112322216767494417}
   m_SourcePrefab: {fileID: 100100000, guid: c51080746ab471f419bf3f2a4a8401ed, type: 3}
 --- !u!1 &2380255585315122057 stripped
 GameObject:
@@ -2926,6 +3019,19 @@ GameObject:
   m_PrefabInstance: {fileID: 2801015803839201181}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &5298714273561350981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2380255585315122057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4360525fff8b40e45b98a84502af3495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerHealth: {fileID: 3382564647445246701}
+--- !u!114 &6112322216767494417
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     private static GameObject inventory;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    static void OnBeforeSplashScreen()
+    static void OnBeforeSceneLoad()
     {
         GameObject gameObject = Instantiate(new GameObject("GameManager"));
         DontDestroyOnLoad(gameObject);
@@ -33,11 +33,20 @@ public class GameManager : MonoBehaviour
         gameCanvas.gameObject.transform.SetParent(gameObject.transform);
         gameCanvas.GetComponent<RectTransform>().offsetMax = Vector2.zero;
         gameCanvas.GetComponent<RectTransform>().offsetMin = Vector2.zero;
+        
+        gameObject.AddComponent<GameProgressTracker>();
 
         escMenu = Instantiate(Resources.Load("Prefabs/UI/EscMenuPrefab")) as GameObject;
         escMenu.gameObject.transform.SetParent(gameCanvas.transform);
 
         inventory = Instantiate(Resources.Load("Prefabs/UI/Inventory")) as GameObject;
         inventory.gameObject.transform.SetParent(gameCanvas.transform);
+    }
+
+    //TODO - Test this with multiple scenes when that is readily available
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void OnAfterSceneLoad()
+    {
+        NonRespawnableItemsRemover.Instance.RemoveNonRespawnableItems();
     }
 }
