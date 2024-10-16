@@ -17,18 +17,18 @@ namespace GameStateManagement
         {
             EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
-            if (EscMenuController.audioSource != null) EscMenuController.audioSource.Pause();
+            AudioListener.pause = true;
         }
 
         public void ExitState()
         {
-            if(EscMenuController.getSettingsMenuPanel().activeSelf)
+            if (EscMenuController.getSettingsMenuPanel().activeSelf)
             {
                 EscMenuController.CloseSettings();
             }
             EscMenuController.getPauseMenuPanel().SetActive(false);
             Time.timeScale = 1f;
-            if (EscMenuController.audioSource != null) EscMenuController.audioSource.Play();
+            AudioListener.pause = false;
         }
     }
 }
