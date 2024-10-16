@@ -8,12 +8,16 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static UnityEngine.InputSystem.InputAction;
 
-public class InventoryController : MonoBehaviour
+public class ShopController : MonoBehaviour
 {
+    public List<ItemData> shopItems; // place items to be displayed in shop
+
+    #region Keybinds
     [SerializeField]
     [Tooltip("The keybind that controls opening and closing the inventory.")]
     InputAction InventoryAction;
@@ -38,18 +42,25 @@ public class InventoryController : MonoBehaviour
     [SerializeField]
     [Tooltip("The keybind that controls moving down in the inventory.")]
     InputAction NavDown;
+    #endregion
 
     [SerializeField]
-    private GameObject inventory; // canvas game object
+    private GameObject invObj; // canvas game object
 
+    [SerializeField]
+    private GameObject playerInvObj; // player's inventory
+
+    // Canvas children
     private GameObject invPanel; // main inventory panel within canvas
-    private GameObject coins; // coin counter and icon
-    private GameObject health; // health icon
+    private GameObject playerCoins; // Player coins
+    private GameObject coins; // coin UI object in shop
     private GameObject itemInfo; // item name & description parent (holds the two fields below)
     private GameObject itemName;
     private GameObject itemDescription;
+    private GameObject itemPrice;
 
     private PlayerInventory pInv;
+    private ShopInventory shopInv;
 
     private List<GameObject> inventorySlots; // slots in the inventory 
     private List<ItemData> itemsInInventory; // list of items currently held in inventory
@@ -57,42 +68,56 @@ public class InventoryController : MonoBehaviour
     private int inventoryRowSize;
     private UnityEngine.UI.Image selectedSlot;
 
-    public GameObject GetInventoryPanel() { return inventory; }
+    public GameObject GetShopInventoryPanel() { return invObj; }
 
     private void Start()
     {
         pInv = PlayerInventory.Instance;
-        invPanel = inventory.transform.GetChild(0).gameObject;
-        coins = inventory.transform.GetChild(1).gameObject;
-        health = inventory.transform.GetChild(2).gameObject;
-        itemInfo = inventory.transform.GetChild(3).gameObject;
+        shopInv = ShopInventory.Instance;
+        invPanel = invObj.transform.GetChild(0).gameObject;
 
-        // this is commented out right now because it doesn't like the tags anymore? I'm not sure why...
-        // inventory.SetActive(true);
-        // itemName = GameObject.FindWithTag("InventoryItemName");
-        // itemDescription = GameObject.FindWithTag("InventoryItemDescription");
-        // inventory.SetActive(false);
+        playerInvObj.SetActive(true);
+        playerCoins = GameObject.FindWithTag("Coins"); // get coins from player
+        playerInvObj.SetActive(false);
 
+        coins = invObj.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
+        itemInfo = invObj.transform.GetChild(2).gameObject;
+
+        invObj.SetActive(true);
         itemName = itemInfo.transform.GetChild(0).gameObject;
-        itemDescription = itemInfo.transform.GetChild(1).gameObject;
+        itemPrice = itemInfo.transform.GetChild(1).gameObject;
+        itemDescription = itemInfo.transform.GetChild(2).gameObject;
+        invObj.SetActive(false);
 
         inventorySlots = new List<GameObject>();
-        itemsInInventory = new List<ItemData>();
 
         foreach (Transform child in invPanel.transform)
         {
             inventorySlots.Add(child.gameObject);
         }
 
+        LoadShopItems();
+        itemsInInventory = shopItems;
+
         inventoryRowSize = invPanel.GetComponent<GridLayoutGroup>().constraintCount;
         selectedSlot = invPanel.transform.GetChild(0).gameObject.transform.GetChild(0).gameObject.GetComponent<UnityEngine.UI.Image>();
+    }
+
+    void LoadShopItems()
+    {
+        foreach (var item in shopItems)
+        {
+            var slot = inventorySlots[shopItems.Count - 1];
+            var img = item.sprite;
+            slot.GetComponent<UnityEngine.UI.Image>().sprite = img;
+        }
     }
 
     private void OnEnable()
     {
         InventoryAction.performed += OpenInventory;
         InventoryAction.Enable();
-        SelectItem.performed += EquipItem;
+        SelectItem.performed += BuyItem;
         SelectItem.Enable();
 
         // Navigating inventory
@@ -112,7 +137,7 @@ public class InventoryController : MonoBehaviour
     {
         InventoryAction.performed -= OpenInventory;
         InventoryAction.Disable();
-        SelectItem.performed -= EquipItem;
+        SelectItem.performed -= BuyItem;
         SelectItem.Disable();
 
         // Navigating inventory
@@ -129,7 +154,7 @@ public class InventoryController : MonoBehaviour
 
     void OpenInventory(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (invObj.activeSelf)
         {
             GameStateManager.Instance.SetState(new PlayingState());
         }
@@ -137,24 +162,16 @@ public class InventoryController : MonoBehaviour
         {
             // make sure something else isn't already pausing the game
             var state = GameStateManager.Instance.CurrentState;
-            if (state is not PauseState && state is not ShopState) {
-                GameStateManager.Instance.SetState(new GameStateManagement.InventoryState(this));
+            if (state is not PauseState && state is not InventoryState) {
+                GameStateManager.Instance.SetState(new GameStateManagement.ShopState(this));
             }
-        }
-    }
-
-    void EquipItem(CallbackContext c)
-    {
-        if (inventory.activeSelf && itemsInInventory[inventoryIndex] != null)
-        {
-            pInv.EquipItem(itemsInInventory[inventoryIndex]);
         }
     }
 
     #region Inventory Navigation
     void NavInvLeft(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (invObj.activeSelf)
         {
             if (inventoryIndex > 0 && inventoryIndex % inventoryRowSize != 0) 
             {
@@ -168,7 +185,7 @@ public class InventoryController : MonoBehaviour
 
     void NavInvRight(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (invObj.activeSelf)
         {
             if (inventoryIndex < inventorySlots.Count && inventoryIndex % inventoryRowSize != inventoryRowSize - 1)
             {
@@ -182,7 +199,7 @@ public class InventoryController : MonoBehaviour
 
     void NavInvUp(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (invObj.activeSelf)
         {
             if (inventoryIndex > inventoryRowSize - 1) inventoryIndex -= inventoryRowSize;
             selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
@@ -193,7 +210,7 @@ public class InventoryController : MonoBehaviour
 
     void NavInvDown(CallbackContext c)
     {
-        if (inventory.activeSelf)
+        if (invObj.activeSelf)
         {
             if (inventoryIndex < inventorySlots.Count - inventoryRowSize) inventoryIndex += inventoryRowSize;
             selectedSlot.transform.SetParent(invPanel.transform.GetChild(inventoryIndex));
@@ -203,40 +220,47 @@ public class InventoryController : MonoBehaviour
     }
     #endregion
 
-    private void Update()
+    void BuyItem(CallbackContext c)
     {
-        List<ItemData> keysToRemove = new List<ItemData>();
-        foreach (var item in pInv.ItemDictionary)
+        // TODO
+        // if player has enough coins, add item to inventory,
+        // subtract amt. of coins from player's coins.
+        // maybe add a confirmation box before purchasing
+
+        int playerCoinAmt = int.Parse(playerCoins.GetComponent<TextMeshProUGUI>().text);
+        if (invObj.activeSelf && itemsInInventory[inventoryIndex] != null)
         {
-            if (item.Key.itemName.Contains("Coin"))
+            int currentItemPrice = itemsInInventory[inventoryIndex].price;
+            if (playerCoinAmt < currentItemPrice)
             {
-                int coinCount = int.Parse(coins.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text);
-                coins.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = (coinCount + 1).ToString();
-                keysToRemove.Add(item.Key);
-            } else if (!itemsInInventory.Contains(item.Key))
+                Debug.Log("Cannot buy - come back when you're a little, mmm, richer!");
+            }
+            else
             {
-                itemsInInventory.Add(item.Key);
-                var slot = inventorySlots[itemsInInventory.Count-1];
-                var img = item.Key.sprite;
-                slot.GetComponent<UnityEngine.UI.Image>().sprite = img;
+                playerCoinAmt -= currentItemPrice;
+                playerCoins.GetComponent<TextMeshProUGUI>().text = playerCoinAmt.ToString();
+                coins.GetComponent<TextMeshProUGUI>().text = playerCoinAmt.ToString();
+
+                pInv.Add(itemsInInventory[inventoryIndex]);
+                // shopInv.PurchaseItem(itemsInInventory[inventoryIndex]); // Remove item from shop
             }
         }
         
-        // Remove keys
-        foreach (var key in keysToRemove)
-        {
-            pInv.ItemDictionary.Remove(key);
-        }
-
-        if (itemsInInventory.Count > inventoryIndex)
+    }
+    
+    private void Update()
+    {
+        if (shopItems.Count > inventoryIndex)
         {
             itemInfo.SetActive(true);
             itemName.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemName;
             itemDescription.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].itemDesc;
+            itemPrice.GetComponent<TextMeshProUGUI>().text = itemsInInventory[inventoryIndex].price.ToString();
         }
         else
         {
             itemInfo.SetActive(false);
         }
+        coins.GetComponent<TextMeshProUGUI>().text = playerCoins.GetComponent<TextMeshProUGUI>().text;
     }
 }

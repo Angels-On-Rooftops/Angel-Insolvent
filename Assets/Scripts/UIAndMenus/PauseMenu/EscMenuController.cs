@@ -1,9 +1,11 @@
 using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 
 public class EscMenuController : MonoBehaviour
@@ -76,16 +78,27 @@ public class EscMenuController : MonoBehaviour
     {
         settingsMenuPanel.SetActive(true);
         pauseMenuPanel.SetActive(false);
+
+        settingsMenuPanel.gameObject.GetComponentInChildren<Button>()?.onClick.Invoke();
+        settingsMenuPanel.gameObject.GetComponentInChildren<Button>()?.Select();
     }
 
     public void CloseSettings()
     {
         settingsMenuPanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
+        pauseMenuPanel.GetComponentsInChildren<Button>().First().Select();
+    }
+
+    public void CloseSavePrompt()
+    {
+        savePromptPanel.SetActive(false);
+        pauseMenuPanel.GetComponentsInChildren<Button>().First().Select();
     }
 
     public void QuitToMainMenu()
     {
         savePromptPanel.SetActive(true);
+        savePromptPanel.GetComponentsInChildren<Button>().Last().Select();
     }
 }

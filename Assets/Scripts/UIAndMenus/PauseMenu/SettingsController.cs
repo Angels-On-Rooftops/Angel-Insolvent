@@ -39,7 +39,7 @@ public class SettingsController : MonoBehaviour
     void Start()
     {
         categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/Settings/SettingCategoryButton");
-        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SettingsPanelPrefab");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/VerticalPanelPrefab");
         singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SingleSettingPrefab");
 
         categoriesPanel = this.gameObject.transform
