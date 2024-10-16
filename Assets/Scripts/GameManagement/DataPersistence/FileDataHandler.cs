@@ -30,12 +30,13 @@ public class FileDataHandler
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
-            fileStream = new FileStream(fullPath, FileMode.Create);
+            fileStream = new FileStream(fullPath, FileMode.OpenOrCreate);
             fileWriter = new StreamWriter(fileStream, System.Text.Encoding.UTF8, 64, true);
         }
         catch (Exception e)
         {
             Debug.LogError("Error occured when trying to open file: " + fullPath + "\n" + e);
+            fileStream.Close();
         }
     }
 
@@ -48,9 +49,9 @@ public class FileDataHandler
             fileStream = new FileStream(fullPath, FileMode.Open);
             fileReader = new StreamReader(fileStream, System.Text.Encoding.UTF8, false, 64, true);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Debug.LogError("Error occured when trying to open file: " + fullPath + "\n" + e);
+            throw;
         }
     }
 
@@ -61,6 +62,7 @@ public class FileDataHandler
         {
             string dataToStore = JsonUtility.ToJson(data, true);
             fileWriter.WriteLine(dataToStore);
+            Debug.Log(dataToStore);
         }
         catch (Exception e)
         {
@@ -75,6 +77,7 @@ public class FileDataHandler
             fileReader.DiscardBufferedData();
             fileReader.BaseStream.Seek(0, SeekOrigin.Begin);
             string data = GetSingleJsonObjectString(jsonTag);
+            Debug.Log(data);
             var method = typeof(JsonUtility).GetMethod("FromJson", new Type[] { typeof(string) });
             var genericMethod = method.MakeGenericMethod(returnType);
             return genericMethod.Invoke(null, new object[] { data });
