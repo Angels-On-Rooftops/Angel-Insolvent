@@ -79,8 +79,8 @@ public class EscMenuController : MonoBehaviour
         settingsMenuPanel.SetActive(true);
         pauseMenuPanel.SetActive(false);
 
-        settingsMenuPanel.gameObject.GetComponentInChildren<Button>()?.onClick.Invoke();
-        settingsMenuPanel.gameObject.GetComponentInChildren<Button>()?.Select();
+        settingsMenuPanel.GetComponentInChildren<Button>()?.Select();
+        settingsMenuPanel.GetComponentInChildren<Button>()?.onClick.Invoke();
     }
 
     public void CloseSettings()

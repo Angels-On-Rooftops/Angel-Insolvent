@@ -20,6 +20,7 @@ namespace GameStateManagement
             if(characterCamera != null) characterCamera.CanOrbit = false;
             EscMenuController.getPauseMenuPanel().SetActive(true);
             Time.timeScale = 0f;
+            EscMenuController.getPauseMenuPanel().GetComponentInChildren<Button>().Select();
             AudioListener.pause = true;
         }
 
