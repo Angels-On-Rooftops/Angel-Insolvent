@@ -203,6 +203,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void Awake()
     {
+        MovementDirectionMiddleware = MovementMiddleware.RelativeToCamera(this);
         FacingDirectionMiddleware = FacingMiddleware.UpdateOnlyWhenMoving(this);
     }
 
@@ -308,14 +309,19 @@ public class CharacterMovement : MonoBehaviour
         return Vector3.Scale(-forward, Vector3.one - Vector3.up);
     }
 
-    Vector3 MovementVelocity(Vector3 forwardVector)
+    public Quaternion ForwardRotationFromCamera()
+    {
+        return Quaternion.LookRotation(-ForwardMovementDirectionFromCamera(), Vector3.up);
+    }
+
+    Vector3 MovementVelocity()
     {
         if (!LateralMovementEnabled)
         {
             return Vector3.zero;
         }
 
-        return Quaternion.LookRotation(-forwardVector, Vector3.up) * MovementDirection * WalkSpeed;
+        return MovementDirection * WalkSpeed;
     }
 
     (bool didHit, RaycastHit hit) GroundInfo(float checkDistance)
@@ -410,8 +416,7 @@ public class CharacterMovement : MonoBehaviour
 
     void ApplyMovementVelocity(Vector3 additionalImpulse)
     {
-        Vector3 forwardFromCamera = ForwardMovementDirectionFromCamera();
-        Vector3 moveVelocity = MovementVelocity(forwardFromCamera);
+        Vector3 moveVelocity = MovementVelocity();
 
         bool didHit = Physics.CapsuleCast(
             BottomSphereCenter,
@@ -573,6 +578,11 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
         UpdateProcessedVectors();
 
         if (GravityEnabled)
