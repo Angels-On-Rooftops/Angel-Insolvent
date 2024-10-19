@@ -438,15 +438,26 @@ public class CharacterMovement : MonoBehaviour
 
         // subtract the component of the move velocity that's going up too steep of a slope
         if (
-            PointGroundAngle(Controller.height * 1.3f) > Controller.slopeLimit
+            PointGroundAngle(Controller.height / 2f + dx) > Controller.slopeLimit
             && Vector3.Dot(FacingDirection, downSlope) > 0
-            && PointGroundAngle(Controller.height * 1.3f) != 90
+            && PointGroundAngle(Controller.height / 2f + dx) != 90
         )
         {
+            // if using 2022.3.4
+            //moveVelocity -= Vector3.Project(
+            //    moveVelocity, Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
+            //);
+
+            // if using 2022.3.47+
             moveVelocity -= Vector3.Project(
                 moveVelocity,
-                Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
+                Vector3.Scale(
+                    Vector3.up * 100,
+                    Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
+                )
             );
+
+            // if using between those versions, i'm not sure
         }
 
         // make character slip off edge to prevent being stuck on the very edge of a platform
