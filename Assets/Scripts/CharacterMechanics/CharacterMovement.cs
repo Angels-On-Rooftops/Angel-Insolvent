@@ -116,14 +116,6 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Public Properties
-    float JumpPower
-    {
-        get
-        {
-            float height = JumpHeight + (Jumps - ExtraJumpsRemaining - 1) * JumpHeightBonus;
-            return Mathf.Sqrt(2 * CharacterGravity * height);
-        }
-    }
     CharacterController Controller => GetComponent<CharacterController>();
     Vector3 ControllerWorldPosition => transform.position + Controller.center;
 
@@ -255,7 +247,13 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    bool DoJump(bool isFromBuffer)
+    float JumpPower(float jumpHeight)
+    {
+        float height = jumpHeight + (Jumps - ExtraJumpsRemaining - 1) * JumpHeightBonus;
+        return Mathf.Sqrt(2 * CharacterGravity * height);
+    }
+
+    void DoJump(float jumpBufferLeft, float scheduledJumpHeight)
     {
         bool FromGround = VerticalState == VerticalMovementState.Grounded;
         bool WithinCoyoteTime =
@@ -276,26 +274,29 @@ public class CharacterMovement : MonoBehaviour
                 ExtraJumpsRemaining--;
             }
 
-            VerticalSpeed = JumpPower;
+            VerticalSpeed = JumpPower(scheduledJumpHeight);
             VerticalState = VerticalMovementState.Jumping;
             Jumped?.Invoke(Jumps - ExtraJumpsRemaining);
-
-            return true;
         }
-        else if (!isFromBuffer)
+        else if (jumpBufferLeft > 0)
         {
             // jump didn't succeed, buffer it
-            StartCoroutine(Macros.Buffer(JumpBufferTime, () => DoJump(true)));
-            return false;
-        }
+            jumpBufferLeft -= Time.deltaTime;
 
-        return false;
+            // if the jump height changes while buffered, we want to give the player the benefit
+            // of the highest jump height they could've been aiming for
+            StartCoroutine(
+                CoroutineUtil.WaitAFrameThenRun(
+                    () => DoJump(jumpBufferLeft, Mathf.Max(JumpHeight, scheduledJumpHeight))
+                )
+            );
+        }
     }
 
     void DoJumpInput(CallbackContext _)
     {
         JumpRequested?.Invoke();
-        DoJump(false);
+        DoJump(JumpBufferTime, JumpHeight);
     }
 
     public Vector3 ForwardMovementDirectionFromCamera()

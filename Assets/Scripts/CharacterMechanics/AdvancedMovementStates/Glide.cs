@@ -40,6 +40,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
                 "MovementDirectionMiddleware",
                 MovementMiddleware.NonZeroLimitedAdjust(Movement, TurningSpeed)
             },
+            { "JumpHeight", GetComponent<HighJump>().HighJumpHeight },
         };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
@@ -49,7 +50,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
                 Movement.IsOnStableGround() && !canHighJump || !Movement.Jump.IsPressed()
             },
             { AdvancedMovementState.Plunging, !Movement.IsOnStableGround() && pushedActionButton },
-            { AdvancedMovementState.HighJumping, Movement.IsOnStableGround() && canHighJump }
+            { AdvancedMovementState.HighJumping, Movement.IsOnStableGround() && canHighJump },
         };
 
     public List<string> HoldFromPreviousState =>
@@ -58,7 +59,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     float JumpBufferTime => GetComponent<CharacterMovement>().JumpBufferTime;
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
-    float HighJumpHeight => GetComponent<HighJump>().HighJumpHeight;
 
     readonly Maid StateMaid = new();
     bool canHighJump = false;
@@ -78,52 +78,28 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
             MaxGlideSpeed
         );
 
-        Coroutine dampRoutine = null;
         if (Movement.VerticalSpeed > 0)
         {
-            dampRoutine = StartCoroutine(DampVertical(UpSpeedDampAcceleration));
+            StateMaid.GiveCoroutine(this, StartCoroutine(DampVertical(UpSpeedDampAcceleration)));
         }
-        StateMaid.GiveTask(() =>
-        {
-            if (dampRoutine is not null)
-            {
-                StopCoroutine(dampRoutine);
-            }
-        });
 
-        Coroutine glideTransitionRoutine = StartCoroutine(TransitionToGlide());
-        StateMaid.GiveTask(() =>
-        {
-            if (glideTransitionRoutine is not null)
-            {
-                StopCoroutine(glideTransitionRoutine);
-            }
-        });
+        StateMaid.GiveCoroutine(this, StartCoroutine(TransitionToGlide()));
 
-        canHighJump = false;
-        Coroutine highJumpCounter = null;
         if (fromState == AdvancedMovementState.Plunging)
         {
-            canHighJump = true;
-            Movement.JumpHeight = HighJumpHeight;
-            highJumpCounter = StartCoroutine(
-                CoroutineUtil.DoActionAfterTime(
-                    () =>
-                    {
-                        canHighJump = false;
-                        Movement.JumpHeight = standardJumpHeight;
-                    },
-                    JumpBufferTime
+            StateMaid.GiveCoroutine(
+                this,
+                StartCoroutine(
+                    CoroutineUtil.DoActionAfterTime(
+                        () =>
+                        {
+                            Movement.JumpHeight = standardJumpHeight;
+                        },
+                        JumpBufferTime
+                    )
                 )
             );
         }
-        StateMaid.GiveTask(() =>
-        {
-            if (highJumpCounter is not null)
-            {
-                StopCoroutine(highJumpCounter);
-            }
-        });
 
         pushedActionButton = false;
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
