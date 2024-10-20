@@ -438,34 +438,34 @@ public class CharacterMovement : MonoBehaviour
         Vector3 DownSlopeDirection = downSlope.normalized;
 
         // subtract the component of the move velocity that's going up too steep of a slope
-        if (
-            PointGroundAngle(Controller.height / 2f + dx) > Controller.slopeLimit
-            && Vector3.Dot(FacingDirection, downSlope) > 0
-            && PointGroundAngle(Controller.height / 2f + dx) != 90
-        )
-        {
-            // if using 2022.3.4
-            //moveVelocity -= Vector3.Project(
-            //    moveVelocity, Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
-            //);
+        //if (
+        //    PointGroundAngle(Controller.height / 2f + dx) > Controller.slopeLimit
+        //    && Vector3.Dot(FacingDirection, downSlope) > 0
+        //    && PointGroundAngle(Controller.height / 2f + dx) != 90
+        //)
+        //{
+        //    // if using 2022.3.4
+        //    //moveVelocity -= Vector3.Project(
+        //    //    moveVelocity, Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
+        //    //);
 
-            // if using 2022.3.47+
-            moveVelocity -= Vector3.Project(
-                moveVelocity,
-                Vector3.Scale(
-                    Vector3.up * 100,
-                    Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
-                )
-            );
+        //    // if using 2022.3.47+
+        //    moveVelocity -= Vector3.Project(
+        //        moveVelocity,
+        //        Vector3.Scale(
+        //            Vector3.up * 100,
+        //            Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
+        //        )
+        //    );
 
-            // if using between those versions, i'm not sure
-        }
+        //    // if using between those versions, i'm not sure
+        //}
 
-        // make character slip off edge to prevent being stuck on the very edge of a platform
-        if (IsOnSteepSlope() && GroundNormal(Controller.height).magnitude == 0)
-        {
-            moveVelocity += FacingDirection;
-        }
+        //// make character slip off edge to prevent being stuck on the very edge of a platform
+        //if (IsOnSteepSlope() && GroundNormal(Controller.height).magnitude == 0)
+        //{
+        //    moveVelocity += FacingDirection;
+        //}
 
         // redirect vertical speed down the slope if moving downwards
         Vector3 verticalDirection =
@@ -473,7 +473,8 @@ public class CharacterMovement : MonoBehaviour
         Vector3 verticalVelocity = verticalDirection * VerticalSpeed;
 
         // bring it all together
-        Vector3 combinedVelocity = verticalVelocity + moveVelocity;
+        Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -0.01f, 0);
+        Debug.Log(combinedVelocity);
         Controller.Move(combinedVelocity * Time.deltaTime + additionalImpulse);
     }
 

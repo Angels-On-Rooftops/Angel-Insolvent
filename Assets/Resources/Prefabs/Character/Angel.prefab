@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2266696455461381938}
   m_Layer: 5
   m_Name: Coin Counter
-  m_TagString: Untagged
+  m_TagString: Coins
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -206,9 +206,9 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 1
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_StepOffset: 0
+  m_SkinWidth: 0.5
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &8750904993138488779
 MonoBehaviour:
@@ -805,6 +805,14 @@ MonoBehaviour:
     - m_Name: 
       m_Id: 47b94ae7-21a8-4ac4-ae8c-22175b96f30b
       m_Path: <Keyboard>/e
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Interact
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 5d35c65f-f9ee-4442-bb8e-99e8650e9b34
+      m_Path: <Gamepad>/buttonNorth
       m_Interactions: 
       m_Processors: 
       m_Groups: 
