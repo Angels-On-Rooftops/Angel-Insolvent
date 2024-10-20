@@ -45,7 +45,7 @@ public class CharacterCamera : MonoBehaviour
     public float MaxZoom = 30f;
 
     [SerializeField]
-    public float ControllerZoomIncrement = 5f;
+    public float ControllerZoomIncrement = 0.5f;
 
     [Space(10)]
     [SerializeField]
@@ -58,7 +58,7 @@ public class CharacterCamera : MonoBehaviour
 
     [SerializeField]
     [Tooltip("The camera's zooming sensitivity from the scroll wheel on a mouse.")]
-    float ZoomSensitivity = 1;
+    float ZoomSensitivity = 0.1f;    
 
     [Space(20)]
     [SerializeField]
