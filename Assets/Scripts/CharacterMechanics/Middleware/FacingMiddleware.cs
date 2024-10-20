@@ -2,14 +2,10 @@
 using System.Collections;
 using UnityEngine;
 
-
 public static class FacingMiddleware
 {
-
     public static Func<Vector3, float, Vector3> UpdateOnlyWhenMoving(CharacterMovement movement)
     {
-
-
         return (v, dt) =>
         {
             if (movement.MovementDirection.magnitude == 0)
@@ -17,7 +13,10 @@ public static class FacingMiddleware
                 return movement.FacingDirection;
             }
 
-            return Quaternion.LookRotation(-movement.ForwardMovementDirectionFromCamera(), Vector3.up) * movement.RawFacingDirection;
+            return Quaternion.LookRotation(
+                    -movement.ForwardMovementDirectionFromCamera(),
+                    Vector3.up
+                ) * movement.RawFacingDirection;
         };
     }
 
@@ -25,7 +24,7 @@ public static class FacingMiddleware
     {
         return (v, dt) =>
         {
-            return Quaternion.LookRotation(-movement.ForwardMovementDirectionFromCamera(), Vector3.up) * movement.MovementDirection.normalized;
+            return movement.MovementDirection.normalized;
         };
     }
 }
