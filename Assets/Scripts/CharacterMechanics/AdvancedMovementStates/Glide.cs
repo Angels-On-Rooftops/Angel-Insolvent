@@ -40,7 +40,6 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
                 "MovementDirectionMiddleware",
                 MovementMiddleware.NonZeroLimitedAdjust(Movement, TurningSpeed)
             },
-            { "JumpHeight", GetComponent<HighJump>().HighJumpHeight },
         };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
@@ -87,6 +86,7 @@ public class Glide : MonoBehaviour, IAdvancedMovementStateSpec
 
         if (fromState == AdvancedMovementState.Plunging)
         {
+            Movement.JumpHeight = GetComponent<HighJump>().HighJumpHeight;
             StateMaid.GiveCoroutine(
                 this,
                 StartCoroutine(
