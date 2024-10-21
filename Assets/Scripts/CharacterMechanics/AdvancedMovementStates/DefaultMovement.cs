@@ -8,7 +8,11 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
     float StandardSpeed;
 
     public Dictionary<string, object> MovementProperties =>
-        new() { { "WalkSpeed", StandardSpeed } };
+        new()
+        {
+            { "WalkSpeed", StandardSpeed },
+            { "DownwardTerminalVelocity", standardTerminalVelocity }
+        };
     public Dictionary<AdvancedMovementState, bool> Transitions =>
         new()
         {
@@ -16,8 +20,19 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
             { AdvancedMovementState.Plunging, pushedActionButton && !Movement.IsOnGround() },
             { AdvancedMovementState.MoveStarting, movementStarted },
             { AdvancedMovementState.MoveStopping, movementEnded },
-            { AdvancedMovementState.Gliding, jumpedOffGround },
+            {
+                AdvancedMovementState.Gliding,
+                Movement.Jump.IsPressed()
+                    && !Movement.IsOnStableGround()
+                    && Movement.ExtraJumpsRemaining == 0
+                    && Movement.VerticalSpeed < 0
+            },
         };
+
+    void Awake()
+    {
+        standardTerminalVelocity = Movement.DownwardTerminalVelocity;
+    }
 
     public List<string> HoldFromPreviousState => new() { };
 
@@ -28,7 +43,8 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
     bool pushedActionButton = false;
     bool movementStarted = false;
     bool movementEnded = false;
-    bool jumpedOffGround = false;
+
+    float standardTerminalVelocity;
 
     public void TransitionedTo(AdvancedMovementState fromState)
     {
@@ -40,19 +56,6 @@ public class DefaultMovement : MonoBehaviour, IAdvancedMovementStateSpec
 
         movementEnded = false;
         StateMaid.GiveEvent(Movement, "WalkStopRequested", () => movementEnded = true);
-
-        jumpedOffGround = false;
-        StateMaid.GiveEvent(
-            Movement,
-            "JumpRequested",
-            () =>
-            {
-                if (Movement.VerticalState != VerticalMovementState.Grounded)
-                {
-                    jumpedOffGround = true;
-                }
-            }
-        );
     }
 
     public void TransitioningFrom()

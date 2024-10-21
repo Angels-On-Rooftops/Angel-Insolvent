@@ -67,10 +67,14 @@ public class InventoryController : MonoBehaviour
         health = inventory.transform.GetChild(2).gameObject;
         itemInfo = inventory.transform.GetChild(3).gameObject;
 
-        inventory.SetActive(true);
-        itemName = GameObject.FindWithTag("InventoryItemName");
-        itemDescription = GameObject.FindWithTag("InventoryItemDescription");
-        inventory.SetActive(false);
+        // this is commented out right now because it doesn't like the tags anymore? I'm not sure why...
+        // inventory.SetActive(true);
+        // itemName = GameObject.FindWithTag("InventoryItemName");
+        // itemDescription = GameObject.FindWithTag("InventoryItemDescription");
+        // inventory.SetActive(false);
+
+        itemName = itemInfo.transform.GetChild(0).gameObject;
+        itemDescription = itemInfo.transform.GetChild(1).gameObject;
 
         inventorySlots = new List<GameObject>();
         itemsInInventory = new List<ItemData>();
@@ -132,7 +136,8 @@ public class InventoryController : MonoBehaviour
         else
         {
             // make sure something else isn't already pausing the game
-            if (GameStateManager.Instance.CurrentState is not PauseState) {
+            var state = GameStateManager.Instance.CurrentState;
+            if (state is not PauseState && state is not ShopState) {
                 GameStateManager.Instance.SetState(new GameStateManagement.InventoryState(this));
             }
         }
@@ -146,6 +151,7 @@ public class InventoryController : MonoBehaviour
         }
     }
 
+    #region Inventory Navigation
     void NavInvLeft(CallbackContext c)
     {
         if (inventory.activeSelf)
@@ -195,6 +201,7 @@ public class InventoryController : MonoBehaviour
             Debug.Log(inventoryIndex);
         }
     }
+    #endregion
 
     private void Update()
     {
@@ -214,7 +221,7 @@ public class InventoryController : MonoBehaviour
                 slot.GetComponent<UnityEngine.UI.Image>().sprite = img;
             }
         }
-
+        
         // Remove keys
         foreach (var key in keysToRemove)
         {

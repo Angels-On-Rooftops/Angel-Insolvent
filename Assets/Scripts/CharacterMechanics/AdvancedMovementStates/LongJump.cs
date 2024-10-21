@@ -5,6 +5,9 @@ using UnityEngine;
 public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
 {
     [SerializeField]
+    public float LongJumpHeight = 3;
+
+    [SerializeField]
     AnimationCurve AccelerationCurve;
 
     [SerializeField]
@@ -20,13 +23,15 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
             { AdvancedMovementState.Plunging, pushedActionButton },
             {
                 AdvancedMovementState.Gliding,
-                jumpedOffGround && !Movement.IsOnStableGround() && Movement.ExtraJumpsRemaining == 0
+                Movement.Jump.IsPressed()
+                    && !Movement.IsOnStableGround()
+                    && Movement.ExtraJumpsRemaining == 0
+                    && Movement.VerticalSpeed < 0
             },
         };
     public Dictionary<string, object> MovementProperties =>
         new()
         {
-            { "JumpHeight", GetComponent<Roll>().LongJumpHeight },
             { "MovementDirectionMiddleware", MovementMiddleware.FullSpeedAhead(Movement, 2.5f) },
             { "FacingDirectionMiddleware", FacingMiddleware.FaceMovementDirection(Movement) },
         };
@@ -40,7 +45,6 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
         landed,
         pushedActionButton;
     readonly Maid StateMaid = new();
-    bool jumpedOffGround = false;
 
     public void TransitionedTo(AdvancedMovementState oldState)
     {
@@ -54,9 +58,6 @@ public class LongJump : MonoBehaviour, IAdvancedMovementStateSpec
 
         hitWall = false;
         StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);
-
-        jumpedOffGround = false;
-        StateMaid.GiveEvent(Movement, "JumpRequested", () => jumpedOffGround = true);
 
         Coroutine accelerateRoutine = StartCoroutine(Accelerate());
         StateMaid.GiveTask(() =>

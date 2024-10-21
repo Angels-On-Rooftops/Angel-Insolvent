@@ -109,7 +109,6 @@ namespace Inventory
             {
                 this.equipmentList.Add(itemData);
             }
-            
             base.Add(itemData, amount);
         }
 
