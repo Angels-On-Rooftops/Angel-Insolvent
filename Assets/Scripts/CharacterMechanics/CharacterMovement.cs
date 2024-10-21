@@ -473,8 +473,7 @@ public class CharacterMovement : MonoBehaviour
         Vector3 verticalVelocity = verticalDirection * VerticalSpeed;
 
         // bring it all together
-        Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -0.01f, 0);
-        Debug.Log(combinedVelocity);
+        Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -dx, 0);
         Controller.Move(combinedVelocity * Time.deltaTime + additionalImpulse);
     }
 
