@@ -74,6 +74,15 @@ public class CharacterCamera : MonoBehaviour
     [SerializeField]
     InputAction Zoom;
 
+    [SerializeField]
+    [Tooltip("The Y axis spring's stiffness")]
+    public float springConstant = 50f;
+    [SerializeField]
+    [Tooltip("The Y axis spring's damping")]
+    public float damping = 0.5f; 
+
+    public Vector3 velocity = Vector3.zero; // Velocity for spring-based movement
+
     Vector2 RawOrbitDelta;
     string OrbitInput;
 
@@ -156,12 +165,11 @@ public class CharacterCamera : MonoBehaviour
 
     void AddRotationDelta(Vector3 delta)
     {
-        // limit rotation around the x axis between Y_LIMIT and -Y_LIMIT
-        CurrentOrbitRotation = new Vector3(
-            Mathf.Clamp(CurrentOrbitRotation.x + delta.x, -Y_LIMIT, Y_LIMIT),
-            CurrentOrbitRotation.y + delta.y,
-            CurrentOrbitRotation.z + delta.z
-        );
+        // Limit rotation around the x axis between Y_LIMIT and -Y_LIMIT
+        float targetX = Mathf.Clamp(CurrentOrbitRotation.x + delta.x, -Y_LIMIT, Y_LIMIT);
+        float targetY = CurrentOrbitRotation.y + delta.y;
+        float targetZ = CurrentOrbitRotation.z + delta.z;
+        CurrentOrbitRotation = new Vector3(targetX, targetY, targetZ);
     }
 
     // avoids clipping by placing the camera infront of the wall it would clip into
