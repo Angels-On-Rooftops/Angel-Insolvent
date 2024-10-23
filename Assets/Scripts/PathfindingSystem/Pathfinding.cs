@@ -1,13 +1,14 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-public class Pathfinding : MonoBehaviour
-{
+public class Pathfinding : MonoBehaviour {
     //path way from start node to end node
-    [NonSerialized]
-    public List<NodeMarker> path = new();
+    public List<NodeMarker> path;
+
+    private void Start() {
+        path = new List<NodeMarker>();
+        }
 
     /*
      * take random node from neighbor list
@@ -16,25 +17,29 @@ public class Pathfinding : MonoBehaviour
      * repeat if not
      */
 
-    // TODO does not work, will not find a path if the random node chosen doesn't have some path to the endNode not through the start node
-    public List<NodeMarker> FindPath(NodeMarker startNode, NodeMarker endNode)
-    {
-        NodeMarker tempNode = startNode.nextNode[Random.Range(0, startNode.nextNode.Count)];
+    public List<NodeMarker> findPath(NodeMarker currentNode, NodeMarker lastNode) {
+        NodeMarker tempNode = currentNode.NextNode[Random.Range(0, currentNode.NextNode.Count)];
 
-        if (!path.Contains(tempNode))
-        {
+        if (!path.Contains(tempNode)) {
             path.Add(tempNode);
-        }
-        else if (tempNode == endNode)
-        {
+            }
+        else if (tempNode == lastNode) {
             path.Add(tempNode);
-        }
+            }
 
-        if (tempNode != endNode)
-        {
-            FindPath(tempNode, endNode);
-        }
+
+        if (tempNode != lastNode) {
+            findPath(tempNode, lastNode);
+            }
+        else if (path.Contains(tempNode)) {
+            findPath(currentNode, lastNode);
+            }
 
         return path;
+        }
+
+
+
+
+
     }
-}
