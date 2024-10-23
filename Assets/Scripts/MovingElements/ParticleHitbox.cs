@@ -12,9 +12,6 @@ public class ParticleHitbox : MonoBehaviour
     [SerializeField] private Notes note;
     [SerializeField] private int octave;
     [Space]
-    [SerializeField] private Notes indicatorBeatNote;
-    [SerializeField] private int indicatorBeatOctave;
-    [Space]
     [SerializeField] [Tooltip("Leave empty if a hitbox is not desired")]
     private BoxCollider hitbox;
     [SerializeField][Tooltip("z dimension of the hitbox right before dissipating (minimum z size)")]
@@ -28,6 +25,12 @@ public class ParticleHitbox : MonoBehaviour
     [Space]
     [SerializeField][Tooltip("Because several settings can effect particle distance/time, adjusting particle settings through script is optional in case it does not work with your specific particle settings")]
     private bool adjustParticleSettings;
+    [Space]
+    [SerializeField] private Notes indicatorBeatNote;
+    [SerializeField] private int indicatorBeatOctave;
+    [SerializeField] private GameObject parentOfObjectsToRotate;
+    [SerializeField] private Vector3 initialRotation;
+    [SerializeField] private Vector3 indicationSignalRotation;
 
     private Vector3 initialHitboxPosition;
     private float distanceTraveled = 0;
@@ -36,30 +39,42 @@ public class ParticleHitbox : MonoBehaviour
     
     private Action unsubPlay;
     private Action unsubStop;
+    private Action unsubIndicator;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.particleSys.Stop();
-        this.initialHitboxPosition = this.hitbox.transform.position;
-        this.hitbox.transform.localScale = new Vector3(this.hitbox.transform.localScale.x, this.hitbox.transform.localScale.y, 0);
+        this.particleSys?.Stop();
+
+        if (this.hitbox is not null)
+        {
+            this.initialHitboxPosition = this.hitbox.transform.position;
+            this.hitbox.transform.localScale = new Vector3(this.hitbox.transform.localScale.x, this.hitbox.transform.localScale.y, 0);
+        }      
 
         if (this.adjustParticleSettings)
         {
             SetParticleSettings();
         }
+
+        if (this.parentOfObjectsToRotate is not null)
+        {
+            SetObjectsToRotation(this.initialRotation);
+        }     
     }
 
     private void OnEnable()
     {
         unsubPlay = midiEventSys.Subscribe(PlayParticles, note, octave);
         unsubStop = midiEventSys.Subscribe(StopParticles, note, octave, Midi2Event.SubType.Stop);
+        unsubIndicator = midiEventSys.Subscribe(TurnOnIndication, indicatorBeatNote, indicatorBeatOctave);
     }
 
     private void OnDisable()
     {
         unsubPlay.Invoke();
         unsubStop.Invoke();
+        unsubIndicator.Invoke();
     }
 
     // Update is called once per frame
@@ -75,7 +90,7 @@ public class ParticleHitbox : MonoBehaviour
 
     void PlayParticles()
     {
-        this.particleSys.Play();
+        this.particleSys?.Play();
 
         StartCoroutine(MoveHitboxCoRoutine());
     }
@@ -122,7 +137,7 @@ public class ParticleHitbox : MonoBehaviour
     private bool ShouldMoveHitbox()
     {
         //Check if StopParticles was called (should not change the hitbox anymore if so)
-        if (this.stopWasCalled)
+        if (this.stopWasCalled || this.hitbox is null)
         {
             return false;
         }
@@ -140,24 +155,50 @@ public class ParticleHitbox : MonoBehaviour
 
     IEnumerator Disappear()
     {
-        this.particleSys.Stop();
+        this.particleSys?.Stop();
 
         yield return new WaitForSeconds(this.timeBeforeDisappear);
 
-        //this.particleSys.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        //this.particleSys?.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         Reset();
-
-        
     }
 
     private void Reset()
     {
-        //Reset Hitbox
-        this.hitbox.transform.position = this.initialHitboxPosition;
-        this.hitbox.transform.localScale = new Vector3(this.hitbox.transform.localScale.x, this.hitbox.transform.localScale.y, 0);
-
+        if (this.hitbox is not null)
+        {
+            //Reset Hitbox
+            this.hitbox.transform.position = this.initialHitboxPosition;
+            this.hitbox.transform.localScale = new Vector3(this.hitbox.transform.localScale.x, this.hitbox.transform.localScale.y, 0);
+        }
+            
         this.distanceTraveled = 0;
 
+        if (this.parentOfObjectsToRotate is not null)
+        {
+            SetObjectsToRotation(this.initialRotation);
+        }
+
         this.stopWasCalled = false;
+    }
+
+    void TurnOnIndication()
+    {
+        if (this.parentOfObjectsToRotate is not null)
+        {
+            SetObjectsToRotation(this.indicationSignalRotation);
+        }     
+    }
+
+    private void SetObjectsToRotation(Vector3 rotationVector)
+    {
+        Quaternion rotationQuaternion = Quaternion.Euler(rotationVector.x, rotationVector.y, rotationVector.z);
+
+        for (int i = 0; i < this.parentOfObjectsToRotate.transform.childCount; i++)
+        {
+            GameObject childObject = this.parentOfObjectsToRotate.transform.GetChild(i).gameObject;
+
+            childObject.transform.rotation = rotationQuaternion;
+        }
     }
 }
