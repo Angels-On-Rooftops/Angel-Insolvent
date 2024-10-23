@@ -91,24 +91,29 @@ public class ParticleHitbox : MonoBehaviour
 
     private void MoveHitbox()
     {
+        float distanceMovedThisFrame = 0;
+
         if (this.distanceTraveled < this.distance)
         {
             //Move hitbox center
             Vector3 movementVector = this.hitboxVelocity * Time.deltaTime;
             this.hitbox.transform.Translate(movementVector);
 
-            //Increase hitbox size based on translation
-            float distanceMovedThisFrame = movementVector.magnitude;
-            this.hitbox.transform.localScale = new Vector3(this.hitbox.transform.localScale.x, this.hitbox.transform.localScale.y,
-                this.hitbox.transform.localScale.z + distanceMovedThisFrame * 2);
-
-            //Update this.distanceTraveled
-            this.distanceTraveled += distanceMovedThisFrame;
+            distanceMovedThisFrame = movementVector.magnitude;
         }
-        else if (this.hitbox.size.z > this.endHitboxDepth)
+
+        this.distanceTraveled += distanceMovedThisFrame;
+
+        if (this.distanceTraveled < (this.distance - this.hitbox.transform.localScale.z / 2))
         {
-            //Finished moving the hitbox, so start shrinking the hitbox until it's size.z is this.endHitboxDepth
-            float sizeDecreaseFactor = 1 - this.hitboxShrinkSpeed * Time.deltaTime;
+            //Increase hitbox size based on translation
+            this.hitbox.transform.localScale = new Vector3(this.hitbox.transform.localScale.x, this.hitbox.transform.localScale.y,
+                this.hitbox.transform.localScale.z + distanceMovedThisFrame * 2);           
+        }
+        else if (this.hitbox.transform.localScale.z > this.endHitboxDepth)
+        {
+            //Start shrinking the hitbox
+            float sizeDecreaseFactor = this.hitboxShrinkSpeed * Time.deltaTime;
             this.hitbox.transform.localScale = new Vector3(this.hitbox.transform.localScale.x, this.hitbox.transform.localScale.y,
                 this.hitbox.transform.localScale.z * sizeDecreaseFactor);
         }
@@ -128,9 +133,9 @@ public class ParticleHitbox : MonoBehaviour
 
     void StopParticles()
     {
-        //this.stopWasCalled = true;
+        this.stopWasCalled = true;
 
-        //StartCoroutine(Disappear());
+        StartCoroutine(Disappear());
     }
 
     IEnumerator Disappear()

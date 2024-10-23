@@ -312,7 +312,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3.5
+      scalar: 4
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -365,7 +365,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 15
+      scalar: 25
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5875,8 +5875,8 @@ MonoBehaviour:
   hitbox: {fileID: 371927832}
   endHitboxDepth: 0.25
   distance: 4
-  hitboxVelocity: {x: 0, y: 0, z: 10}
-  hitboxShrinkSpeed: 0.75
+  hitboxVelocity: {x: 0, y: 0, z: 7}
+  hitboxShrinkSpeed: 0.5
   timeBeforeDisappear: 0.25
   adjustParticleSettings: 0
 --- !u!1001 &1843541774
