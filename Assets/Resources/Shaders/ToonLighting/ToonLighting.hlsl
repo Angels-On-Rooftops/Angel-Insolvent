@@ -43,34 +43,34 @@ float Posterize(float value, float steps)
 
 float LinearAttenuation(ToonLightingParams params, int lightIndex)
 {
-#ifndef SHADERGRAPH_PREVIEW
-#if USE_STRUCTURED_BUFFER_FOR_LIGHT_DATA
+    #ifndef SHADERGRAPH_PREVIEW
+        #if USE_STRUCTURED_BUFFER_FOR_LIGHT_DATA
 		    float4 lightPosition = _AdditionalLightsBuffer[lightIndex].position;
 		    half4 spotDirection = _AdditionalLightsBuffer[lightIndex].spotDirection;
 		    half4 attenuationInfo = _AdditionalLightsBuffer[lightIndex].attenuation;
-#else
-    float4 lightPosition = _AdditionalLightsPosition[lightIndex];
-    half4 spotDirection = _AdditionalLightsSpotDir[lightIndex];
-    half4 attenuationInfo = _AdditionalLightsAttenuation[lightIndex];
-#endif
+        #else
+            float4 lightPosition = _AdditionalLightsPosition[lightIndex];
+            half4 spotDirection = _AdditionalLightsSpotDir[lightIndex];
+            half4 attenuationInfo = _AdditionalLightsAttenuation[lightIndex];
+        #endif
         
         //point attenuation
-    float3 lightVec = lightPosition.xyz - params.fragWorldPos * lightPosition.w;
-    float distance = length(lightVec);
-    float range = rsqrt(attenuationInfo.x);
-    float result = saturate(1.0 - (distance / range));
+        float3 lightVec = lightPosition.xyz - params.fragWorldPos * lightPosition.w;
+        float distance = length(lightVec);
+        float range = rsqrt(attenuationInfo.x);
+        float result = saturate(1.0 - (distance / range));
     
     
         [branch]
-    if (attenuationInfo.z > 0)
-    {
-            //spot light, incorporate spot attenuation
-        half SdotL = dot(spotDirection.xyz, lightVec);
-        result *= saturate(SdotL * attenuationInfo.x + attenuationInfo.y);
-    }
+        if (attenuationInfo.z > 0)
+        {
+                //spot light, incorporate spot attenuation
+            half SdotL = dot(spotDirection.xyz, lightVec);
+            result *= saturate(SdotL * attenuationInfo.x + attenuationInfo.y);
+        }
     
-    return result;
-#endif
+        return result;
+    #endif
     return 1;
 }
 
@@ -114,8 +114,8 @@ float3 CalculateGlobalIllumination(ToonLightingParams params)
 
 float3 CalculateLighting(ToonLightingParams params)
 {
-#ifdef SHADERGRAPH_PREVIEW
-    //approximate lighting for node preview (shadergraph preview doesn't have world info)
+    #ifdef SHADERGRAPH_PREVIEW
+        //approximate lighting for node preview (shadergraph preview doesn't have world info)
         float3 lightDir = float3(0.5,0.5,-0.5);
     
         float3 diffuse = dot(lightDir, params.normal);
@@ -135,81 +135,80 @@ float3 CalculateLighting(ToonLightingParams params)
     
         return params.albedo * (diffuse+specular);
 
-#else
+    #else
 
-    Light mainLight = GetMainLight(params.shadowCoordinate, params.fragWorldPos, params.shadowMask);
+        Light mainLight = GetMainLight(params.shadowCoordinate, params.fragWorldPos, params.shadowMask);
     
         //make sure no lights are considered twice, baked vs realtime
-    MixRealtimeAndBakedGI(mainLight, params.normal, params.bakedLighting);
-    float3 color = CalculateGlobalIllumination(params);
+        MixRealtimeAndBakedGI(mainLight, params.normal, params.bakedLighting);
+        float3 color = CalculateGlobalIllumination(params);
 
         //calculate main light info
-    color += CalculateOneLight(params, mainLight, 1);
+        color += CalculateOneLight(params, mainLight, 1);
     
-    uint pixelLightsCount = GetAdditionalLightsCount();
+        uint pixelLightsCount = GetAdditionalLightsCount();
     
         //calculate info for additional lights if allowed
-#if USE_FORWARD_PLUS
+        #if USE_FORWARD_PLUS
             for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++) 
             {
                 FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
                 Light light = GetAdditionalLight(lightIndex, params.fragWorldPos, params.shadowMask);
                 color += CalculateOneLight(params, light, 1);
             }
-#endif
+        #endif
     
-    InputData inputData = (InputData) 0;
-    float4 screenPos = ComputeScreenPos(TransformWorldToHClip(params.fragWorldPos));
-    inputData.normalizedScreenSpaceUV = screenPos.xy / screenPos.w;
-    inputData.positionWS = params.fragWorldPos;
+        InputData inputData = (InputData) 0;
+        float4 screenPos = ComputeScreenPos(TransformWorldToHClip(params.fragWorldPos));
+        inputData.normalizedScreenSpaceUV = screenPos.xy / screenPos.w;
+        inputData.positionWS = params.fragWorldPos;
     
-    LIGHT_LOOP_BEGIN(pixelLightsCount)
-
-    Light light = GetAdditionalLight(lightIndex, params.fragWorldPos, params.shadowMask);
-    float attenuation = LinearAttenuation(params, lightIndex);
-    color += CalculateOneLight(params, light, attenuation);
-    LIGHT_LOOP_END
+        LIGHT_LOOP_BEGIN(pixelLightsCount)
+            Light light = GetAdditionalLight(lightIndex, params.fragWorldPos, params.shadowMask);
+            float attenuation = LinearAttenuation(params, lightIndex);
+            color += CalculateOneLight(params, light, attenuation);
+        LIGHT_LOOP_END
             
         
-    return color;
-#endif
+        return color;
+    #endif
 }
 
 float4 GetShadowCoordinate(float3 pos)
 {
     //don't include shadows in shadergraph preview
-#ifdef SHADERGRAPH_PREVIEW
+    #ifdef SHADERGRAPH_PREVIEW
         return 0;
-#else
+    #else
         //get coords based on if using screen space deferred cascaded shadows
-#if SHADOWS_SCREEN
-            float4 clipSpacePos = TransformWorldToHClip(pos);
-            return ComputeScreenPos(clipSpacePos);
-#else
-    return TransformWorldToShadowCoord(pos);
-#endif
-#endif
+        #if SHADOWS_SCREEN
+                float4 clipSpacePos = TransformWorldToHClip(pos);
+                return ComputeScreenPos(clipSpacePos);
+        #else
+            return TransformWorldToShadowCoord(pos);
+        #endif
+    #endif
    
 }
 
 float3 GetBakedLighting(float3 normal, float3 lightmapUV, float3 sphericalHarmonics)
 {
     //don't consider baked lighting in shadergraph preview
-#ifdef SHADERGRAPH_PREVIEW
+    #ifdef SHADERGRAPH_PREVIEW
         return 0;
-#else
-    return SAMPLE_GI(lightmapUV, sphericalHarmonics, normal);
-#endif
+    #else
+        return SAMPLE_GI(lightmapUV, sphericalHarmonics, normal);
+    #endif
 }
 
 float4 GetShadowMask(float3 lightmapUV)
 {
     //don't consider baked shadows in shadergraph preview
-#ifdef SHADERGRAPH_PREVIEW
+    #ifdef SHADERGRAPH_PREVIEW
             return 0;
-#else
-    return SAMPLE_SHADOWMASK(lightmapUV);
-#endif
+    #else
+        return SAMPLE_SHADOWMASK(lightmapUV);
+    #endif
 }
 
 //This function exists to allow this script to be used as a node in Unity's ShaderGraph
