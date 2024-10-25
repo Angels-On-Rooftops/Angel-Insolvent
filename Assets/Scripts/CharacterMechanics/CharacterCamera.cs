@@ -50,7 +50,7 @@ public class CharacterCamera : MonoBehaviour
     [Space(10)]
     [SerializeField]
     [Tooltip("The camera's orbiting sensitivity from moving the mouse.")]
-    float MouseRotationSensitivity = 1;
+    float MouseRotationSensitivity = 0.5f;
 
     [SerializeField]
     [Tooltip("The camera's orbiting sensitivity from moving the right stick on a gamepad.")]
@@ -90,19 +90,24 @@ public class CharacterCamera : MonoBehaviour
     Vector3 CurrentOrbitRotation = Vector3.zero;
     const float Y_LIMIT = 80;
 
-    public Transform NextTransform { get; private set; }
+    public Transform NextTargetTransform { get; private set; }
 
     Maid maid = new();
 
     Camera Camera => GetComponent<Camera>();
+
+    float smoothTime = 0.3f;
+    float xVelocity = 0;
+    float yVelocity = 0;
+    float zVelocity = 0; 
 
     // Start is called before the first frame update
     void OnEnable()
     {
         CurrentOrbitRotation = transform.rotation.eulerAngles;
 
-        NextTransform = maid.GiveTask(new GameObject()).transform;
-        NextTransform.name = "CameraHelper";
+        NextTargetTransform = maid.GiveTask(new GameObject()).transform;
+        NextTargetTransform.name = "CameraHelper";
 
         maid.GiveEvent(
             Rotate,
@@ -197,17 +202,17 @@ public class CharacterCamera : MonoBehaviour
 
     public Transform GetNextCameraTransform()
     {
-        NextTransform.position =
+        NextTargetTransform.position =
             Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
 
         if (MitigateClipping)
         {
-            SnapForwardToAvoidClipping(NextTransform);
+            SnapForwardToAvoidClipping(NextTargetTransform);
         }
 
-        NextTransform.LookAt(Focus(), Vector3.up);
+        NextTargetTransform.LookAt(Focus(), Vector3.up);
 
-        return NextTransform;
+        return NextTargetTransform;
     }
 
     void UpdateLockState()
@@ -222,8 +227,8 @@ public class CharacterCamera : MonoBehaviour
         AddRotationDelta(GetRotationDeltaForFrame() * 360);
         GetNextCameraTransform();
 
-        Vector3 nextPosition = NextTransform.position;
+        Vector3 nextPosition = NextTargetTransform.position;
 
-        transform.SetPositionAndRotation(nextPosition, NextTransform.rotation);
+        transform.SetPositionAndRotation(nextPosition, NextTargetTransform.rotation);
     }
 }
