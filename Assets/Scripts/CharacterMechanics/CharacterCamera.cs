@@ -36,8 +36,6 @@ public class CharacterCamera : MonoBehaviour
     [Tooltip("The current distance from the focus with the offset applied.")]
     public float ZoomLevel = 20f;
 
-    public float tempZoomLevel = 0f;
-
     [SerializeField]
     [Tooltip("The shortest distance the camera can be from the focus.")]
     public float MinZoom = 10f;
@@ -87,6 +85,8 @@ public class CharacterCamera : MonoBehaviour
 
     public Transform NextCameraTransform { get; private set; }
 
+    public Transform lastSnapPosition;
+
     Maid maid = new();
 
     Camera Camera => GetComponent<Camera>();
@@ -114,6 +114,8 @@ public class CharacterCamera : MonoBehaviour
 
      NextCameraTransform = maid.GiveTask(new GameObject()).transform;
      NextCameraTransform.name = "CameraHelper";
+
+     lastSnapPosition = maid.GiveTask(new GameObject()).transform;
 
         maid.GiveEvent(
             Rotate,
@@ -199,7 +201,21 @@ public class CharacterCamera : MonoBehaviour
         {   
             setTimer();
             t.position = hit.point - (t.position - Focus()) * GetComponent<Camera>().nearClipPlane;
+            lastSnapPosition.position = t.position;
+        } else {
+            
         }
+    }
+
+    bool didHit(Transform t) {
+        return Physics.Raycast(
+            Focus(),
+            t.position - Focus(),
+            out RaycastHit hit,
+            ZoomLevel,
+            ControlConstants.RAYCAST_MASK,
+            QueryTriggerInteraction.Ignore
+        );
     }
 
     public Vector3 Focus()
@@ -220,7 +236,7 @@ public class CharacterCamera : MonoBehaviour
 
         NextCameraTransform.position = new Vector3(newX, newY, newZ);
 
-        if (MitigateClipping)
+        if ((MitigateClipping && didHit(NextCameraTransform)) || timer > 0)
         {
             SnapForwardToAvoidClipping(NextCameraTransform);
         }
@@ -241,15 +257,7 @@ public class CharacterCamera : MonoBehaviour
         UpdateLockState();
         AddRotationDelta(GetRotationDeltaForFrame() * 360);
         tickTimer();
-        // Debug.Log(timer);
-        // if (timer > 0) {
-        //     float ZoomLevelCopy = ZoomLevel;
-        //     ZoomLevel = tempZoomLevel;
-        //     GetNextCameraTransform();
-        //     ZoomLevel = ZoomLevelCopy;
-        // }else {
-        //     GetNextCameraTransform();
-        // }
+        Debug.Log(timer);
         GetNextCameraTransform();
 
         Vector3 nextPosition = NextCameraTransform.position;
