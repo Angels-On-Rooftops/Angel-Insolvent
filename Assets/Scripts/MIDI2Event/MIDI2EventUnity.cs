@@ -137,6 +137,8 @@ public class MIDI2EventUnity : MonoBehaviour
         //audioInfo[currentTrackIndex].audioSource.Stop();
 
         currentTrackIndex++;
+        lastTime = 0;
+        beforeSamples = 0;
 
         eventPlayers[currentTrackIndex].Play();
         //audioInfo[currentTrackIndex].audioSource.Play();
