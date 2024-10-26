@@ -5,6 +5,7 @@ using Utility;
 using MIDI2EventSystem;
 using System;
 using System.Drawing;
+using System.Linq;
 
 public class TimerPlatform : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class TimerPlatform : MonoBehaviour
 
     [SerializeField]
     Vector3[] PositionLoop;
+
+    [SerializeField]
+    bool LocalMode = false;
 
     [SerializeField]
     Notes BeatNote;
@@ -49,6 +53,7 @@ public class TimerPlatform : MonoBehaviour
     private int countdown;
     private int locationIndex = 0;
     private Action[] UnsubActions;
+    private Space space = Space.World;
 
     void Awake()
     {
@@ -61,6 +66,15 @@ public class TimerPlatform : MonoBehaviour
         }
         UnsubActions = new Action[Debounces.Length + 1];
         countdown = TriangleRings[activeRing].Length;
+
+        if (LocalMode)
+        {
+            TriangleCenterOffset = Vector3.Scale(TriangleCenterOffset, transform.lossyScale);
+            for (int i = 0; i < PositionLoop.Length; i++)
+            {
+                PositionLoop[i] = transform.TransformPoint(PositionLoop[i]);
+            }
+        }
     }
 
     private void OnEnable()
@@ -92,8 +106,7 @@ public class TimerPlatform : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //render current indicator
         for (int i = 0; i < TriangleRings[activeRing].Length; i++)
@@ -157,7 +170,7 @@ public class TimerPlatform : MonoBehaviour
             Vector3[] points = new Vector3[3];
 
             //generate triangle points
-            points[0] = Vector3.zero + TriangleCenterOffset;
+            points[0] = Vector3.zero;
 
             float halfFarSideLen = Mathf.Sin(angleForTris / 2) * TriangleCalculationRadius;
             float height = Mathf.Cos(angleForTris / 2) * TriangleCalculationRadius;
@@ -174,11 +187,12 @@ public class TimerPlatform : MonoBehaviour
                 points[j].z = oldX * Mathf.Sin(rotAngle) + points[j].z * Mathf.Cos(rotAngle);
             }
 
-            //pushout triangle points
+            //pushout triangle points and offset them
             Vector3 unitPush = (points[1] + points[2]).normalized;
             for (int j = 0; j < 3; j++)
             {
                 points[j] += unitPush * TrianglePushout;
+                points[j] += TriangleCenterOffset;
             }
 
             //make triangle mesh
