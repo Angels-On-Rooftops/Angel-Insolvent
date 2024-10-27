@@ -14,6 +14,9 @@ public class TimeSigScreen : MonoBehaviour
     TextMeshPro Text;
 
     [SerializeField]
+    string StartingBPMString;
+
+    [SerializeField]
     List<NoteStringTriplet> BPMForeshadows;
 
     [SerializeField]
@@ -21,6 +24,9 @@ public class TimeSigScreen : MonoBehaviour
 
     [SerializeField]
     int BPMChangeOctave;
+
+    [SerializeField]
+    string StartingSignatureString;
 
     [SerializeField]
     List<NoteStringTriplet> SignatureForeshadows;
@@ -31,10 +37,10 @@ public class TimeSigScreen : MonoBehaviour
     [SerializeField]
     int SignatureChangeOctave;
 
-    string currentBPMString = "120";
-    string currentTimeSignatureString = "4/4";
+    string currentBPMString;
+    string currentSignatureString;
     string nextBPMString;
-    string nextTimeSignatureString;
+    string nextSignatureString;
 
     void Start()
     {
@@ -49,31 +55,42 @@ public class TimeSigScreen : MonoBehaviour
             EventSys.Subscribe(() => AnticipateSignatureChange(t.noteString), t.note, t.octave);
         }
         EventSys.Subscribe(() => SignatureChange(), SignatureChangeNote, SignatureChangeOctave);
+
+        currentBPMString = StartingBPMString;
+        currentSignatureString = StartingSignatureString;
+        nextBPMString = StartingBPMString;
+        nextSignatureString = StartingSignatureString;
     }
 
     void AnticipateBPMChange(string upcoming)
     {
-
+        nextBPMString = upcoming;
+        currentBPMString += " -> " + upcoming;
+        SetText(currentBPMString, currentSignatureString);
     }
 
     void BPMChange()
     {
-
+        currentBPMString = nextBPMString;
+        SetText(currentBPMString, currentSignatureString);
     }
 
     void AnticipateSignatureChange(string upcoming)
     {
-
+        nextSignatureString = upcoming;
+        currentSignatureString += " -> " + upcoming;
+        SetText(currentBPMString, currentSignatureString);
     }
 
     void SignatureChange()
     {
-
+        currentSignatureString = nextSignatureString;
+        SetText(currentBPMString, currentSignatureString);
     }
 
     void SetText(string firstLine, string secondLine)
     {
-
+        Text.text = (firstLine + "<br>" + secondLine);
     }
 
     [Serializable]
