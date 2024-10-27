@@ -48,7 +48,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.2
   m_TransitionOffset: 0
   m_ExitTime: 0
   m_HasExitTime: 0
@@ -76,7 +76,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.1
+  m_TransitionDuration: 0.05
   m_TransitionOffset: 0
   m_ExitTime: 0.001
   m_HasExitTime: 0
@@ -391,8 +391,8 @@ AnimatorStateMachine:
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: -1602967445608767508}
-  - {fileID: -9031047234701645546}
   - {fileID: 1363483083711965173}
+  - {fileID: -9031047234701645546}
   - {fileID: -5025983581483118782}
   - {fileID: 1151744252850950845}
   - {fileID: -5007621874161809738}
@@ -525,7 +525,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.2
   m_TransitionOffset: 0
-  m_ExitTime: 0.75000006
+  m_ExitTime: 0.1
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -552,7 +552,7 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 0.001
   m_HasExitTime: 0
-  m_HasFixedDuration: 0
+  m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 0
@@ -745,7 +745,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Roll
-  m_Speed: 5
+  m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7656715947301738249}
