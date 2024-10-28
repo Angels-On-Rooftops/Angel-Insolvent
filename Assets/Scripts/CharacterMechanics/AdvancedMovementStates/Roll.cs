@@ -75,7 +75,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
 
         hitWall = false;
-        StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = false);
+        StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);
 
         canHighJump = false;
         Coroutine highJumpCounter = null;
