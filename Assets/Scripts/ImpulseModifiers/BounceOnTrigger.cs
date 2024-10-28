@@ -32,6 +32,11 @@ public class BounceOnTrigger : MonoBehaviour
         );
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        OnTriggerStay(other);
+    }
+
     private void OnTriggerStay(Collider other)
     {
         Debug.Assert(
