@@ -137,6 +137,8 @@ public class MIDI2EventUnity : MonoBehaviour
         //audioInfo[currentTrackIndex].audioSource.Stop();
 
         currentTrackIndex++;
+        lastTime = 0;
+        beforeSamples = 0;
 
         eventPlayers[currentTrackIndex].Play();
         //audioInfo[currentTrackIndex].audioSource.Play();
@@ -166,7 +168,7 @@ public class MIDI2EventUnity : MonoBehaviour
         lastTime = 0;
         currentTrackIndex = 0;
         int i = 0;
-        double initDsp = AudioSettings.dspTime;
+        double initDsp = AudioSettings.dspTime + 0.25;
         double scheduledStartTime = initDsp;
         audioInfo[i].audioSource.PlayScheduled(scheduledStartTime);
         while (i < audioInfo.Count - 1 && !audioInfo[i].audioSource.loop)
