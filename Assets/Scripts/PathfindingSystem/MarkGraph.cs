@@ -23,7 +23,7 @@ public class MarkGraph : MonoBehaviour
     //add every node in graph to list
     void PopulateMap(NodeMarker startingNode)
     {
-        foreach (NodeMarker node in startingNode.nextNode)
+        foreach (NodeMarker node in startingNode.NextNode)
         {
             if (!map.Contains(node))
             {

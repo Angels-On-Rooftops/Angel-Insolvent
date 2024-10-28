@@ -27,13 +27,9 @@ public class Pathfinding : MonoBehaviour {
             path.Add(tempNode);
             }
 
-
         if (tempNode != lastNode) {
             findPath(tempNode, lastNode);
-            }
-        else if (path.Contains(tempNode)) {
-            findPath(currentNode, lastNode);
-            }
+            } 
 
         return path;
         }

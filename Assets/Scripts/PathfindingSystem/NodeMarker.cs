@@ -8,9 +8,6 @@ public class NodeMarker : MonoBehaviour {
     public List<NodeMarker> NextNode { get { return nextNode; } }
     [SerializeField] string objTag; //objects to check for collison
 
-    private bool isOccupied = false;
-    public bool Occupied { get { return isOccupied; } }
-
 
     //visualize all of the nodes connected
     private void OnDrawGizmos() {
@@ -25,14 +22,5 @@ public class NodeMarker : MonoBehaviour {
             }
         }
 
-    private void OnTriggerEnter(Collider other) {
-        if (objTag != null && other.gameObject.CompareTag(objTag)) {
-            isOccupied = true;
-            }
-        }
-    private void OnTriggerExit(Collider other) {
-        if (objTag != null && other.gameObject.CompareTag(objTag)) {
-            isOccupied = false;
-            }
-        }
+    
     }

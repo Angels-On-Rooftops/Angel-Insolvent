@@ -8,7 +8,8 @@ using Random = UnityEngine.Random;
 public class GraphMovement : MonoBehaviour {
     [SerializeField] Pathfinding path; //pathfinding
     [SerializeField] MarkGraph map; //all of the nodes
-    float speed; //speed of object
+    public float speed; //speed of object
+    public float Speed { set { speed = value; } get { return speed; } }
 
     private List<NodeMarker> pathway; //pathway that objeect follows
     private int position = 0; //position in pathway
@@ -18,7 +19,7 @@ public class GraphMovement : MonoBehaviour {
 
     [SerializeField] MIDI2EventUnity handler;
     [SerializeField] int BeatPeriod;
-    [SerializeField] float speedMod = 1.0f;
+    
 
 
 
@@ -37,7 +38,7 @@ public class GraphMovement : MonoBehaviour {
         if (!handler.IsPlaying) {
             return;
             }
-        speed = speedMod * handler.BeatPerSec * 1 / BeatPeriod * Time.deltaTime;
+        speed = Vector3.Distance(node1.transform.position, node2.transform.position) * handler.BeatPerSec * 1 / BeatPeriod * Time.deltaTime;
         moveCar();
         }
 
@@ -56,9 +57,7 @@ public class GraphMovement : MonoBehaviour {
         if (this.transform.position == pathway[position].transform.position) {
             //increment to next point
             if (position < pathway.Count - 1) {
-                if (!pathway[position + 1].Occupied) {
-                    position++;
-                    }
+                position++;
 
                 }
             else {
