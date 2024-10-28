@@ -3176,7 +3176,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 101923309674167104, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 101923309674167104, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: m_audioClip
@@ -3184,7 +3184,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 90c00cc2f6dfc5244989392ddfe0f9bd, type: 3}
     - target: {fileID: 1725411369402266003, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 1725411369402266003, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: m_audioClip
@@ -3195,12 +3195,32 @@ PrefabInstance:
       value: LofiMIDI2Event
       objectReference: {fileID: 0}
     - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.data[0].audioSource
+      value: 
+      objectReference: {fileID: 1618425895}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.data[1].audioSource
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: audioInfo.Array.data[0].streamingAssetChartPath
-      value: '[VAULT ZONE] Breaking Out!/Breaking out loop chart.mid'
+      value: Central/loaf_1.mid
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.data[1].streamingAssetChartPath
+      value: Central/loaf_1.mid
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.data[2].streamingAssetChartPath
+      value: Central/loaf_1.mid
       objectReference: {fileID: 0}
     - target: {fileID: 5668559038693174025, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: m_Volume
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5668559038693174025, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: m_audioClip
@@ -3247,7 +3267,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 57697271973037180, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+    - {fileID: 6203381679625468275, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
@@ -19726,6 +19748,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 71cb56016a0b044f2abc80fb8d9c12fe, type: 3}
   m_PrefabInstance: {fileID: 610513933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &1618425895 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5668559038693174025, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+  m_PrefabInstance: {fileID: 274937612}
   m_PrefabAsset: {fileID: 0}
 --- !u!43 &1627543889
 Mesh:
