@@ -41,11 +41,44 @@ float Posterize(float value, float steps)
     return saturate(floor(value * steps) * (1 / steps));
 }
 
+float LinearAttenuation(ToonLightingParams params, int lightIndex)
+{
+    #ifndef SHADERGRAPH_PREVIEW
+        #if USE_STRUCTURED_BUFFER_FOR_LIGHT_DATA
+		    float4 lightPosition = _AdditionalLightsBuffer[lightIndex].position;
+		    half4 spotDirection = _AdditionalLightsBuffer[lightIndex].spotDirection;
+		    half4 attenuationInfo = _AdditionalLightsBuffer[lightIndex].attenuation;
+        #else
+            float4 lightPosition = _AdditionalLightsPosition[lightIndex];
+            half4 spotDirection = _AdditionalLightsSpotDir[lightIndex];
+            half4 attenuationInfo = _AdditionalLightsAttenuation[lightIndex];
+        #endif
+        
+        //point attenuation
+        float3 lightVec = lightPosition.xyz - params.fragWorldPos * lightPosition.w;
+        float distance = length(lightVec);
+        float range = rsqrt(attenuationInfo.x);
+        float result = saturate(1.0 - (distance / range));
+    
+    
+        [branch]
+        if (attenuationInfo.z > 0)
+        {
+                //spot light, incorporate spot attenuation
+            half SdotL = dot(spotDirection.xyz, lightVec);
+            result *= saturate(SdotL * attenuationInfo.x + attenuationInfo.y);
+        }
+    
+        return result;
+    #endif
+    return 1;
+}
+
 #ifndef SHADERGRAPH_PREVIEW
-float3 CalculateOneLight(ToonLightingParams params, Light light)
+float3 CalculateOneLight(ToonLightingParams params, Light light, float attenuation)
 {
     //diffuse
-    float diffuse = saturate(dot(params.normal, light.direction));
+    float diffuse = saturate(dot(params.normal, light.direction)) * attenuation;
     
     //specular: Blinn-Phong
     float3 middle = normalize(params.viewDir + light.direction);
@@ -57,13 +90,20 @@ float3 CalculateOneLight(ToonLightingParams params, Light light)
     if (params.isToon)
     {
         //posterize lighting contributions
-        diffuse = Posterize(diffuse + (params.stepOffset/ params.diffuseSteps), params.diffuseSteps);
-        specular = Posterize(specular + (params.stepOffset/ params.specularSteps), params.specularSteps);
+        diffuse = Posterize(diffuse + (params.stepOffset / params.diffuseSteps), params.diffuseSteps);
+        specular = Posterize(specular + (params.stepOffset / params.specularSteps), params.specularSteps);
     }
 
     //calc light total
     float combinedContributions = (diffuse + specular);
-    return params.albedo * light.color * light.shadowAttenuation * combinedContributions;
+    
+    [branch]
+    if (light.distanceAttenuation <= 0)
+    {
+        return 0;
+    }
+    //return float3(1.0, 0.5, 0.0) * light.distanceAttenuation;
+    return saturate(params.albedo * light.color * light.shadowAttenuation * combinedContributions);
 }
 
 float3 CalculateGlobalIllumination(ToonLightingParams params)
@@ -72,10 +112,10 @@ float3 CalculateGlobalIllumination(ToonLightingParams params)
 }
 #endif
 
-float3 CalculateLighting(ToonLightingParams params) 
+float3 CalculateLighting(ToonLightingParams params)
 {
     #ifdef SHADERGRAPH_PREVIEW
-    //approximate lighting for node preview (shadergraph preview doesn't have world info)
+        //approximate lighting for node preview (shadergraph preview doesn't have world info)
         float3 lightDir = float3(0.5,0.5,-0.5);
     
         float3 diffuse = dot(lightDir, params.normal);
@@ -104,18 +144,32 @@ float3 CalculateLighting(ToonLightingParams params)
         float3 color = CalculateGlobalIllumination(params);
 
         //calculate main light info
-        color += CalculateOneLight(params, mainLight);
+        color += CalculateOneLight(params, mainLight, 1);
+    
+        uint pixelLightsCount = GetAdditionalLightsCount();
     
         //calculate info for additional lights if allowed
-        #ifdef _ADDITIONAL_LIGHTS
-            uint additionalLightsCount = GetAdditionalLightsCount();
-            for (uint i = 0; i < additionalLightsCount; i++)
+        #if USE_FORWARD_PLUS
+            for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++) 
             {
-                Light light = GetAdditionalLight(i, params.fragWorldPos, params.shadowMask);
-                color += CalculateOneLight(params, light);
+                FORWARD_PLUS_SUBTRACTIVE_LIGHT_CHECK
+                Light light = GetAdditionalLight(lightIndex, params.fragWorldPos, params.shadowMask);
+                color += CalculateOneLight(params, light, 1);
             }
-            
         #endif
+    
+        InputData inputData = (InputData) 0;
+        float4 screenPos = ComputeScreenPos(TransformWorldToHClip(params.fragWorldPos));
+        inputData.normalizedScreenSpaceUV = screenPos.xy / screenPos.w;
+        inputData.positionWS = params.fragWorldPos;
+    
+        LIGHT_LOOP_BEGIN(pixelLightsCount)
+            Light light = GetAdditionalLight(lightIndex, params.fragWorldPos, params.shadowMask);
+            float attenuation = LinearAttenuation(params, lightIndex);
+            color += CalculateOneLight(params, light, attenuation);
+        LIGHT_LOOP_END
+            
+        
         return color;
     #endif
 }
@@ -128,8 +182,8 @@ float4 GetShadowCoordinate(float3 pos)
     #else
         //get coords based on if using screen space deferred cascaded shadows
         #if SHADOWS_SCREEN
-            float4 clipSpacePos = TransformWorldToHClip(pos);
-            return ComputeScreenPos(clipSpacePos);
+                float4 clipSpacePos = TransformWorldToHClip(pos);
+                return ComputeScreenPos(clipSpacePos);
         #else
             return TransformWorldToShadowCoord(pos);
         #endif
@@ -159,10 +213,10 @@ float4 GetShadowMask(float3 lightmapUV)
 
 //This function exists to allow this script to be used as a node in Unity's ShaderGraph
 void ToonLighting_float(
-    float3 Albedo, 
-    float3 Normal, 
-    float3 ViewDir, 
-    float Smoothness, 
+    float3 Albedo,
+    float3 Normal,
+    float3 ViewDir,
+    float Smoothness,
     float Shininess,
     float3 WorldPos,
     float AmbientOcclusion,
@@ -173,7 +227,8 @@ void ToonLighting_float(
     float SpecularSteps,
     float StepOffset,
     out float3 Color
-){ 
+)
+{
     ToonLightingParams params;
     
     params.albedo = Albedo;
