@@ -91,7 +91,7 @@ public class CharacterCamera : MonoBehaviour
 
     Camera Camera => GetComponent<Camera>();
 
-    float smoothTime = 0.02f;
+    float smoothTime = 0.1f;
     float xVelocity = 0;
     float yVelocity = 0;
     float zVelocity = 0; 
@@ -233,6 +233,26 @@ public class CharacterCamera : MonoBehaviour
         float newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.transform.position.x, ref xVelocity, smoothTime);
         float newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.transform.position.y, ref yVelocity, smoothTime);
         float newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.transform.position.z, ref zVelocity, smoothTime);
+
+        /****** TEMPORARY FIX TO MAKE MOTION SICKNESS LESS ***************/
+        float longSmoothTime = 60;
+        float minDistanceForRegularSmooth = 1f;
+
+        if (Mathf.Abs(newX - NextTargetTransform.transform.position.x) < minDistanceForRegularSmooth)
+        {
+            newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.transform.position.x, ref xVelocity, longSmoothTime);
+        }
+
+        if (Mathf.Abs(newY - NextTargetTransform.transform.position.y) < minDistanceForRegularSmooth)
+        {
+            newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.transform.position.y, ref yVelocity, longSmoothTime);
+        }
+
+        if (Mathf.Abs(newX - NextTargetTransform.transform.position.z) < minDistanceForRegularSmooth)
+        {
+            newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.transform.position.z, ref zVelocity, longSmoothTime);
+        }
+        /*********** TODO REPLACE THIS WITH SOMETHING BETTER, IT HELPS BUT IS NOT ENOUGH ***************/
 
         NextCameraTransform.position = new Vector3(newX, newY, newZ);
 
