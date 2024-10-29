@@ -45,20 +45,20 @@ public class CharacterCamera : MonoBehaviour
     public float MaxZoom = 30f;
 
     [SerializeField]
-    public float ControllerZoomIncrement = 5f;
+    public float ControllerZoomIncrement = 0.5f;
 
     [Space(10)]
     [SerializeField]
     [Tooltip("The camera's orbiting sensitivity from moving the mouse.")]
-    float MouseRotationSensitivity = 1;
+    float MouseRotationSensitivity = 1f;
 
     [SerializeField]
     [Tooltip("The camera's orbiting sensitivity from moving the right stick on a gamepad.")]
-    float GamepadRotationSensitivity = 1;
+    float GamepadRotationSensitivity = 1f;
 
     [SerializeField]
     [Tooltip("The camera's zooming sensitivity from the scroll wheel on a mouse.")]
-    float ZoomSensitivity = 1;
+    float ZoomSensitivity = 0.1f;    
 
     [Space(20)]
     [SerializeField]
@@ -74,6 +74,8 @@ public class CharacterCamera : MonoBehaviour
     [SerializeField]
     InputAction Zoom;
 
+    public Vector3 velocity = Vector3.zero; // Velocity for spring-based movement
+
     Vector2 RawOrbitDelta;
     string OrbitInput;
 
@@ -81,19 +83,39 @@ public class CharacterCamera : MonoBehaviour
     Vector3 CurrentOrbitRotation = Vector3.zero;
     const float Y_LIMIT = 80;
 
-    public Transform NextTransform { get; private set; }
+    public Transform NextCameraTransform { get; private set; }
+
+    public Transform lastSnapPosition;
 
     Maid maid = new();
 
     Camera Camera => GetComponent<Camera>();
+
+    float smoothTime = 0.1f;
+    float xVelocity = 0;
+    float yVelocity = 0;
+    float zVelocity = 0; 
+
+    float timer = 0;
+    
+    void setTimer() {
+        timer = 1;
+    }
+
+    void tickTimer() {
+        timer -= Time.deltaTime;
+        timer = Mathf.Clamp(timer, 0, 1);
+    }
 
     // Start is called before the first frame update
     void OnEnable()
     {
         CurrentOrbitRotation = transform.rotation.eulerAngles;
 
-        NextTransform = maid.GiveTask(new GameObject()).transform;
-        NextTransform.name = "CameraHelper";
+     NextCameraTransform = maid.GiveTask(new GameObject()).transform;
+     NextCameraTransform.name = "CameraHelper";
+
+     lastSnapPosition = maid.GiveTask(new GameObject()).transform;
 
         maid.GiveEvent(
             Rotate,
@@ -156,12 +178,11 @@ public class CharacterCamera : MonoBehaviour
 
     void AddRotationDelta(Vector3 delta)
     {
-        // limit rotation around the x axis between Y_LIMIT and -Y_LIMIT
-        CurrentOrbitRotation = new Vector3(
-            Mathf.Clamp(CurrentOrbitRotation.x + delta.x, -Y_LIMIT, Y_LIMIT),
-            CurrentOrbitRotation.y + delta.y,
-            CurrentOrbitRotation.z + delta.z
-        );
+        // Limit rotation around the x axis between Y_LIMIT and -Y_LIMIT
+        float targetX = Mathf.Clamp(CurrentOrbitRotation.x + delta.x, -Y_LIMIT, Y_LIMIT);
+        float targetY = CurrentOrbitRotation.y + delta.y;
+        float targetZ = CurrentOrbitRotation.z + delta.z;
+        CurrentOrbitRotation = new Vector3(targetX, targetY, targetZ);
     }
 
     // avoids clipping by placing the camera infront of the wall it would clip into
@@ -177,9 +198,24 @@ public class CharacterCamera : MonoBehaviour
         );
 
         if (didHit)
-        {
+        {   
+            setTimer();
             t.position = hit.point - (t.position - Focus()) * GetComponent<Camera>().nearClipPlane;
+            lastSnapPosition.position = t.position;
+        } else {
+            
         }
+    }
+
+    bool didHit(Transform t) {
+        return Physics.Raycast(
+            Focus(),
+            t.position - Focus(),
+            out RaycastHit hit,
+            ZoomLevel,
+            ControlConstants.RAYCAST_MASK,
+            QueryTriggerInteraction.Ignore
+        );
     }
 
     public Vector3 Focus()
@@ -189,17 +225,25 @@ public class CharacterCamera : MonoBehaviour
 
     public Transform GetNextCameraTransform()
     {
-        NextTransform.position =
+        Transform NextTargetTransform = maid.GiveTask(new GameObject()).transform;
+
+        NextTargetTransform.position =
             Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
 
-        if (MitigateClipping)
+        float newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.position.x, ref xVelocity, smoothTime);
+        float newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.position.y, ref yVelocity, smoothTime);
+        float newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.position.z, ref zVelocity, smoothTime);
+
+        NextCameraTransform.position = new Vector3(newX, newY, newZ);
+
+        if ((MitigateClipping && didHit(NextCameraTransform)) || timer > 0)
         {
-            SnapForwardToAvoidClipping(NextTransform);
+            SnapForwardToAvoidClipping(NextCameraTransform);
         }
 
-        NextTransform.LookAt(Focus(), Vector3.up);
+     NextCameraTransform.LookAt(Focus(), Vector3.up);
 
-        return NextTransform;
+        return NextCameraTransform;
     }
 
     void UpdateLockState()
@@ -212,10 +256,12 @@ public class CharacterCamera : MonoBehaviour
     {
         UpdateLockState();
         AddRotationDelta(GetRotationDeltaForFrame() * 360);
+        tickTimer();
+        Debug.Log(timer);
         GetNextCameraTransform();
 
-        Vector3 nextPosition = NextTransform.position;
+        Vector3 nextPosition = NextCameraTransform.position;
 
-        transform.SetPositionAndRotation(nextPosition, NextTransform.rotation);
+        transform.SetPositionAndRotation(nextPosition, NextCameraTransform.rotation);
     }
 }
