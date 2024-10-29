@@ -629,7 +629,7 @@ public class CharacterMovement : MonoBehaviour
         VerticalMovementState putIntoState = VerticalMovementState.Falling
     )
     {
-        StartingAdditionalImpulse = newImpulse; // TODO: WORKING ON IT, THIS IS SETTING THE IMPULSE NOT ADDING IT
+        StartingAdditionalImpulse = newImpulse;
         TimeImpulseApplied = Time.time;
         ImpulseTime = impulseTime;
 
