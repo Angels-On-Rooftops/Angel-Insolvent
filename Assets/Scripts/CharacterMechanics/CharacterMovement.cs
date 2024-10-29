@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -118,14 +116,6 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Public Properties
-    float JumpPower
-    {
-        get
-        {
-            float height = JumpHeight + (Jumps - ExtraJumpsRemaining - 1) * JumpHeightBonus;
-            return Mathf.Sqrt(2 * CharacterGravity * height);
-        }
-    }
     CharacterController Controller => GetComponent<CharacterController>();
     Vector3 ControllerWorldPosition => transform.position + Controller.center;
 
@@ -205,6 +195,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void Awake()
     {
+        MovementDirectionMiddleware = MovementMiddleware.RelativeToCamera(this);
         FacingDirectionMiddleware = FacingMiddleware.UpdateOnlyWhenMoving(this);
     }
 
@@ -256,7 +247,13 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    bool DoJump(bool isFromBuffer)
+    float JumpPower(float jumpHeight)
+    {
+        float height = jumpHeight + (Jumps - ExtraJumpsRemaining - 1) * JumpHeightBonus;
+        return Mathf.Sqrt(2 * CharacterGravity * height);
+    }
+
+    void DoJump(float jumpBufferLeft, float scheduledJumpHeight)
     {
         bool FromGround = VerticalState == VerticalMovementState.Grounded;
         bool WithinCoyoteTime =
@@ -277,26 +274,29 @@ public class CharacterMovement : MonoBehaviour
                 ExtraJumpsRemaining--;
             }
 
-            VerticalSpeed = JumpPower;
+            VerticalSpeed = JumpPower(scheduledJumpHeight);
             VerticalState = VerticalMovementState.Jumping;
             Jumped?.Invoke(Jumps - ExtraJumpsRemaining);
-
-            return true;
         }
-        else if (!isFromBuffer)
+        else if (jumpBufferLeft > 0)
         {
             // jump didn't succeed, buffer it
-            StartCoroutine(Macros.Buffer(JumpBufferTime, () => DoJump(true)));
-            return false;
-        }
+            jumpBufferLeft -= Time.deltaTime;
 
-        return false;
+            // if the jump height changes while buffered, we want to give the player the benefit
+            // of the highest jump height they could've been aiming for
+            StartCoroutine(
+                CoroutineUtil.WaitAFrameThenRun(
+                    () => DoJump(jumpBufferLeft, Mathf.Max(JumpHeight, scheduledJumpHeight))
+                )
+            );
+        }
     }
 
     void DoJumpInput(CallbackContext _)
     {
         JumpRequested?.Invoke();
-        DoJump(false);
+        DoJump(JumpBufferTime, JumpHeight);
     }
 
     public Vector3 ForwardMovementDirectionFromCamera()
@@ -310,14 +310,19 @@ public class CharacterMovement : MonoBehaviour
         return Vector3.Scale(-forward, Vector3.one - Vector3.up);
     }
 
-    Vector3 MovementVelocity(Vector3 forwardVector)
+    public Quaternion ForwardRotationFromCamera()
+    {
+        return Quaternion.LookRotation(-ForwardMovementDirectionFromCamera(), Vector3.up);
+    }
+
+    Vector3 MovementVelocity()
     {
         if (!LateralMovementEnabled)
         {
             return Vector3.zero;
         }
 
-        return Quaternion.LookRotation(-forwardVector, Vector3.up) * MovementDirection * WalkSpeed;
+        return MovementDirection * WalkSpeed;
     }
 
     (bool didHit, RaycastHit hit) GroundInfo(float checkDistance)
@@ -347,6 +352,19 @@ public class CharacterMovement : MonoBehaviour
             BottomSphereCenter + dx * GravityUpDirection,
             TopSphereCenter,
             Controller.radius - dx,
+            -GravityUpDirection,
+            out RaycastHit hit,
+            checkDistance,
+            ControlConstants.RAYCAST_MASK,
+            QueryTriggerInteraction.Ignore
+        );
+        return didHit ? Vector3.Angle(hit.normal, GravityUpDirection) : 90;
+    }
+
+    float PointGroundAngle(float checkDistance)
+    {
+        bool didHit = Physics.Raycast(
+            BottomSphereCenter + dx * GravityUpDirection,
             -GravityUpDirection,
             out RaycastHit hit,
             checkDistance,
@@ -391,13 +409,15 @@ public class CharacterMovement : MonoBehaviour
             return;
         }
 
-        VerticalSpeed -= CharacterGravity * Time.deltaTime;
+        VerticalSpeed = Math.Max(
+            VerticalSpeed - CharacterGravity * Time.deltaTime,
+            -DownwardTerminalVelocity
+        );
     }
 
     void ApplyMovementVelocity(Vector3 additionalImpulse)
     {
-        Vector3 forwardFromCamera = ForwardMovementDirectionFromCamera();
-        Vector3 moveVelocity = MovementVelocity(forwardFromCamera);
+        Vector3 moveVelocity = MovementVelocity();
 
         bool didHit = Physics.CapsuleCast(
             BottomSphereCenter,
@@ -418,22 +438,34 @@ public class CharacterMovement : MonoBehaviour
         Vector3 DownSlopeDirection = downSlope.normalized;
 
         // subtract the component of the move velocity that's going up too steep of a slope
-        if (
-            GroundAngle(Controller.height / 2 + dx) > Controller.slopeLimit
-            && Vector3.Dot(FacingDirection, downSlope) > 0
-        )
-        {
-            moveVelocity -= Vector3.Project(
-                moveVelocity,
-                Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
-            );
-        }
+        //if (
+        //    PointGroundAngle(Controller.height / 2f + dx) > Controller.slopeLimit
+        //    && Vector3.Dot(FacingDirection, downSlope) > 0
+        //    && PointGroundAngle(Controller.height / 2f + dx) != 90
+        //)
+        //{
+        //    // if using 2022.3.4
+        //    //moveVelocity -= Vector3.Project(
+        //    //    moveVelocity, Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
+        //    //);
 
-        // make character slip off edge to prevent being stuck on the very edge of a platform
-        if (IsOnSteepSlope() && GroundNormal(Controller.height).magnitude == 0)
-        {
-            moveVelocity += FacingDirection;
-        }
+        //    // if using 2022.3.47+
+        //    moveVelocity -= Vector3.Project(
+        //        moveVelocity,
+        //        Vector3.Scale(
+        //            Vector3.up * 100,
+        //            Vector3.ProjectOnPlane(DownSlopeDirection, Vector3.one - Vector3.up)
+        //        )
+        //    );
+
+        //    // if using between those versions, i'm not sure
+        //}
+
+        //// make character slip off edge to prevent being stuck on the very edge of a platform
+        //if (IsOnSteepSlope() && GroundNormal(Controller.height).magnitude == 0)
+        //{
+        //    moveVelocity += FacingDirection;
+        //}
 
         // redirect vertical speed down the slope if moving downwards
         Vector3 verticalDirection =
@@ -441,7 +473,7 @@ public class CharacterMovement : MonoBehaviour
         Vector3 verticalVelocity = verticalDirection * VerticalSpeed;
 
         // bring it all together
-        Vector3 combinedVelocity = verticalVelocity + moveVelocity;
+        Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -dx, 0);
         Controller.Move(combinedVelocity * Time.deltaTime + additionalImpulse);
     }
 
@@ -537,8 +569,8 @@ public class CharacterMovement : MonoBehaviour
 
         bool isCapsuleOverGeometry = Physics.CheckCapsule(
             TopSphereCenter,
-            BottomSphereCenter,
-            Controller.radius + Controller.skinWidth + dx,
+            BottomSphereCenter - GravityUpDirection * (Controller.skinWidth + dx),
+            Controller.radius,
             ControlConstants.RAYCAST_MASK,
             QueryTriggerInteraction.Ignore
         );
@@ -558,6 +590,11 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
         UpdateProcessedVectors();
 
         if (GravityEnabled)
@@ -583,7 +620,5 @@ public class CharacterMovement : MonoBehaviour
         {
             VerticalSpeed = 0;
         }
-
-        VerticalSpeed = Mathf.Max(VerticalSpeed, -DownwardTerminalVelocity);
     }
 }
