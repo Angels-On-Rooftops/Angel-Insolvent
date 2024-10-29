@@ -104,7 +104,7 @@ public class CharacterCamera : MonoBehaviour
 
     void tickTimer() {
         timer -= Time.deltaTime;
-        timer = Mathf.Clamp(timer, 0, 1);
+        timer = Mathf.Max(0, timer);
     }
 
     // Start is called before the first frame update
@@ -225,15 +225,16 @@ public class CharacterCamera : MonoBehaviour
 
     public Transform GetNextCameraTransform()
     {
-        Transform NextTargetTransform = maid.GiveTask(new GameObject()).transform;
+        GameObject NextTargetTransform = new GameObject();
 
-        NextTargetTransform.position =
+        NextTargetTransform.transform.position =
             Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
 
-        float newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.position.x, ref xVelocity, smoothTime);
-        float newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.position.y, ref yVelocity, smoothTime);
-        float newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.position.z, ref zVelocity, smoothTime);
+        float newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.transform.position.x, ref xVelocity, smoothTime);
+        float newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.transform.position.y, ref yVelocity, smoothTime);
+        float newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.transform.position.z, ref zVelocity, smoothTime);
 
+        Destroy(NextTargetTransform);
         NextCameraTransform.position = new Vector3(newX, newY, newZ);
 
         if ((MitigateClipping && didHit(NextCameraTransform)) || timer > 0)
