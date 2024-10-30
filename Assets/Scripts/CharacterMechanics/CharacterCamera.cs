@@ -84,8 +84,8 @@ public class CharacterCamera : MonoBehaviour
     const float Y_LIMIT = 80;
 
     public Transform NextCameraTransform { get; private set; }
-
-    public Transform lastSnapPosition;
+    private Transform LastSnapPosition;
+    private Transform NextTargetTransform;
 
     Maid maid = new();
 
@@ -112,10 +112,14 @@ public class CharacterCamera : MonoBehaviour
     {
         CurrentOrbitRotation = transform.rotation.eulerAngles;
 
-     NextCameraTransform = maid.GiveTask(new GameObject()).transform;
-     NextCameraTransform.name = "CameraHelper";
+        NextCameraTransform = maid.GiveTask(new GameObject()).transform;
+        NextCameraTransform.name = "NextCameraTranform";
 
-     lastSnapPosition = maid.GiveTask(new GameObject()).transform;
+        LastSnapPosition = maid.GiveTask(new GameObject()).transform;
+        LastSnapPosition.name = "LastSnappedTransform";
+
+        NextTargetTransform = maid.GiveTask(new GameObject()).transform;
+        NextTargetTransform.name = "NextCameraTransformTarget";
 
         maid.GiveEvent(
             Rotate,
@@ -201,9 +205,7 @@ public class CharacterCamera : MonoBehaviour
         {   
             setTimer();
             t.position = hit.point - (t.position - Focus()) * GetComponent<Camera>().nearClipPlane;
-            lastSnapPosition.position = t.position;
-        } else {
-            
+            LastSnapPosition.position = t.position;
         }
     }
 
@@ -225,8 +227,6 @@ public class CharacterCamera : MonoBehaviour
 
     public Transform GetNextCameraTransform()
     {
-        GameObject NextTargetTransform = new GameObject();
-
         NextTargetTransform.transform.position =
             Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
 
@@ -234,7 +234,26 @@ public class CharacterCamera : MonoBehaviour
         float newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.transform.position.y, ref yVelocity, smoothTime);
         float newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.transform.position.z, ref zVelocity, smoothTime);
 
-        Destroy(NextTargetTransform);
+        /****** TEMPORARY FIX TO MAKE MOTION SICKNESS LESS ***************/
+        float longSmoothTime = 60;
+        float minDistanceForRegularSmooth = 1f;
+
+        if (Mathf.Abs(newX - NextTargetTransform.transform.position.x) < minDistanceForRegularSmooth)
+        {
+            newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.transform.position.x, ref xVelocity, longSmoothTime);
+        }
+
+        if (Mathf.Abs(newY - NextTargetTransform.transform.position.y) < minDistanceForRegularSmooth)
+        {
+            newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.transform.position.y, ref yVelocity, longSmoothTime);
+        }
+
+        if (Mathf.Abs(newX - NextTargetTransform.transform.position.z) < minDistanceForRegularSmooth)
+        {
+            newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.transform.position.z, ref zVelocity, longSmoothTime);
+        }
+        /*********** TODO REPLACE THIS WITH SOMETHING BETTER, IT HELPS BUT IS NOT ENOUGH ***************/
+
         NextCameraTransform.position = new Vector3(newX, newY, newZ);
 
         if ((MitigateClipping && didHit(NextCameraTransform)) || timer > 0)
@@ -242,7 +261,7 @@ public class CharacterCamera : MonoBehaviour
             SnapForwardToAvoidClipping(NextCameraTransform);
         }
 
-     NextCameraTransform.LookAt(Focus(), Vector3.up);
+        NextCameraTransform.LookAt(Focus(), Vector3.up);
 
         return NextCameraTransform;
     }
@@ -258,7 +277,6 @@ public class CharacterCamera : MonoBehaviour
         UpdateLockState();
         AddRotationDelta(GetRotationDeltaForFrame() * 360);
         tickTimer();
-        Debug.Log(timer);
         GetNextCameraTransform();
 
         Vector3 nextPosition = NextCameraTransform.position;

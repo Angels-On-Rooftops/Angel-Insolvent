@@ -112,6 +112,9 @@ public class CharacterMovement : MonoBehaviour
     public event Action Landed;
     public event Action Falling;
 
+    public event Action<Vector3> ImpulseApplied;
+    public event Action JumpedFromImpulse;
+
     public event Action RanIntoWall; // TODO
     #endregion
 
@@ -161,23 +164,37 @@ public class CharacterMovement : MonoBehaviour
     //[NonSerialized]
     public float VerticalSpeed = 0;
 
+    //[NonSerialized]
+    public int ExtraJumpsRemaining = 0;
+
+    //[NonSerialized]
+    public VerticalMovementState VerticalState = VerticalMovementState.Falling;
+
+    float LastTimeGrounded = 0;
+
+    #region Processed Vectors
     public Vector3 RawMovementDirection = new();
     public Vector3 RawFacingDirection = new();
     public Func<Vector3, float, Vector3> MovementDirectionMiddleware = (v, dt) => v;
     public Func<Vector3, float, Vector3> FacingDirectionMiddleware = (v, dt) => v;
     public Vector3 FacingDirection = new();
     public Vector3 MovementDirection = new();
+    #endregion
 
-    [NonSerialized]
-    public int ExtraJumpsRemaining = 0;
+    #region AdditionalImpulse
+    [SerializeField]
+    Vector3 StartingAdditionalImpulse = Vector3.zero;
+    Vector3 CurrentAdditionalImpulse =>
+        Vector3.Lerp(StartingAdditionalImpulse, Vector3.zero, Math.Min(1, PercentImpulseTimeLeft));
 
-    [NonSerialized]
-    public Vector3 AdditionalImpulse = Vector3.zero;
+    [SerializeField]
+    AnimationCurve ImpulseDecay;
 
-    //[NonSerialized]
-    public VerticalMovementState VerticalState = VerticalMovementState.Falling;
-
-    float LastTimeGrounded = 0;
+    float ImpulseTime = 0;
+    float TimeImpulseApplied = 0;
+    float PercentImpulseTimeLeft =>
+        ImpulseTime != 0 ? Mathf.Max((Time.time - TimeImpulseApplied) / ImpulseTime, 0) : 0;
+    #endregion
 
     #region Platform Tracking
     // the last platform the character landed on
@@ -213,6 +230,9 @@ public class CharacterMovement : MonoBehaviour
             maid.GiveEvent(Jump, "performed", (CallbackContext c) => DoJumpInput(c));
             Jump.Enable();
         }
+
+        // instantly kills momentum when you touch the ground, using smoothdamp in Update() instead
+        maid.GiveEvent(this, "Landed", () => StartingAdditionalImpulse.y = 0);
     }
 
     void OnDisable()
@@ -256,9 +276,10 @@ public class CharacterMovement : MonoBehaviour
     void DoJump(float jumpBufferLeft, float scheduledJumpHeight)
     {
         bool FromGround = VerticalState == VerticalMovementState.Grounded;
-        bool WithinCoyoteTime =
-            TimeSinceGrounded <= CoyoteTime && VerticalState != VerticalMovementState.Jumping;
-        bool NeedsExtraJump = !(FromGround || WithinCoyoteTime);
+        bool WithinCoyoteTime = TimeSinceGrounded <= CoyoteTime;
+        bool NeedsExtraJump = !(
+            (FromGround || WithinCoyoteTime) && VerticalState != VerticalMovementState.Jumping
+        );
 
         // Reset extra jumps when grounded
         if (!NeedsExtraJump)
@@ -401,25 +422,30 @@ public class CharacterMovement : MonoBehaviour
         return !IsOnStableGround() && IsOnGround();
     }
 
+    void AddToVerticalSpeed(float toAdd)
+    {
+        VerticalSpeed = Math.Max(VerticalSpeed + toAdd, -DownwardTerminalVelocity);
+    }
+
     void ApplyGravity()
     {
-        if (VerticalState == VerticalMovementState.Grounded && VerticalSpeed < dx)
+        if (
+            (VerticalState == VerticalMovementState.Grounded && VerticalSpeed < dx)
+            || Mathf.Abs(CurrentAdditionalImpulse.y) > dx
+        )
         {
             VerticalSpeed = 0;
             return;
         }
 
-        VerticalSpeed = Math.Max(
-            VerticalSpeed - CharacterGravity * Time.deltaTime,
-            -DownwardTerminalVelocity
-        );
+        AddToVerticalSpeed(-CharacterGravity * Time.deltaTime);
     }
 
     void ApplyMovementVelocity(Vector3 additionalImpulse)
     {
         Vector3 moveVelocity = MovementVelocity();
 
-        bool didHit = Physics.CapsuleCast(
+        Physics.CapsuleCast(
             BottomSphereCenter,
             TopSphereCenter,
             Controller.radius,
@@ -467,6 +493,14 @@ public class CharacterMovement : MonoBehaviour
         //    moveVelocity += FacingDirection;
         //}
 
+        if (!IsOnGround() && additionalImpulse.magnitude != 0)
+        {
+            moveVelocity -=
+                PercentImpulseTimeLeft
+                * additionalImpulse.normalized
+                * Vector3.Dot(additionalImpulse.normalized, moveVelocity);
+        }
+
         // redirect vertical speed down the slope if moving downwards
         Vector3 verticalDirection =
             (IsOnSteepSlope() && VerticalSpeed < 0) ? DownSlopeDirection : GravityUpDirection;
@@ -474,7 +508,8 @@ public class CharacterMovement : MonoBehaviour
 
         // bring it all together
         Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -dx, 0);
-        Controller.Move(combinedVelocity * Time.deltaTime + additionalImpulse);
+
+        Controller.Move((combinedVelocity + additionalImpulse) * Time.deltaTime);
     }
 
     void ApplyRotation()
@@ -588,6 +623,30 @@ public class CharacterMovement : MonoBehaviour
         Controller.enabled = true;
     }
 
+    public void GiveImpulse(
+        Vector3 newImpulse,
+        float impulseTime,
+        VerticalMovementState putIntoState = VerticalMovementState.Falling
+    )
+    {
+        StartingAdditionalImpulse = newImpulse;
+        TimeImpulseApplied = Time.time;
+        ImpulseTime = impulseTime;
+
+        if (newImpulse.y > dx)
+        {
+            VerticalState = putIntoState;
+            JumpedFromImpulse?.Invoke();
+        }
+
+        ImpulseApplied?.Invoke(newImpulse);
+    }
+
+    public void ForceHitWall()
+    {
+        RanIntoWall?.Invoke();
+    }
+
     void Update()
     {
         if (Time.timeScale == 0)
@@ -602,7 +661,7 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        ApplyMovementVelocity(AdditionalImpulse);
+        ApplyMovementVelocity(CurrentAdditionalImpulse);
 
         if (RotationEnabled)
         {

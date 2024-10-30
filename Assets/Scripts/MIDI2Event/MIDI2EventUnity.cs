@@ -91,9 +91,9 @@ public class MIDI2EventUnity : MonoBehaviour
     //update the event system every frame
     void Update()
     {
-        Debug.Log(currentTrackIndex);
-        Debug.Log(lastTime);
-        Debug.Log(beforeSamples);
+        //Debug.Log(currentTrackIndex);
+        //Debug.Log(lastTime);
+        //Debug.Log(beforeSamples);
         //track has passed end
         if (beforeSamples > audioInfo[currentTrackIndex].audioSource.timeSamples)
         {
