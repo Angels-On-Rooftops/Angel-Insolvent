@@ -107,14 +107,12 @@ public class TimeSigScreen : MonoBehaviour
         nextSignatureString = upcoming;
         currentSignatureString += " -> " + upcoming;
         SetText(currentBPMString, currentSignatureString);
-        Debug.Log("here");
     }
 
     void SignatureChange()
     {
         currentSignatureString = nextSignatureString;
         SetText(currentBPMString, currentSignatureString);
-        Debug.Log("here2");
     }
 
     void SetText(string firstLine, string secondLine)
