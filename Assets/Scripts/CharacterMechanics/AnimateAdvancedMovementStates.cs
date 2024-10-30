@@ -52,11 +52,12 @@ public class AnimateAdvancedMovementStates : MonoBehaviour
 
         Animator.SetBool("IsMoving", BasicMovementController.MovementDirection.magnitude != 0);
 
-        Animator.SetFloat(
-            "RunSpeed",
-            (
-                BasicMovementController.WalkSpeed * BasicMovementController.MovementDirection
-            ).magnitude / 16
-        );
+        float moveSpeed = (BasicMovementController.WalkSpeed * BasicMovementController.MovementDirection).magnitude;
+        float moveSpeedToAnimationScale = 1 / 16f;
+
+        if (moveSpeed != 0)
+        {
+            Animator.SetFloat("RunSpeed", moveSpeed * moveSpeedToAnimationScale);
+        }
     }
 }
