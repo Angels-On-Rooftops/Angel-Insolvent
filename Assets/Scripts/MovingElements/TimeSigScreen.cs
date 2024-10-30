@@ -42,24 +42,51 @@ public class TimeSigScreen : MonoBehaviour
     string nextBPMString;
     string nextSignatureString;
 
-    void Start()
+    readonly Maid screenMaid = new();
+
+    private void SetInitVals()
     {
-        foreach(NoteStringTriplet t in BPMForeshadows)
-        {
-            EventSys.Subscribe(() => AnticipateBPMChange(t.noteString), t.note, t.octave);
-        }
-        EventSys.Subscribe(() => BPMChange(), BPMChangeNote, BPMChangeOctave);
-
-        foreach (NoteStringTriplet t in SignatureForeshadows)
-        {
-            EventSys.Subscribe(() => AnticipateSignatureChange(t.noteString), t.note, t.octave);
-        }
-        EventSys.Subscribe(() => SignatureChange(), SignatureChangeNote, SignatureChangeOctave);
-
         currentBPMString = StartingBPMString;
         currentSignatureString = StartingSignatureString;
         nextBPMString = StartingBPMString;
         nextSignatureString = StartingSignatureString;
+        SetText(currentBPMString, currentSignatureString);
+    }
+
+    private void OnEnable()
+    {
+        foreach (NoteStringTriplet t in BPMForeshadows)
+        {
+            screenMaid.GiveTask(
+                EventSys.Subscribe(() => AnticipateBPMChange(t.noteString), t.note, t.octave)
+            );
+        }
+        screenMaid.GiveTask(EventSys.Subscribe(() => BPMChange(), BPMChangeNote, BPMChangeOctave));
+
+        foreach (NoteStringTriplet t in SignatureForeshadows)
+        {
+            screenMaid.GiveTask(
+                EventSys.Subscribe(() => AnticipateSignatureChange(t.noteString), t.note, t.octave)
+            );
+        }
+        screenMaid.GiveTask(
+            EventSys.Subscribe(() => SignatureChange(), SignatureChangeNote, SignatureChangeOctave)
+        );
+
+        EventSys.OnPlay += SetInitVals;
+        screenMaid.GiveTask(() => EventSys.OnStop -= SetInitVals);
+
+        Action clearScreen = () =>
+        {
+            SetText("", "");
+        };
+        EventSys.OnStop += clearScreen;
+        screenMaid.GiveTask(() => EventSys.OnStop -= clearScreen);
+    }
+
+    private void OnDisable()
+    {
+        screenMaid.Cleanup();
     }
 
     void AnticipateBPMChange(string upcoming)
@@ -80,12 +107,14 @@ public class TimeSigScreen : MonoBehaviour
         nextSignatureString = upcoming;
         currentSignatureString += " -> " + upcoming;
         SetText(currentBPMString, currentSignatureString);
+        Debug.Log("here");
     }
 
     void SignatureChange()
     {
         currentSignatureString = nextSignatureString;
         SetText(currentBPMString, currentSignatureString);
+        Debug.Log("here2");
     }
 
     void SetText(string firstLine, string secondLine)
@@ -100,5 +129,4 @@ public class TimeSigScreen : MonoBehaviour
         public int octave;
         public string noteString;
     }
-
 }
