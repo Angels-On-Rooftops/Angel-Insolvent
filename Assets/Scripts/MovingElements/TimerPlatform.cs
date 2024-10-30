@@ -5,23 +5,27 @@ using Utility;
 using MIDI2EventSystem;
 using System;
 using System.Drawing;
+using System.Linq;
 
 public class TimerPlatform : MonoBehaviour
 {
     [SerializeField]
-    MIDI2EventUnity EventSys;
+    internal MIDI2EventUnity EventSys;
 
     [SerializeField]
     Vector3[] PositionLoop;
 
     [SerializeField]
-    Notes BeatNote;
+    bool LocalMode = false;
 
     [SerializeField]
-    int BeatOctave;
+    internal Notes BeatNote;
 
     [SerializeField]
-    NoteDebounceTriplet[] Debounces;
+    internal int BeatOctave;
+
+    [SerializeField]
+    internal NoteDebounceTriplet[] Debounces;
 
     [SerializeField]
     Material OnMaterial;
@@ -49,8 +53,9 @@ public class TimerPlatform : MonoBehaviour
     private int countdown;
     private int locationIndex = 0;
     private Action[] UnsubActions;
+    private Space space = Space.World;
 
-    void Awake()
+    void Start()
     {
         onParams = new RenderParams(OnMaterial);
         offParams = new RenderParams(OffMaterial);
@@ -59,12 +64,22 @@ public class TimerPlatform : MonoBehaviour
         {
             TriangleRings[i] = GenerateTriangleRing(Debounces[i].numTicks - 1);
         }
-        UnsubActions = new Action[Debounces.Length + 1];
         countdown = TriangleRings[activeRing].Length;
+
+        if (LocalMode)
+        {
+            TriangleCenterOffset = Vector3.Scale(TriangleCenterOffset, transform.lossyScale);
+            for (int i = 0; i < PositionLoop.Length; i++)
+            {
+                PositionLoop[i] = transform.TransformPoint(PositionLoop[i]);
+            }
+        }
     }
 
     private void OnEnable()
     {
+        UnsubActions = new Action[Debounces.Length + 1];
+
         //subscribe ring setting events
         for (int i = 0; i < Debounces.Length; i++)
         {
@@ -92,8 +107,7 @@ public class TimerPlatform : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //render current indicator
         for (int i = 0; i < TriangleRings[activeRing].Length; i++)
@@ -112,7 +126,7 @@ public class TimerPlatform : MonoBehaviour
     {
         countdown--;
         //move position if necessary
-        if (countdown == 0)
+        if (countdown == 0 && PositionLoop.Length > 0)
         {
             locationIndex = (locationIndex + 1) % PositionLoop.Length;
             StartCoroutine(MoveToPosInBeat(PositionLoop[locationIndex]));
@@ -157,7 +171,7 @@ public class TimerPlatform : MonoBehaviour
             Vector3[] points = new Vector3[3];
 
             //generate triangle points
-            points[0] = Vector3.zero + TriangleCenterOffset;
+            points[0] = Vector3.zero;
 
             float halfFarSideLen = Mathf.Sin(angleForTris / 2) * TriangleCalculationRadius;
             float height = Mathf.Cos(angleForTris / 2) * TriangleCalculationRadius;
@@ -174,11 +188,12 @@ public class TimerPlatform : MonoBehaviour
                 points[j].z = oldX * Mathf.Sin(rotAngle) + points[j].z * Mathf.Cos(rotAngle);
             }
 
-            //pushout triangle points
+            //pushout triangle points and offset them
             Vector3 unitPush = (points[1] + points[2]).normalized;
             for (int j = 0; j < 3; j++)
             {
                 points[j] += unitPush * TrianglePushout;
+                points[j] += TriangleCenterOffset;
             }
 
             //make triangle mesh
@@ -191,7 +206,7 @@ public class TimerPlatform : MonoBehaviour
 }
 
 [Serializable]
-internal struct NoteDebounceTriplet
+struct NoteDebounceTriplet
 {
     public Notes note;
     public int octave;
