@@ -26,6 +26,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ADDITIONAL_LIGHTS
+  - _ADDITIONAL_LIGHT_SHADOWS
+  - _FORWARD_PLUS
   - _LIGHTMAP_SHADOW_MIXING
   m_InvalidKeywords:
   - _SHADOWS_SOFT
@@ -102,6 +104,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _ADDITIONAL_LIGHTS: 1
+    - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Ambient_Occlusion: 0
@@ -118,6 +121,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _FORWARD_PLUS: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -134,9 +138,10 @@ Material:
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularSteps: 1
+    - _SpecularSteps: 0
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
+    - _StepOffset: 0.999
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -147,5 +152,5 @@ Material:
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
-    - _Tint: {r: 1, g: 1, b: 1, a: 0}
+    - _Tint: {r: 0.8396226, g: 0.6528678, b: 0.31287822, a: 0}
   m_BuildTextureStacks: []
