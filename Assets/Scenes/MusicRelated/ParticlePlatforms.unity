@@ -355,7 +355,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 80245697}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 2
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 0
@@ -430,7 +430,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -978,15 +978,15 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 4
+    type: 5
     angle: 10
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0, y: 0, z: 2.5}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 0.5, y: 0.5, z: 1}
+    m_Scale: {x: 1.5, y: 1.5, z: 5}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -2890,7 +2890,7 @@ ParticleSystem:
     magnitude:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.5
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -6114,6 +6114,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.data[0].audioSource
+      value: 
+      objectReference: {fileID: 1598725280}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.data[1].audioSource
+      value: 
+      objectReference: {fileID: 1492910234}
+    - target: {fileID: 3899254757310960320, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+      propertyPath: audioInfo.Array.data[0].streamingAssetChartPath
+      value: '[VAULT ZONE] Breaking Out!/Breaking out loop chart.mid'
+      objectReference: {fileID: 0}
     - target: {fileID: 7176092730672561289, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6751,6 +6767,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1348835734}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!82 &1492910234 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 101923309674167104, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+  m_PrefabInstance: {fileID: 949292204}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1501659079
 GameObject:
   m_ObjectHideFlags: 0
@@ -6919,6 +6940,11 @@ MonoBehaviour:
   parentOfObjectsToRotate: {fileID: 895331833}
   initialRotation: {x: 45, y: 0, z: 0}
   indicationSignalRotation: {x: -15, y: 0, z: 0}
+--- !u!82 &1598725280 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5668559038693174025, guid: 337f8ca53a1b646488977ddca1249397, type: 3}
+  m_PrefabInstance: {fileID: 949292204}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1673247875
 GameObject:
   m_ObjectHideFlags: 0
