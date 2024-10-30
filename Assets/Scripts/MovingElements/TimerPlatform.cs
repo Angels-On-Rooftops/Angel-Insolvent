@@ -10,7 +10,7 @@ using System.Linq;
 public class TimerPlatform : MonoBehaviour
 {
     [SerializeField]
-    MIDI2EventUnity EventSys;
+    internal MIDI2EventUnity EventSys;
 
     [SerializeField]
     Vector3[] PositionLoop;
@@ -19,13 +19,13 @@ public class TimerPlatform : MonoBehaviour
     bool LocalMode = false;
 
     [SerializeField]
-    Notes BeatNote;
+    internal Notes BeatNote;
 
     [SerializeField]
-    int BeatOctave;
+    internal int BeatOctave;
 
     [SerializeField]
-    NoteDebounceTriplet[] Debounces;
+    internal NoteDebounceTriplet[] Debounces;
 
     [SerializeField]
     Material OnMaterial;
@@ -55,7 +55,7 @@ public class TimerPlatform : MonoBehaviour
     private Action[] UnsubActions;
     private Space space = Space.World;
 
-    void Awake()
+    void Start()
     {
         onParams = new RenderParams(OnMaterial);
         offParams = new RenderParams(OffMaterial);
@@ -64,7 +64,6 @@ public class TimerPlatform : MonoBehaviour
         {
             TriangleRings[i] = GenerateTriangleRing(Debounces[i].numTicks - 1);
         }
-        UnsubActions = new Action[Debounces.Length + 1];
         countdown = TriangleRings[activeRing].Length;
 
         if (LocalMode)
@@ -79,6 +78,8 @@ public class TimerPlatform : MonoBehaviour
 
     private void OnEnable()
     {
+        UnsubActions = new Action[Debounces.Length + 1];
+
         //subscribe ring setting events
         for (int i = 0; i < Debounces.Length; i++)
         {
@@ -125,7 +126,7 @@ public class TimerPlatform : MonoBehaviour
     {
         countdown--;
         //move position if necessary
-        if (countdown == 0)
+        if (countdown == 0 && PositionLoop.Length > 0)
         {
             locationIndex = (locationIndex + 1) % PositionLoop.Length;
             StartCoroutine(MoveToPosInBeat(PositionLoop[locationIndex]));
@@ -205,7 +206,7 @@ public class TimerPlatform : MonoBehaviour
 }
 
 [Serializable]
-internal struct NoteDebounceTriplet
+struct NoteDebounceTriplet
 {
     public Notes note;
     public int octave;

@@ -31,6 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3011336288445614681}
+  - {fileID: 1374587268480410939}
   m_Father: {fileID: 4494284997843097369}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &1416693641890277655
@@ -109,7 +110,7 @@ GameObject:
   - component: {fileID: 2860180234934083957}
   - component: {fileID: 5628793222023605916}
   m_Layer: 0
-  m_Name: bottom (1)
+  m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -306,6 +307,79 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &8482496445813244389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1374587268480410939}
+  - component: {fileID: 3494063788224888323}
+  - component: {fileID: 5201965503056955728}
+  m_Layer: 0
+  m_Name: TopTimer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1374587268480410939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8482496445813244389}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8876847378569184008}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &3494063788224888323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8482496445813244389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1db26f480d806cc4cb2d3c4194442a25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventSys: {fileID: 0}
+  PositionLoop: []
+  LocalMode: 0
+  BeatNote: 0
+  BeatOctave: 0
+  Debounces:
+  - note: 0
+    octave: 0
+    numTicks: 0
+  OnMaterial: {fileID: 2100000, guid: 5be1227d4c2c05b4394035bcdfd568c8, type: 2}
+  OffMaterial: {fileID: 2100000, guid: 7e6825b1d76b92a4f93cf0ec695ac67d, type: 2}
+  TriangleCalculationRadius: 0.4
+  TrianglePushout: 0.04
+  TriangleCenterOffset: {x: 0, y: 0.4001, z: 0}
+  MaxInternalTriangleAngle: 120
+--- !u!114 &5201965503056955728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8482496445813244389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f716245e14383fb48af56cce6247f6d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  platformWithEventSys: {fileID: 1416693641890277655}
 --- !u!1 &8974830832634227853
 GameObject:
   m_ObjectHideFlags: 0
