@@ -495,10 +495,9 @@ public class CharacterMovement : MonoBehaviour
 
         if (!IsOnGround() && additionalImpulse.magnitude != 0)
         {
-            moveVelocity -=
-                PercentImpulseTimeLeft
-                * additionalImpulse.normalized
-                * Vector3.Dot(additionalImpulse.normalized, moveVelocity);
+            moveVelocity -= ImpulseDecay.Evaluate(1 - PercentImpulseTimeLeft)
+                * Vector3.Dot(additionalImpulse.normalized, moveVelocity) 
+                * additionalImpulse.normalized;
         }
 
         // redirect vertical speed down the slope if moving downwards
