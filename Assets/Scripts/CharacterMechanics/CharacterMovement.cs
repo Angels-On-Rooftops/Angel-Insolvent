@@ -167,7 +167,6 @@ public class CharacterMovement : MonoBehaviour
     //[NonSerialized]
     public int ExtraJumpsRemaining = 0;
 
-    //[NonSerialized]
     public VerticalMovementState VerticalState = VerticalMovementState.Falling;
 
     float LastTimeGrounded = 0;
@@ -495,8 +494,9 @@ public class CharacterMovement : MonoBehaviour
 
         if (!IsOnGround() && additionalImpulse.magnitude != 0)
         {
-            moveVelocity -= ImpulseDecay.Evaluate(1 - PercentImpulseTimeLeft)
-                * Vector3.Dot(additionalImpulse.normalized, moveVelocity) 
+            moveVelocity -=
+                ImpulseDecay.Evaluate(1 - PercentImpulseTimeLeft)
+                * Vector3.Dot(additionalImpulse.normalized, moveVelocity)
                 * additionalImpulse.normalized;
         }
 
@@ -635,6 +635,7 @@ public class CharacterMovement : MonoBehaviour
         if (newImpulse.y > dx)
         {
             VerticalState = putIntoState;
+            Debug.Log($"put into state {VerticalState}");
             JumpedFromImpulse?.Invoke();
         }
 

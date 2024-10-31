@@ -1,11 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Utility;
-using MIDI2EventSystem;
-using System;
 using System.Drawing;
 using System.Linq;
+using MIDI2EventSystem;
+using UnityEngine;
+using Utility;
 
 public class TimerPlatform : MonoBehaviour
 {
@@ -53,7 +53,8 @@ public class TimerPlatform : MonoBehaviour
     private int countdown;
     private int locationIndex = 0;
     private Action[] UnsubActions;
-    private Space space = Space.World;
+
+    //private Space space = Space.World; TODO
 
     void Start()
     {
