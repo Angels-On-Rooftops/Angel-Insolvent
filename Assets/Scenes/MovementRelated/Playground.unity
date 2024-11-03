@@ -2622,6 +2622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1001 &266572549
@@ -4515,6 +4516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 2056469056}
   RotationAxis: {x: 0, y: 0, z: 1}
+  AxisSpace: 1
   BeatPeriod: 14
   ResetOnStop: 1
 --- !u!64 &397843530
@@ -5890,6 +5892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1001 &454933037
@@ -5902,15 +5905,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.67002
+      value: 0.4765651
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.67002
+      value: 0.4765651
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.67002
+      value: 0.4765651
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5918,7 +5921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0207
+      value: 1.2707
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5926,44 +5929,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.95920455
+      value: -0.025999323
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.28271294
+      value: -0.007662734
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.9588487
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.28262088
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 32.844
+      value: -32.791
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 183.696
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: -2.004
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_LightProbeUsage
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 5e96a3daa077bbb4489734da9b74c79d, type: 2}
+    - target: {fileID: -5754084199372789682, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2401557703631361947, guid: d087936a94e020d46bceec61f88b965b, type: 3}
     - target: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_Name
       value: GuitarPickCoinWholeNote (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 532697854}
   m_SourcePrefab: {fileID: 100100000, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
 --- !u!1001 &456682910
 PrefabInstance:
@@ -6199,6 +6221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1001 &472305934
@@ -6368,7 +6391,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
+  ResetOnStop: 1
+--- !u!1 &475055053 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+  m_PrefabInstance: {fileID: 508421174}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &475055057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475055053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1bc85cf873e9bf45acddc86dd596fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TrackInfo: {fileID: 770835726}
+  RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 0
+  BeatPeriod: 8
   ResetOnStop: 1
 --- !u!43 &484364488
 Mesh:
@@ -6665,12 +6711,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.71127
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.71127
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.71127
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.x
       value: -63.31568
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0437074
+      value: 1.2937074
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6678,30 +6736,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.95920455
+      value: -0.068154044
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.28271294
+      value: -0.020089008
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.95677686
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.28200996
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 32.844
+      value: -32.473
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -189.673
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 5.229
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_LightProbeUsage
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
@@ -6712,10 +6778,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: GuitarPickCoinWholeNote
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 475055057}
   m_SourcePrefab: {fileID: 100100000, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
 --- !u!1 &511381011
 GameObject:
@@ -7791,6 +7864,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 345002019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &532697850 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+  m_PrefabInstance: {fileID: 454933037}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &532697854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532697850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1bc85cf873e9bf45acddc86dd596fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TrackInfo: {fileID: 770835726}
+  RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 0
+  BeatPeriod: 8
+  ResetOnStop: 1
 --- !u!114 &536929471 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2105557922396366585, guid: 9599eb0a377dc3d449601c48d02d6636, type: 3}
@@ -8469,15 +8564,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.50150025
+      value: 0.35670206
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.50150025
+      value: 0.35670206
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.50150025
+      value: 0.35670206
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8485,7 +8580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.0089
+      value: 1.2588999
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8493,44 +8588,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.95920455
+      value: 0.025999323
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.28271294
+      value: 0.007662748
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.9588488
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.28262073
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 32.844
+      value: -32.791
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -176.304
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: -2.004
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_LightProbeUsage
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 361efae2530a0244fbb513c6d803d5b0, type: 2}
+    - target: {fileID: -5754084199372789682, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 2958407188349271460, guid: dd73f25f3c097a540962155b554f319f, type: 3}
     - target: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
       propertyPath: m_Name
       value: GuitarPickCoinWholeNote (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1955334165}
   m_SourcePrefab: {fileID: 100100000, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
 --- !u!1001 &597805140
 PrefabInstance:
@@ -8724,6 +8838,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &617186304 stripped
@@ -8745,6 +8860,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!43 &623490356
@@ -9878,19 +9994,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4161886384667282869, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.845269
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4161886384667282869, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.021468552
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4161886384667282869, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.5337375
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4161886384667282869, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.013556121
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4161886385312650187, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13088,6 +13204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!43 &784072602
@@ -13353,6 +13470,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1001 &790354042
@@ -15268,6 +15386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &1036675547
@@ -15368,6 +15487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &1056671665
@@ -21044,6 +21164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1001 &1606529305
@@ -21733,6 +21854,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &1669689608
@@ -23151,6 +23273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!4 &1738447330 stripped
@@ -25368,6 +25491,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1001 &1868496617
@@ -25905,6 +26029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &1926788294
@@ -26005,6 +26130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &1927601407
@@ -26260,6 +26386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &1942275482
@@ -26733,6 +26860,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 223623553}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1955334161 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: adbbc79aed1cbe7458783e6fb3981061, type: 3}
+  m_PrefabInstance: {fileID: 590357942}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1955334165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955334161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1bc85cf873e9bf45acddc86dd596fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TrackInfo: {fileID: 770835726}
+  RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 0
+  BeatPeriod: 8
+  ResetOnStop: 1
 --- !u!1 &1967770906
 GameObject:
   m_ObjectHideFlags: 0
@@ -27068,6 +27217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TrackInfo: {fileID: 770835726}
   RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 1
   BeatPeriod: 4
   ResetOnStop: 1
 --- !u!1 &1990673443
