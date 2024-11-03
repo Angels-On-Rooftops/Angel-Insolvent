@@ -37,6 +37,8 @@ public class AdvancedMovement : MonoBehaviour
     // does not contain every default property, just ones that have been overwritten previously
     Dictionary<string, object> DefaultMovementProperties = new();
 
+    HashSet<string> MovementPropertyExceptions = new() { "VerticalState" };
+
     private void Start()
     {
         foreach (IAdvancedMovementStateSpec movementState in States.Values)
@@ -129,6 +131,11 @@ public class AdvancedMovement : MonoBehaviour
     {
         foreach (var (name, newValue) in newProperties)
         {
+            if (MovementPropertyExceptions.Contains(name))
+            {
+                continue;
+            }
+
             var field = Movement.GetType().GetField(name);
 
             // check if name refers to a field or property

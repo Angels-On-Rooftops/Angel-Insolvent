@@ -1,58 +1,47 @@
-using Inventory;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.DialogueSystem;
+using Assets.Scripts.DialogueSystem.DialogueSamples;
+using Inventory;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Items.Interactables
 {
-    //This class should eventually be updated to better match how the rest of the UI is set up
+    [RequireComponent(typeof(DialogueFile))]
     public class DialogueInteractable : UIInteractable
     {
-        //DialogueHandler dialogueHandler;
+        private DialogueFile DialogueFile => GetComponent<DialogueFile>();
 
-        void Awake()
+        protected override void Awake()
         {
-            GetInteractableOverlayComponent();
+            Assert.IsNotNull(
+                DialogueFile,
+                $"You gotta put a dialogue file on this guy! {gameObject}"
+            );
+
+            base.Awake();
         }
 
         public override void Interact()
-        {          
-            //this.isActive = !this.isActive;
-
-            if (!this.isActive)
+        {         
+            if (isActive)
             {
-                //Mark Active when changing from inactive to active, but do not deactivate from this class
-                this.isActive = true;
-
-                StartCoroutine(CreateDialogueHandler());
+                return;
             }
-        }
 
-        IEnumerator CreateDialogueHandler()
-        {
-            yield return new WaitForSeconds(.5f); //Wait to avoid the Interaction input interfering with the Move Forward input
-
-            //Creates prefab in the center
-            this.instantiatedUIPrefab = Instantiate(this.UIPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-
-            DialogueHandler dialogueHandler = this.instantiatedUIPrefab.GetComponentInChildren<DialogueHandler>();
-            dialogueHandler.EndDialogueNodeReached += DestroyDialogueInteractable;
-
+            isActive = true;
             FreezeCharacterMovement();
+            DialogueSystem.EndOfDialogueReached += OnEndOfDialogue;
 
-            yield return null;
+            StartCoroutine(DialogueSystem.PlayDialogue(DialogueFile));
         }
 
-        void DestroyDialogueInteractable()
+        void OnEndOfDialogue()
         {
-            Destroy(this.instantiatedUIPrefab);
+            DialogueSystem.EndOfDialogueReached -= OnEndOfDialogue;
             UnFreezeCharacterMovement();
-
-            //this.dialogueHandler.EndDialogueNodeReached -= DestroyDialogueInteractable;
-            //this.dialogueHandler = null;
-            // ^commented out on the assumption that calling Destroy makes them unneeded
-
-            this.isActive = false;
+            isActive = false;
         }
     }
 }

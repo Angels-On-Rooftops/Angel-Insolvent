@@ -1,11 +1,11 @@
+using PhotoMode;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using PhotoMode;
 
+# pragma warning disable
 namespace PhotoMode
 {
-
     public class BlitRenderPass : ScriptableRenderPass
     {
         public Material blitMaterial = null;
@@ -28,7 +28,10 @@ namespace PhotoMode
 
         //Override the Execute function decalared in the scriptable render pass class.
         //Any code in here will execute as part of the rendering process.
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        public override void Execute(
+            ScriptableRenderContext context,
+            ref RenderingData renderingData
+        )
         {
             //Create a command buffer, a list of graphical instructions to execute
             CommandBuffer cmd = CommandBufferPool.Get(profilerTag);
@@ -46,7 +49,6 @@ namespace PhotoMode
 
             //Copy what the temporary render texture is rendering back to the camera
             Blit(cmd, temporaryColorTexture.Identifier(), source);
-
 
             //Execute the graphic commands
             context.ExecuteCommandBuffer(cmd);

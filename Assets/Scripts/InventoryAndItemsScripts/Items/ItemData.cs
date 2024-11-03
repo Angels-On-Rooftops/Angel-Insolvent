@@ -14,6 +14,7 @@ namespace Items
         public string itemID;
         public Sprite sprite; //can be used for UI graphic
         public GameObject itemPrefab;
+        public int price = 0; // item price for shop, 0 by default
         public bool isEquippable;
         public bool isRespawnable = false;
     }

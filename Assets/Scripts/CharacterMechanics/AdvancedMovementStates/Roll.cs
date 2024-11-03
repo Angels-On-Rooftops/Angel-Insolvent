@@ -12,12 +12,6 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     public float RollDuration = 1;
 
     [SerializeField]
-    public float LongJumpHeight = 2;
-
-    [SerializeField]
-    public float HighJumpHeight = 7;
-
-    [SerializeField]
     public float HighJumpWindow = 0.25f;
 
     [SerializeField]
@@ -51,6 +45,9 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
 
     CharacterMovement Movement => GetComponent<CharacterMovement>();
     AdvancedMovement AdvancedMovement => GetComponent<AdvancedMovement>();
+    float HighJumpHeight => GetComponent<HighJump>().HighJumpHeight;
+    float LongJumpHeight => GetComponent<LongJump>().LongJumpHeight;
+
     readonly Maid StateMaid = new();
 
     bool jumped = false;
@@ -78,7 +75,7 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         StateMaid.GiveEvent(AdvancedMovement, "ActionRequested", () => pushedActionButton = true);
 
         hitWall = false;
-        StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = false);
+        StateMaid.GiveEvent(Movement, "RanIntoWall", () => hitWall = true);
 
         canHighJump = false;
         Coroutine highJumpCounter = null;
@@ -86,7 +83,16 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
         {
             canHighJump = true;
             Movement.JumpHeight = HighJumpHeight;
-            highJumpCounter = StartCoroutine(HighJumpTimer());
+            highJumpCounter = StartCoroutine(
+                CoroutineUtil.DoActionAfterTime(
+                    () =>
+                    {
+                        canHighJump = false;
+                        Movement.JumpHeight = LongJumpHeight;
+                    },
+                    HighJumpWindow
+                )
+            );
         }
         StateMaid.GiveTask(() =>
         {
@@ -107,16 +113,6 @@ public class Roll : MonoBehaviour, IAdvancedMovementStateSpec
     bool IsRollOver()
     {
         return Time.time - timeStarted >= RollDuration;
-    }
-
-    IEnumerator HighJumpTimer()
-    {
-        while (Time.time - timeStarted <= HighJumpWindow)
-        {
-            yield return null;
-        }
-        canHighJump = false;
-        Movement.JumpHeight = LongJumpHeight;
     }
 
     void LateUpdate()

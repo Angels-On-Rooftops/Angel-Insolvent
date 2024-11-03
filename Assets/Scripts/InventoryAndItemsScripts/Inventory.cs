@@ -99,7 +99,7 @@ namespace Inventory
             {
                 items.Add(
                     new SerializableInventoryItem(
-                        item.Data.itemName,
+                        item.Data.itemID,
                         item.StackSize,
                         item.Data.isRespawnable
                     )
@@ -126,7 +126,7 @@ namespace Inventory
                 {
                     IEnumerable<ItemData> itemToLoad =
                         from itemData in allItems
-                        where itemData.itemName == deserializedItem.itemName
+                        where itemData.itemID == deserializedItem.itemID
                         select itemData;
                     if (itemToLoad.Any())
                     {
@@ -137,6 +137,8 @@ namespace Inventory
                     }
                 }
             }
+
+            NonRespawnableItemsRemover.Instance.RemoveNonRespawnableItems();
         }
     }
 
@@ -154,13 +156,13 @@ namespace Inventory
     [Serializable]
     public class SerializableInventoryItem
     {
-        public string itemName;
+        public string itemID;
         public int stackSize;
         public bool isRespawnable;
 
-        public SerializableInventoryItem(string _itemName, int _stackSize, bool isRespawnable)
+        public SerializableInventoryItem(string _itemID, int _stackSize, bool isRespawnable)
         {
-            this.itemName = _itemName;
+            this.itemID = _itemID;
             this.stackSize = _stackSize;
             this.isRespawnable = isRespawnable;
         }
