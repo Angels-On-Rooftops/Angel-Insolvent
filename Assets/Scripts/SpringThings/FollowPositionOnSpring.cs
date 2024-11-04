@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterOnSpring : MonoBehaviour
+public class FollowPositionOnSpring : MonoBehaviour
 {
     [SerializeField]
     Transform ToFollow;
 
     [SerializeField]
-    Vector3 PositionSmoothing = new Vector3(2, 5, 2) / 100f;
+    Vector3 PositionSmoothing = new Vector3(2, 5, 2);
 
     float xVelocity = 0;
     float yVelocity = 0;
@@ -17,24 +17,29 @@ public class CharacterOnSpring : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Time.deltaTime == 0)
+        {
+            return;
+        }
+
         transform.position = new Vector3(
             Mathf.SmoothDamp(
                 transform.position.x,
                 ToFollow.position.x,
                 ref xVelocity,
-                PositionSmoothing.x
+                PositionSmoothing.x * Time.deltaTime
             ),
             Mathf.SmoothDamp(
                 transform.position.y,
                 ToFollow.position.y,
                 ref yVelocity,
-                PositionSmoothing.y
+                PositionSmoothing.y * Time.deltaTime
             ),
             Mathf.SmoothDamp(
                 transform.position.z,
                 ToFollow.position.z,
                 ref zVelocity,
-                PositionSmoothing.z
+                PositionSmoothing.z * Time.deltaTime
             )
         );
     }
