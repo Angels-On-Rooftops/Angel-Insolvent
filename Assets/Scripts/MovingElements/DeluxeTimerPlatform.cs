@@ -103,6 +103,7 @@ public class DeluxeTimerPlatform : MonoBehaviour
         float moveDuration = EventSys.SecPerBeat;
         Vector3 startPos = this.transform.position;
         Quaternion startRot = this.transform.rotation;
+        Vector3 startScale = this.transform.localScale;
 
         while (timer <= moveDuration)
         {
@@ -115,6 +116,11 @@ public class DeluxeTimerPlatform : MonoBehaviour
             this.transform.rotation = Quaternion.Lerp(
                 startRot,
                 target.rotation,
+                t
+            );
+            this.transform.localScale = Vector3.Lerp(
+                startScale,
+                target.localScale,
                 t
             );
             timer += Time.deltaTime;
