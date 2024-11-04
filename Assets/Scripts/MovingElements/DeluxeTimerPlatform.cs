@@ -102,13 +102,20 @@ public class DeluxeTimerPlatform : MonoBehaviour
         float timer = 0;
         float moveDuration = EventSys.SecPerBeat;
         Vector3 startPos = this.transform.position;
+        Quaternion startRot = this.transform.rotation;
 
         while (timer <= moveDuration)
         {
+            float t = Mathf.SmoothStep(0, 1, timer / moveDuration);
             this.transform.position = Vector3.Lerp(
                 startPos,
                 target.position,
-                Mathf.SmoothStep(0, 1, timer / moveDuration)
+                t
+            );
+            this.transform.rotation = Quaternion.Lerp(
+                startRot,
+                target.rotation,
+                t
             );
             timer += Time.deltaTime;
             yield return null;
