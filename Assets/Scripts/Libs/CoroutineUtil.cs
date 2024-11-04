@@ -9,4 +9,10 @@ public static class CoroutineUtil
         yield return new WaitForSeconds(seconds);
         toPerform();
     }
+
+    public static IEnumerator WaitAFrameThenRun(Action toPerform)
+    {
+        yield return new WaitForEndOfFrame();
+        toPerform();
+    }
 }

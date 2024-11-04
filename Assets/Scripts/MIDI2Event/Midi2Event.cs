@@ -185,7 +185,7 @@ namespace MIDI2EventSystem
             SubType type = SubType.Start
         )
         {
-            if (type == SubType.End)
+            if (type == SubType.ChartEnd)
             {
                 _endEvent += action;
                 return () =>
@@ -219,7 +219,7 @@ namespace MIDI2EventSystem
         {
             Start,
             Stop,
-            End
+            ChartEnd
         }
     }
 }

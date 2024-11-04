@@ -91,19 +91,21 @@ public class MIDI2EventUnity : MonoBehaviour
     //update the event system every frame
     void Update()
     {
+        //Debug.Log(currentTrackIndex);
+        //Debug.Log(lastTime);
+        //Debug.Log(beforeSamples);
         //track has passed end
         if (beforeSamples > audioInfo[currentTrackIndex].audioSource.timeSamples)
         {
-            //no more track to play
-            if (currentTrackIndex == audioInfo.Count - 1)
-            {
-                return;
-            }
-
             //audio has ended, and need to advance to next track
             if (!audioInfo[currentTrackIndex].audioSource.loop)
             {
-                AdvanceEventSys();
+                //additional track after this one
+                if (currentTrackIndex != audioInfo.Count - 1)
+                {
+                    AdvanceEventSys();
+                }
+
                 return;
             }
 
@@ -129,6 +131,7 @@ public class MIDI2EventUnity : MonoBehaviour
         eventPlayers[currentTrackIndex].Back();
         eventPlayers[currentTrackIndex].Play();
         lastTime = 0;
+        beforeSamples = 0;
     }
 
     private void AdvanceEventSys()
@@ -137,6 +140,8 @@ public class MIDI2EventUnity : MonoBehaviour
         //audioInfo[currentTrackIndex].audioSource.Stop();
 
         currentTrackIndex++;
+        lastTime = 0;
+        beforeSamples = 0;
 
         eventPlayers[currentTrackIndex].Play();
         //audioInfo[currentTrackIndex].audioSource.Play();
@@ -166,7 +171,7 @@ public class MIDI2EventUnity : MonoBehaviour
         lastTime = 0;
         currentTrackIndex = 0;
         int i = 0;
-        double initDsp = AudioSettings.dspTime;
+        double initDsp = AudioSettings.dspTime + 0.25;
         double scheduledStartTime = initDsp;
         audioInfo[i].audioSource.PlayScheduled(scheduledStartTime);
         while (i < audioInfo.Count - 1 && !audioInfo[i].audioSource.loop)
