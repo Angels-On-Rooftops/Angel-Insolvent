@@ -700,7 +700,7 @@ public class CharacterMovement : MonoBehaviour
 
     private void LateUpdate()
     {
-        Debug.Log($"{movementVel} {PlatformTrackingGhost.position - transform.position}");
+        //Debug.Log($"{movementVel} {PlatformTrackingGhost.position - transform.position}");
 
         Controller.Move(movementVel + PlatformTrackingGhost.position - transform.position);
 
