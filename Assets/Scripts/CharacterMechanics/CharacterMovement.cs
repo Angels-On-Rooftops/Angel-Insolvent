@@ -100,6 +100,10 @@ public class CharacterMovement : MonoBehaviour
             + "for ground below the character before snapping it downward if SnapToGround is enabled."
     )]
     public float MaximumSnappingDistance = 0.2f;
+
+    [SerializeField]
+    [Tooltip("Moving with a platform will be ignored if the platform is on one of these layers")]
+    public LayerMask PlatformTrackingIgnore = ~ControlConstants.RAYCAST_MASK;
     #endregion
 
     #region Events
@@ -119,9 +123,6 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Public Properties
-    CharacterController Controller => GetComponent<CharacterController>();
-    Vector3 ControllerWorldPosition => transform.position + Controller.center;
-
     public Vector3 TopSphereCenter =>
         ControllerWorldPosition + GravityUpDirection * (Controller.height / 2 - Controller.radius);
     public Vector3 BottomSphereCenter =>
@@ -148,10 +149,13 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Private Properties
+    CharacterController Controller => GetComponent<CharacterController>();
+    Vector3 ControllerWorldPosition => transform.position + Controller.center;
     float CharacterGravity => Physics.gravity.magnitude * GravityMultiplier;
     float TimeSinceGrounded => IsOnStableGround() ? 0 : Time.time - LastTimeGrounded;
     bool IsHittingHead =>
         Mathf.Abs(Vector3.Dot(Controller.velocity, GravityUpDirection)) < dx && IsRising;
+    bool ShouldUpdate => Time.timeScale != 0;
     #endregion
 
     #region Constants
@@ -170,6 +174,8 @@ public class CharacterMovement : MonoBehaviour
     public VerticalMovementState VerticalState = VerticalMovementState.Falling;
 
     float LastTimeGrounded = 0;
+
+    public Func<float, float, float> WalkspeedMiddleware = (v, dt) => v;
 
     #region Processed Vectors
     public Vector3 RawMovementDirection = new();
@@ -196,15 +202,7 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Platform Tracking
-    // the last platform the character landed on
-    GameObject LastPlatform;
-
-    // the position of the last platform on the previous frame
-    Vector3 LastPlatformLastPosition;
-
-    // the velocity of the last platform on the previous frame
-    Vector3 LastPlatformLastVelocity;
-    float LastPlatformLastTime;
+    Transform PlatformTrackingGhost;
     #endregion
 
     readonly Maid maid = new();
@@ -232,6 +230,8 @@ public class CharacterMovement : MonoBehaviour
 
         // instantly kills momentum when you touch the ground, using smoothdamp in Update() instead
         maid.GiveEvent(this, "Landed", () => StartingAdditionalImpulse.y = 0);
+
+        PlatformTrackingGhost = maid.GiveTask(new GameObject("TrackingGhost")).transform;
     }
 
     void OnDisable()
@@ -342,7 +342,7 @@ public class CharacterMovement : MonoBehaviour
             return Vector3.zero;
         }
 
-        return MovementDirection * WalkSpeed;
+        return MovementDirection * WalkspeedMiddleware(WalkSpeed, Time.deltaTime);
     }
 
     (bool didHit, RaycastHit hit) GroundInfo(float checkDistance)
@@ -440,7 +440,7 @@ public class CharacterMovement : MonoBehaviour
         AddToVerticalSpeed(-CharacterGravity * Time.deltaTime);
     }
 
-    void ApplyMovementVelocity(Vector3 additionalImpulse)
+    Vector3 ApplyMovementVelocity(Vector3 additionalImpulse)
     {
         Vector3 moveVelocity = MovementVelocity();
 
@@ -508,7 +508,7 @@ public class CharacterMovement : MonoBehaviour
         // bring it all together
         Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -dx, 0);
 
-        Controller.Move((combinedVelocity + additionalImpulse) * Time.deltaTime);
+        return (combinedVelocity + additionalImpulse) * Time.deltaTime;
     }
 
     void ApplyRotation()
@@ -647,9 +647,46 @@ public class CharacterMovement : MonoBehaviour
         RanIntoWall?.Invoke();
     }
 
+    public GameObject GetCurrentPlatform()
+    {
+        RaycastHit hit = GroundInfo(
+            Controller.height / 2 + Controller.skinWidth + dx + MaximumSnappingDistance
+        ).hit;
+
+        if (
+            hit.transform is null
+            || LayerUtil.IsEnabledInMask(PlatformTrackingIgnore, hit.transform.gameObject.layer)
+        )
+        {
+            return null;
+        }
+
+        return hit.transform.gameObject;
+    }
+
+    void UpdateTrackedPlatform()
+    {
+        GameObject currentPlatform = GetCurrentPlatform();
+        bool onPlatform = currentPlatform is not null;
+        PlatformTrackingGhost.SetParent(onPlatform ? currentPlatform.transform : transform);
+        PlatformTrackingGhost.SetPositionAndRotation(transform.position, transform.rotation);
+    }
+
+    Vector3 movementVel;
+
     void Update()
     {
-        if (Time.timeScale == 0)
+        if (!ShouldUpdate)
+        {
+            return;
+        }
+
+        UpdateTrackedPlatform();
+    }
+
+    private void LateUpdate()
+    {
+        if (!ShouldUpdate)
         {
             return;
         }
@@ -661,7 +698,11 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        ApplyMovementVelocity(CurrentAdditionalImpulse);
+        Controller.Move(
+            ApplyMovementVelocity(CurrentAdditionalImpulse)
+                + PlatformTrackingGhost.position
+                - transform.position
+        );
 
         if (RotationEnabled)
         {

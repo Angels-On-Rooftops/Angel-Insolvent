@@ -313,6 +313,9 @@ MonoBehaviour:
   DownwardTerminalVelocity: 64
   SnapToGround: 1
   MaximumSnappingDistance: 1
+  PlatformTrackingIgnore:
+    serializedVersion: 2
+    m_Bits: 76
   VerticalSpeed: 0
   ExtraJumpsRemaining: 0
   VerticalState: 0
@@ -2294,8 +2297,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2acf645e0763e984abb7d8fd24247207, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ToFollow: {fileID: 7746289060437220042}
-  PositionSmoothing: {x: 0.05, y: 0.2, z: 0.05}
+  ToFollow: {fileID: 869256489426343399}
+  PositionSmoothing: {x: 20, y: 50, z: 20}
 --- !u!1 &8070212094547036531
 GameObject:
   m_ObjectHideFlags: 0
@@ -2344,7 +2347,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ToFollow: {fileID: 7746289060437220042}
-  PositionSmoothing: {x: 0.01, y: 0.01, z: 0.01}
+  PositionSmoothing: {x: 0, y: 0, z: 0}
 --- !u!114 &5812772789258967524
 MonoBehaviour:
   m_ObjectHideFlags: 0
