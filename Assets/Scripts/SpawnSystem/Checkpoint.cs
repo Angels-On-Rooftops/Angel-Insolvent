@@ -5,11 +5,8 @@ using UnityEngine;
 public class Checkpoint : MonoBehaviour
 {
     [SerializeField]
-    Vector3 Offset;
+    public Transform RespawnAt;
 
     [SerializeField]
     public string id;
-
-    public bool Activated { get; set; }
-    public Vector3 RespawnPosition => Offset + transform.position;
 }

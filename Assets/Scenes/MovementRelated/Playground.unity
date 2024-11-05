@@ -395,17 +395,6 @@ Transform:
   - {fileID: 1904657421}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &84037393 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7846452743593530087, guid: bb8d0254337980b40a0fe14648c919cd, type: 3}
-  m_PrefabInstance: {fileID: 6309516209009541466}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 093225ac0c4adaa4b863132739d6805b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &112517765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10075,7 +10064,7 @@ PrefabInstance:
     - target: {fileID: 9100216943895621830, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: checkPoint
       value: 
-      objectReference: {fileID: 84037393}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -30500,6 +30489,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 964486991}
     m_Modifications:
+    - target: {fileID: 3651041486321906251, guid: bb8d0254337980b40a0fe14648c919cd, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 139e848bea30824458d7a5b922438712, type: 2}
     - target: {fileID: 3941602661438734719, guid: bb8d0254337980b40a0fe14648c919cd, type: 3}
       propertyPath: m_RootOrder
       value: -1

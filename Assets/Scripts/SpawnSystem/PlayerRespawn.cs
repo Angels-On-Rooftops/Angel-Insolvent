@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Inventory;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,14 +7,15 @@ using UnityEngine;
 [Serializable]
 public class PlayerRespawn : MonoBehaviour, IPersistableData
 {
-    public Vector3 respawnPoint;
+    [SerializeField]
+    Checkpoint CurrentSpawn;
 
     [SerializeField]
-    private Checkpoint checkPoint;
+    bool CanRevisitCheckpoints = true;
 
-    [SerializeField]
-    private bool CanRevisitCheckpoints = true;
+    CharacterMovement Movement => GetComponent<CharacterMovement>();
 
+    HashSet<string> VisitedCheckpointIds = new();
     readonly Maid maid = new();
 
     private void OnEnable()
@@ -24,7 +23,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
         maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", SaveData);
         maid.GiveEvent(DataPersistenceManager.Instance, "onLoadTriggered", LoadData);
 
-        respawnPlayer();
+        RespawnPlayer();
     }
 
     private void OnDisable()
@@ -32,30 +31,50 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
         maid.Cleanup();
     }
 
+    bool SeenBefore(Checkpoint c)
+    {
+        return VisitedCheckpointIds.Contains(c.id);
+    }
+
+    bool CanSetSpawn(Checkpoint c)
+    {
+        return !SeenBefore(c) || CanRevisitCheckpoints;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         //change respawn to current spawn
-        if (!other.gameObject.CompareTag("Respawn"))
+        if (!other.TryGetComponent(out Checkpoint newSpawn))
         {
             return;
         }
-        Checkpoint newSpawn = other.gameObject.GetComponent<Checkpoint>();
-        if (!newSpawn.Activated || CanRevisitCheckpoints)
+
+        if (!CanSetSpawn(newSpawn))
         {
-            checkPoint = newSpawn;
-            newSpawn.Activated = true;
+            return;
         }
+
+        CurrentSpawn = newSpawn;
+
+        if (SeenBefore(newSpawn))
+        {
+            return;
+        }
+
+        VisitedCheckpointIds.Add(CurrentSpawn.id);
     }
 
     //spawn character in
-    public void respawnPlayer()
+    public void RespawnPlayer()
     {
-        transform.position = checkPoint.RespawnPosition;
+        Movement.Warp(CurrentSpawn.RespawnAt.position, CurrentSpawn.RespawnAt.rotation);
     }
 
     public void SaveData()
     {
-        DataPersistenceManager.SaveData(new SerializablePlayerRespawn(checkPoint.id));
+        DataPersistenceManager.SaveData(
+            new SerializablePlayerRespawn(CurrentSpawn.id, VisitedCheckpointIds.ToListPooled())
+        );
     }
 
     public void LoadData()
@@ -64,8 +83,12 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
             DataPersistenceManager.LoadData("checkpointID", typeof(SerializablePlayerRespawn))
             as SerializablePlayerRespawn;
 
-        checkPoint = Array.Find(FindObjectsByType<Checkpoint>(FindObjectsSortMode.InstanceID), c => c.id == deserializedRespawn.checkpointID);
-        respawnPlayer();
+        CurrentSpawn = Array.Find(
+            FindObjectsByType<Checkpoint>(FindObjectsSortMode.InstanceID),
+            c => c.id == deserializedRespawn.checkpointID
+        );
+        VisitedCheckpointIds = deserializedRespawn.visitedCheckpointIds.ToHashSet();
+        RespawnPlayer();
     }
 }
 
@@ -73,9 +96,11 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
 public class SerializablePlayerRespawn
 {
     public string checkpointID;
+    public List<string> visitedCheckpointIds;
 
-    public SerializablePlayerRespawn(string checkpointID)
+    public SerializablePlayerRespawn(string checkpointID, List<string> visitedIds)
     {
         this.checkpointID = checkpointID;
+        this.visitedCheckpointIds = visitedIds;
     }
 }
