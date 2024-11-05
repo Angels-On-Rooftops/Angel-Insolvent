@@ -31,15 +31,15 @@ public class GameManager : MonoBehaviour
 
         gameCanvas = Instantiate(Resources.Load("Prefabs/UI/GameCanvas")) as GameObject;
         gameCanvas.gameObject.transform.SetParent(gameObject.transform);
-        gameCanvas.GetComponent<RectTransform>().offsetMax = Vector2.zero;
-        gameCanvas.GetComponent<RectTransform>().offsetMin = Vector2.zero;
+        // gameCanvas.GetComponent<RectTransform>().offsetMax = Vector2.zero;
+        // gameCanvas.GetComponent<RectTransform>().offsetMin = Vector2.zero;
         
         gameObject.AddComponent<GameProgressTracker>();
 
         escMenu = Instantiate(Resources.Load("Prefabs/UI/EscMenuPrefab")) as GameObject;
         escMenu.gameObject.transform.SetParent(gameCanvas.transform);
 
-        inventory = Instantiate(Resources.Load("Prefabs/UI/Inventory")) as GameObject;
+        inventory = Instantiate(Resources.Load("Prefabs/UI/NewInventory")) as GameObject;
         inventory.gameObject.transform.SetParent(gameCanvas.transform);
     }
 
