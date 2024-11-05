@@ -155,6 +155,7 @@ public class CharacterMovement : MonoBehaviour
     float TimeSinceGrounded => IsOnStableGround() ? 0 : Time.time - LastTimeGrounded;
     bool IsHittingHead =>
         Mathf.Abs(Vector3.Dot(Controller.velocity, GravityUpDirection)) < dx && IsRising;
+    bool ShouldUpdate => Time.timeScale != 0;
     #endregion
 
     #region Constants
@@ -173,6 +174,8 @@ public class CharacterMovement : MonoBehaviour
     public VerticalMovementState VerticalState = VerticalMovementState.Falling;
 
     float LastTimeGrounded = 0;
+
+    public Func<float, float, float> WalkspeedMiddleware = (v, dt) => v;
 
     #region Processed Vectors
     public Vector3 RawMovementDirection = new();
@@ -339,7 +342,7 @@ public class CharacterMovement : MonoBehaviour
             return Vector3.zero;
         }
 
-        return MovementDirection * WalkSpeed;
+        return MovementDirection * WalkspeedMiddleware(WalkSpeed, Time.deltaTime);
     }
 
     (bool didHit, RaycastHit hit) GroundInfo(float checkDistance)
@@ -664,26 +667,26 @@ public class CharacterMovement : MonoBehaviour
     void UpdateTrackedPlatform()
     {
         GameObject currentPlatform = GetCurrentPlatform();
-
-        if (currentPlatform is not null)
-        {
-            PlatformTrackingGhost.SetParent(currentPlatform.transform, true);
-        }
-        else
-        {
-            PlatformTrackingGhost.SetParent(transform, false);
-        }
+        bool onPlatform = currentPlatform is not null;
+        PlatformTrackingGhost.SetParent(onPlatform ? currentPlatform.transform : transform);
+        PlatformTrackingGhost.SetPositionAndRotation(transform.position, transform.rotation);
     }
 
     Vector3 movementVel;
 
     void Update()
     {
-        UpdateTrackedPlatform();
-        PlatformTrackingGhost.position = transform.position;
-        PlatformTrackingGhost.rotation = transform.rotation;
+        if (!ShouldUpdate)
+        {
+            return;
+        }
 
-        if (Time.timeScale == 0)
+        UpdateTrackedPlatform();
+    }
+
+    private void LateUpdate()
+    {
+        if (!ShouldUpdate)
         {
             return;
         }
@@ -695,14 +698,11 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        movementVel = ApplyMovementVelocity(CurrentAdditionalImpulse);
-    }
-
-    private void LateUpdate()
-    {
-        //Debug.Log($"{movementVel} {PlatformTrackingGhost.position - transform.position}");
-
-        Controller.Move(movementVel + PlatformTrackingGhost.position - transform.position);
+        Controller.Move(
+            ApplyMovementVelocity(CurrentAdditionalImpulse)
+                + PlatformTrackingGhost.position
+                - transform.position
+        );
 
         if (RotationEnabled)
         {

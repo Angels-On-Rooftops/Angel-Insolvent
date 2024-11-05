@@ -64,8 +64,7 @@ namespace Assets.Scripts.DialogueSystem
                 camera.enabled = false;
                 dialogueMaid.GiveTask(() => camera.enabled = true);
 
-                camera.transform.position = file.CameraPosition.position;
-                camera.transform.rotation = file.CameraPosition.rotation;
+                camera.transform.SetPositionAndRotation(file.CameraPosition.position, file.CameraPosition.rotation);
             }
 
             IDialogueLayout layout = file.LayoutType switch
