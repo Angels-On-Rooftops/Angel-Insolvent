@@ -31,6 +31,7 @@ public class DeluxeTimerPlatform : MonoBehaviour
 
     int countdown;
     private int transformIndex = 0;
+    Rigidbody body;
 
     void Start()
     {
@@ -39,6 +40,7 @@ public class DeluxeTimerPlatform : MonoBehaviour
             t.Initialize(Debounces);
         }
         SetAllCountdowns(Debounces[0].numTicks);
+        this.body = GetComponent<Rigidbody>();
     }
 
     private void OnEnable()
@@ -70,7 +72,7 @@ public class DeluxeTimerPlatform : MonoBehaviour
 
     public void SetAllActiveRing(int ringIndex)
     {
-        SetAllCountdowns(Debounces[ringIndex].numTicks-1);
+        SetAllCountdowns(Debounces[ringIndex].numTicks - 1);
         foreach (TimerTriangles t in Timers)
         {
             t.SetActiveRing(ringIndex);
@@ -108,27 +110,15 @@ public class DeluxeTimerPlatform : MonoBehaviour
         while (timer <= moveDuration)
         {
             float t = Mathf.SmoothStep(0, 1, timer / moveDuration);
-            this.transform.position = Vector3.Lerp(
-                startPos,
-                target.position,
-                t
-            );
-            this.transform.rotation = Quaternion.Lerp(
-                startRot,
-                target.rotation,
-                t
-            );
-            this.transform.localScale = Vector3.Lerp(
-                startScale,
-                target.localScale,
-                t
-            );
+            //this.transform.position = Vector3.Lerp(startPos, target.position, t);
+            body.MovePosition(Vector3.Lerp(startPos, target.position, t));
+            //this.transform.rotation = Quaternion.Lerp(startRot, target.rotation, t);
+            body.MoveRotation(Quaternion.Lerp(startRot, target.rotation, t));
+            this.transform.localScale = Vector3.Lerp(startScale, target.localScale, t);
             timer += Time.deltaTime;
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         this.transform.position = target.position;
     }
-
-    
 }
