@@ -12,6 +12,7 @@ namespace Assets.Scripts.DialogueSystem
     public abstract class DialogueFile : MonoBehaviour
     {
         public abstract DialogueTree Dialogue { get; }
+        public Transform CameraPosition = null;
         public abstract DialogueLayoutType LayoutType { get; }
     }
 

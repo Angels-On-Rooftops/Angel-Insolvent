@@ -52,7 +52,9 @@ public class AnimateAdvancedMovementStates : MonoBehaviour
 
         Animator.SetBool("IsMoving", BasicMovementController.MovementDirection.magnitude != 0);
 
-        float moveSpeed = (BasicMovementController.WalkSpeed * BasicMovementController.MovementDirection).magnitude;
+        float moveSpeed = (
+            BasicMovementController.WalkSpeed * BasicMovementController.MovementDirection
+        ).magnitude;
         float moveSpeedToAnimationScale = 1 / 16f;
 
         if (moveSpeed != 0)
