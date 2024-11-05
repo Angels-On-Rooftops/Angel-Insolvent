@@ -1,11 +1,6 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using MIDI2EventSystem;
 using UnityEngine;
-using Utility;
 
 public class DeluxeTimerPlatform : MonoBehaviour
 {
@@ -110,13 +105,15 @@ public class DeluxeTimerPlatform : MonoBehaviour
         while (timer <= moveDuration)
         {
             float t = Mathf.SmoothStep(0, 1, timer / moveDuration);
-            //this.transform.position = Vector3.Lerp(startPos, target.position, t);
-            body.MovePosition(Vector3.Lerp(startPos, target.position, t));
-            //this.transform.rotation = Quaternion.Lerp(startRot, target.rotation, t);
-            body.MoveRotation(Quaternion.Lerp(startRot, target.rotation, t));
+
+            this.transform.position = Vector3.Lerp(startPos, target.position, t);
+            //body.MovePosition(Vector3.Lerp(startPos, target.position, t));
+            this.transform.rotation = Quaternion.Lerp(startRot, target.rotation, t);
+            //body.MoveRotation(Quaternion.Lerp(startRot, target.rotation, t));
             this.transform.localScale = Vector3.Lerp(startScale, target.localScale, t);
+
             timer += Time.deltaTime;
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
 
         this.transform.position = target.position;
