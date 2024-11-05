@@ -18,6 +18,8 @@ namespace Utility
                 new Vector2(vertex3.x, vertex3.z)
             };
             result.triangles = new int[] { 0, 1, 2 };
+            Vector3 normal = Vector3.Cross(vertex1-vertex2, vertex2-vertex3);
+            result.normals = new Vector3[] { normal, normal, normal };
             return result;
         }
 

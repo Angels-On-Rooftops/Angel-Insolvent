@@ -58,7 +58,7 @@ public class AudioSystem : MonoBehaviour
 
     IEnumerator FadeToNext(MIDI2EventUnity previous, MIDI2EventUnity next)
     {
-        Debug.Log(previous.VolumeSliderName);
+        //Debug.Log(previous.VolumeSliderName);
         if (previous == null)
         {
             StartNextIfRelevant(next);
