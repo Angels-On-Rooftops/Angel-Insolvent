@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerRespawn : MonoBehaviour, IPersistableData
 {
     [SerializeField]
-    Checkpoint CurrentSpawn;
+    CheckpointTrigger CurrentSpawn;
 
     [SerializeField]
     bool CanRevisitCheckpoints = true;
@@ -31,12 +31,12 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
         maid.Cleanup();
     }
 
-    bool SeenBefore(Checkpoint c)
+    bool SeenBefore(CheckpointTrigger c)
     {
         return VisitedCheckpointIds.Contains(c.id);
     }
 
-    bool CanSetSpawn(Checkpoint c)
+    bool CanSetSpawn(CheckpointTrigger c)
     {
         return !SeenBefore(c) || CanRevisitCheckpoints;
     }
@@ -44,7 +44,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     private void OnTriggerEnter(Collider other)
     {
         //change respawn to current spawn
-        if (!other.TryGetComponent(out Checkpoint newSpawn))
+        if (!other.TryGetComponent(out CheckpointTrigger newSpawn))
         {
             return;
         }
@@ -84,7 +84,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
             as SerializablePlayerRespawn;
 
         CurrentSpawn = Array.Find(
-            FindObjectsByType<Checkpoint>(FindObjectsSortMode.InstanceID),
+            FindObjectsByType<CheckpointTrigger>(FindObjectsSortMode.InstanceID),
             c => c.id == deserializedRespawn.checkpointID
         );
         VisitedCheckpointIds = deserializedRespawn.visitedCheckpointIds.ToHashSet();
