@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7787780205096977455}
   - component: {fileID: 5401236818682560201}
   - component: {fileID: 8625171597843226555}
+  - component: {fileID: 895019045594694646}
   m_Layer: 0
   m_Name: Electric Ball
   m_TagString: Untagged
@@ -118,8 +119,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01dbad50fea6a2c4a90954bee89a0525, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: {fileID: 0}
+  path: {fileID: 895019045594694646}
   map: {fileID: 0}
   speed: 0
   handler: {fileID: 0}
   BeatPeriod: 0
+--- !u!114 &895019045594694646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6043679906312434051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aee877404e333fc4ba83f8b485aef739, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: []
