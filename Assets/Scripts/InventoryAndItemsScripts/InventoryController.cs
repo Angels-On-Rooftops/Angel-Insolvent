@@ -210,8 +210,9 @@ public class InventoryController : MonoBehaviour
         {
             if (item.Key.itemName.Contains("Coin"))
             {
-                int coinCount = int.Parse(coins.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text);
-                coins.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = (coinCount + 1).ToString();
+                int coinCount = pInv.GetCoins(); // int.Parse(coins.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text);
+                // coins.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = (coinCount + 1).ToString();
+                pInv.AddCoins(1);
                 keysToRemove.Add(item.Key);
             } else if (!itemsInInventory.Contains(item.Key))
             {
@@ -238,5 +239,6 @@ public class InventoryController : MonoBehaviour
         {
             itemInfo.SetActive(false);
         }
+        coins.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().text = pInv.GetCoins().ToString();
     }
 }

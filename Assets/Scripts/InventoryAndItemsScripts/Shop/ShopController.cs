@@ -52,7 +52,7 @@ public class ShopController : MonoBehaviour
 
     // Canvas children
     private GameObject invPanel; // main inventory panel within canvas
-    private GameObject playerCoins; // Player coins
+    private int playerCoins; // Player coins
     private GameObject coins; // coin UI object in shop
     private GameObject itemInfo; // item name & description parent (holds the two fields below)
     private GameObject itemName;
@@ -74,15 +74,17 @@ public class ShopController : MonoBehaviour
     {
         pInv = PlayerInventory.Instance;
         shopInv = ShopInventory.Instance;
+
         invPanel = invObj.transform.GetChild(0).gameObject;
 
-        playerInvObj.SetActive(true);
-        playerCoins = GameObject.FindWithTag("Coins"); // get coins from player
-        playerInvObj.SetActive(false);
+        playerCoins = pInv.GetCoins();
+        //playerInvObj.SetActive(true);
+        //playerCoins = GameObject.FindWithTag("Coins"); // get coins from player
+        //playerInvObj.SetActive(false);
 
         coins = invObj.transform.GetChild(1).gameObject.transform.GetChild(1).gameObject;
         itemInfo = invObj.transform.GetChild(2).gameObject;
-
+        
         invObj.SetActive(true);
         itemName = itemInfo.transform.GetChild(0).gameObject;
         itemPrice = itemInfo.transform.GetChild(1).gameObject;
@@ -97,6 +99,7 @@ public class ShopController : MonoBehaviour
         }
 
         LoadShopItems();
+        coins.GetComponent<TextMeshProUGUI>().text = pInv.GetCoins().ToString();
         itemsInInventory = shopItems;
 
         inventoryRowSize = invPanel.GetComponent<GridLayoutGroup>().constraintCount;
@@ -227,7 +230,7 @@ public class ShopController : MonoBehaviour
         // subtract amt. of coins from player's coins.
         // maybe add a confirmation box before purchasing
 
-        int playerCoinAmt = int.Parse(playerCoins.GetComponent<TextMeshProUGUI>().text);
+        int playerCoinAmt = pInv.GetCoins();
         if (invObj.activeSelf && itemsInInventory[inventoryIndex] != null)
         {
             int currentItemPrice = itemsInInventory[inventoryIndex].price;
@@ -237,9 +240,10 @@ public class ShopController : MonoBehaviour
             }
             else
             {
-                playerCoinAmt -= currentItemPrice;
-                playerCoins.GetComponent<TextMeshProUGUI>().text = playerCoinAmt.ToString();
-                coins.GetComponent<TextMeshProUGUI>().text = playerCoinAmt.ToString();
+                pInv.RemoveCoins(currentItemPrice);
+                // playerCoins.GetComponent<TextMeshProUGUI>().text = playerCoinAmt.ToString();
+                // playerCoins = playerCoinAmt;
+                coins.GetComponent<TextMeshProUGUI>().text = pInv.GetCoins().ToString();
 
                 pInv.Add(itemsInInventory[inventoryIndex]);
                 // shopInv.PurchaseItem(itemsInInventory[inventoryIndex]); // Remove item from shop
@@ -261,6 +265,6 @@ public class ShopController : MonoBehaviour
         {
             itemInfo.SetActive(false);
         }
-        coins.GetComponent<TextMeshProUGUI>().text = playerCoins.GetComponent<TextMeshProUGUI>().text;
+        coins.GetComponent<TextMeshProUGUI>().text = pInv.GetCoins().ToString();
     }
 }

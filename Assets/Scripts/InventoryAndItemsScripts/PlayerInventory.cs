@@ -13,6 +13,7 @@ namespace Inventory
     {
         private static PlayerInventory instance = null;
         private static readonly object instanceLock = new object(); //thread-safe for co-routines
+        private int playerCoins = 0;
 
         PlayerInventory() : base() { }
 
@@ -33,6 +34,18 @@ namespace Inventory
 
         public event Action OnInventoryUpdate;
         public event Action OnEquippedChange;
+
+        public void AddCoins(int amount)
+        {
+            playerCoins += amount;
+        }
+
+        public void RemoveCoins(int amount)
+        {
+            playerCoins -= amount;
+        }
+
+        public int GetCoins() { return playerCoins; }
 
         public override void Add(ItemData itemData, int amount = 1)
         {

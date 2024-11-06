@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     private static GameObject inventory;
 
+    private static GameObject shop;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnBeforeSceneLoad()
     {
@@ -39,8 +41,11 @@ public class GameManager : MonoBehaviour
         escMenu = Instantiate(Resources.Load("Prefabs/UI/EscMenuPrefab")) as GameObject;
         escMenu.gameObject.transform.SetParent(gameCanvas.transform);
 
-        inventory = Instantiate(Resources.Load("Prefabs/UI/NewInventory")) as GameObject;
+        inventory = Instantiate(Resources.Load("Prefabs/UI/Inventory")) as GameObject;
         inventory.gameObject.transform.SetParent(gameCanvas.transform);
+
+        shop = Instantiate(Resources.Load("Prefabs/UI/Shop")) as GameObject;
+        shop.gameObject.transform.SetParent(gameCanvas.transform);
     }
 
     //TODO - Test this with multiple scenes when that is readily available
