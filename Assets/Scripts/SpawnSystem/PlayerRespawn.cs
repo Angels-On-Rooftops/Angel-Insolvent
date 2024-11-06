@@ -22,8 +22,6 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     {
         maid.GiveEvent(DataPersistenceManager.Instance, "onSaveTriggered", SaveData);
         maid.GiveEvent(DataPersistenceManager.Instance, "onLoadTriggered", LoadData);
-
-        RespawnPlayer();
     }
 
     private void OnDisable()
@@ -95,7 +93,10 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
 [Serializable]
 public class SerializablePlayerRespawn
 {
+    [SerializeField]
     public string checkpointID;
+
+    [SerializeField]
     public List<string> visitedCheckpointIds;
 
     public SerializablePlayerRespawn(string checkpointID, List<string> visitedIds)
