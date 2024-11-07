@@ -617,8 +617,13 @@ public class CharacterMovement : MonoBehaviour
 
     public void Warp(Vector3 position)
     {
+        Warp(position, transform.rotation);
+    }
+
+    public void Warp(Vector3 position, Quaternion rotation)
+    {
         Controller.enabled = false;
-        transform.position = position;
+        transform.SetPositionAndRotation(position, rotation);
         Controller.enabled = true;
     }
 
