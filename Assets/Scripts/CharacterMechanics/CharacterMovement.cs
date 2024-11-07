@@ -100,6 +100,10 @@ public class CharacterMovement : MonoBehaviour
             + "for ground below the character before snapping it downward if SnapToGround is enabled."
     )]
     public float MaximumSnappingDistance = 0.2f;
+
+    [SerializeField]
+    [Tooltip("Moving with a platform will be ignored if the platform is on one of these layers")]
+    public LayerMask PlatformTrackingIgnore = ~ControlConstants.RAYCAST_MASK;
     #endregion
 
     #region Events
@@ -112,13 +116,13 @@ public class CharacterMovement : MonoBehaviour
     public event Action Landed;
     public event Action Falling;
 
+    public event Action<Vector3> ImpulseApplied;
+    public event Action JumpedFromImpulse;
+
     public event Action RanIntoWall; // TODO
     #endregion
 
     #region Public Properties
-    CharacterController Controller => GetComponent<CharacterController>();
-    Vector3 ControllerWorldPosition => transform.position + Controller.center;
-
     public Vector3 TopSphereCenter =>
         ControllerWorldPosition + GravityUpDirection * (Controller.height / 2 - Controller.radius);
     public Vector3 BottomSphereCenter =>
@@ -145,10 +149,13 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Private Properties
+    CharacterController Controller => GetComponent<CharacterController>();
+    Vector3 ControllerWorldPosition => transform.position + Controller.center;
     float CharacterGravity => Physics.gravity.magnitude * GravityMultiplier;
     float TimeSinceGrounded => IsOnStableGround() ? 0 : Time.time - LastTimeGrounded;
     bool IsHittingHead =>
         Mathf.Abs(Vector3.Dot(Controller.velocity, GravityUpDirection)) < dx && IsRising;
+    bool ShouldUpdate => Time.timeScale != 0;
     #endregion
 
     #region Constants
@@ -161,34 +168,41 @@ public class CharacterMovement : MonoBehaviour
     //[NonSerialized]
     public float VerticalSpeed = 0;
 
+    //[NonSerialized]
+    public int ExtraJumpsRemaining = 0;
+
+    public VerticalMovementState VerticalState = VerticalMovementState.Falling;
+
+    float LastTimeGrounded = 0;
+
+    public Func<float, float, float> WalkspeedMiddleware = (v, dt) => v;
+
+    #region Processed Vectors
     public Vector3 RawMovementDirection = new();
     public Vector3 RawFacingDirection = new();
     public Func<Vector3, float, Vector3> MovementDirectionMiddleware = (v, dt) => v;
     public Func<Vector3, float, Vector3> FacingDirectionMiddleware = (v, dt) => v;
     public Vector3 FacingDirection = new();
     public Vector3 MovementDirection = new();
+    #endregion
 
-    [NonSerialized]
-    public int ExtraJumpsRemaining = 0;
+    #region AdditionalImpulse
+    [SerializeField]
+    Vector3 StartingAdditionalImpulse = Vector3.zero;
+    Vector3 CurrentAdditionalImpulse =>
+        Vector3.Lerp(StartingAdditionalImpulse, Vector3.zero, Math.Min(1, PercentImpulseTimeLeft));
 
-    [NonSerialized]
-    public Vector3 AdditionalImpulse = Vector3.zero;
+    [SerializeField]
+    AnimationCurve ImpulseDecay;
 
-    //[NonSerialized]
-    public VerticalMovementState VerticalState = VerticalMovementState.Falling;
-
-    float LastTimeGrounded = 0;
+    float ImpulseTime = 0;
+    float TimeImpulseApplied = 0;
+    float PercentImpulseTimeLeft =>
+        ImpulseTime != 0 ? Mathf.Max((Time.time - TimeImpulseApplied) / ImpulseTime, 0) : 0;
+    #endregion
 
     #region Platform Tracking
-    // the last platform the character landed on
-    GameObject LastPlatform;
-
-    // the position of the last platform on the previous frame
-    Vector3 LastPlatformLastPosition;
-
-    // the velocity of the last platform on the previous frame
-    Vector3 LastPlatformLastVelocity;
-    float LastPlatformLastTime;
+    Transform PlatformTrackingGhost;
     #endregion
 
     readonly Maid maid = new();
@@ -213,6 +227,11 @@ public class CharacterMovement : MonoBehaviour
             maid.GiveEvent(Jump, "performed", (CallbackContext c) => DoJumpInput(c));
             Jump.Enable();
         }
+
+        // instantly kills momentum when you touch the ground, using smoothdamp in Update() instead
+        maid.GiveEvent(this, "Landed", () => StartingAdditionalImpulse.y = 0);
+
+        PlatformTrackingGhost = maid.GiveTask(new GameObject("TrackingGhost")).transform;
     }
 
     void OnDisable()
@@ -256,9 +275,10 @@ public class CharacterMovement : MonoBehaviour
     void DoJump(float jumpBufferLeft, float scheduledJumpHeight)
     {
         bool FromGround = VerticalState == VerticalMovementState.Grounded;
-        bool WithinCoyoteTime =
-            TimeSinceGrounded <= CoyoteTime && VerticalState != VerticalMovementState.Jumping;
-        bool NeedsExtraJump = !(FromGround || WithinCoyoteTime);
+        bool WithinCoyoteTime = TimeSinceGrounded <= CoyoteTime;
+        bool NeedsExtraJump = !(
+            (FromGround || WithinCoyoteTime) && VerticalState != VerticalMovementState.Jumping
+        );
 
         // Reset extra jumps when grounded
         if (!NeedsExtraJump)
@@ -322,7 +342,7 @@ public class CharacterMovement : MonoBehaviour
             return Vector3.zero;
         }
 
-        return MovementDirection * WalkSpeed;
+        return MovementDirection * WalkspeedMiddleware(WalkSpeed, Time.deltaTime);
     }
 
     (bool didHit, RaycastHit hit) GroundInfo(float checkDistance)
@@ -401,25 +421,30 @@ public class CharacterMovement : MonoBehaviour
         return !IsOnStableGround() && IsOnGround();
     }
 
+    void AddToVerticalSpeed(float toAdd)
+    {
+        VerticalSpeed = Math.Max(VerticalSpeed + toAdd, -DownwardTerminalVelocity);
+    }
+
     void ApplyGravity()
     {
-        if (VerticalState == VerticalMovementState.Grounded && VerticalSpeed < dx)
+        if (
+            (VerticalState == VerticalMovementState.Grounded && VerticalSpeed < dx)
+            || Mathf.Abs(CurrentAdditionalImpulse.y) > dx
+        )
         {
             VerticalSpeed = 0;
             return;
         }
 
-        VerticalSpeed = Math.Max(
-            VerticalSpeed - CharacterGravity * Time.deltaTime,
-            -DownwardTerminalVelocity
-        );
+        AddToVerticalSpeed(-CharacterGravity * Time.deltaTime);
     }
 
-    void ApplyMovementVelocity(Vector3 additionalImpulse)
+    Vector3 ApplyMovementVelocity(Vector3 additionalImpulse)
     {
         Vector3 moveVelocity = MovementVelocity();
 
-        bool didHit = Physics.CapsuleCast(
+        Physics.CapsuleCast(
             BottomSphereCenter,
             TopSphereCenter,
             Controller.radius,
@@ -467,6 +492,14 @@ public class CharacterMovement : MonoBehaviour
         //    moveVelocity += FacingDirection;
         //}
 
+        if (!IsOnGround() && additionalImpulse.magnitude != 0)
+        {
+            moveVelocity -=
+                ImpulseDecay.Evaluate(1 - PercentImpulseTimeLeft)
+                * Vector3.Dot(additionalImpulse.normalized, moveVelocity)
+                * additionalImpulse.normalized;
+        }
+
         // redirect vertical speed down the slope if moving downwards
         Vector3 verticalDirection =
             (IsOnSteepSlope() && VerticalSpeed < 0) ? DownSlopeDirection : GravityUpDirection;
@@ -474,7 +507,8 @@ public class CharacterMovement : MonoBehaviour
 
         // bring it all together
         Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -dx, 0);
-        Controller.Move(combinedVelocity * Time.deltaTime + additionalImpulse);
+
+        return (combinedVelocity + additionalImpulse) * Time.deltaTime;
     }
 
     void ApplyRotation()
@@ -583,14 +617,81 @@ public class CharacterMovement : MonoBehaviour
 
     public void Warp(Vector3 position)
     {
+        Warp(position, transform.rotation);
+    }
+
+    public void Warp(Vector3 position, Quaternion rotation)
+    {
         Controller.enabled = false;
-        transform.position = position;
+        transform.SetPositionAndRotation(position, rotation);
         Controller.enabled = true;
     }
 
+    public void GiveImpulse(
+        Vector3 newImpulse,
+        float impulseTime,
+        VerticalMovementState putIntoState = VerticalMovementState.Falling
+    )
+    {
+        StartingAdditionalImpulse = newImpulse;
+        TimeImpulseApplied = Time.time;
+        ImpulseTime = impulseTime;
+
+        if (newImpulse.y > dx)
+        {
+            VerticalState = putIntoState;
+            Debug.Log($"put into state {VerticalState}");
+            JumpedFromImpulse?.Invoke();
+        }
+
+        ImpulseApplied?.Invoke(newImpulse);
+    }
+
+    public void ForceHitWall()
+    {
+        RanIntoWall?.Invoke();
+    }
+
+    public GameObject GetCurrentPlatform()
+    {
+        RaycastHit hit = GroundInfo(
+            Controller.height / 2 + Controller.skinWidth + dx + MaximumSnappingDistance
+        ).hit;
+
+        if (
+            hit.transform is null
+            || LayerUtil.IsEnabledInMask(PlatformTrackingIgnore, hit.transform.gameObject.layer)
+        )
+        {
+            return null;
+        }
+
+        return hit.transform.gameObject;
+    }
+
+    void UpdateTrackedPlatform()
+    {
+        GameObject currentPlatform = GetCurrentPlatform();
+        bool onPlatform = currentPlatform is not null;
+        PlatformTrackingGhost.SetParent(onPlatform ? currentPlatform.transform : transform);
+        PlatformTrackingGhost.SetPositionAndRotation(transform.position, transform.rotation);
+    }
+
+    Vector3 movementVel;
+
     void Update()
     {
-        if (Time.timeScale == 0)
+        if (!ShouldUpdate)
+        {
+            return;
+        }
+
+        UpdateTrackedPlatform();
+    }
+
+    private void LateUpdate()
+    {
+        if (!ShouldUpdate)
         {
             return;
         }
@@ -602,7 +703,11 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        ApplyMovementVelocity(AdditionalImpulse);
+        Controller.Move(
+            ApplyMovementVelocity(CurrentAdditionalImpulse)
+                + PlatformTrackingGhost.position
+                - transform.position
+        );
 
         if (RotationEnabled)
         {

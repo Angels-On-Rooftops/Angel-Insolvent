@@ -30,6 +30,8 @@ namespace Assets.Scripts.DialogueSystem
         AudioSource DialogueAudio => GetComponent<AudioSource>();
         private static readonly string audioFolderName = "Audio/DialogueAudio"; //Must be in Assets/Resources
 
+        static Maid dialogueMaid = new Maid();
+
         private void Awake()
         {
             InteractAction.Enable();
@@ -55,6 +57,16 @@ namespace Assets.Scripts.DialogueSystem
 
         public static IEnumerator PlayDialogue(DialogueFile file)
         {
+            CharacterCamera camera = Camera.main.GetComponent<CharacterCamera>();
+
+            if (file.CameraPosition != null)
+            {
+                camera.enabled = false;
+                dialogueMaid.GiveTask(() => camera.enabled = true);
+
+                camera.transform.SetPositionAndRotation(file.CameraPosition.position, file.CameraPosition.rotation);
+            }
+
             IDialogueLayout layout = file.LayoutType switch
             {
                 DialogueLayoutType.Talk => Instance.GetComponent<TalkLayout>(),
@@ -63,9 +75,12 @@ namespace Assets.Scripts.DialogueSystem
             };
 
             layout.Enable();
+            dialogueMaid.GiveTask(() => layout.Disable());
+
             yield return Instance.StartCoroutine(PlayDialogueTree(file.Dialogue, layout));
+
             EndOfDialogueReached?.Invoke();
-            layout.Disable();
+            dialogueMaid.Cleanup();
         }
 
         public static IEnumerator PlayDialogueTree(DialogueTree tree, IDialogueLayout layout)

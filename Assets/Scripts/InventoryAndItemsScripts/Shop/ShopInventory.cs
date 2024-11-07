@@ -1,7 +1,7 @@
-using Items;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Items;
 using UnityEngine;
 
 namespace Inventory
@@ -11,14 +11,17 @@ namespace Inventory
         private static ShopInventory instance = null;
         private static readonly object instanceLock = new object();
 
-        ShopInventory() : base() { }
+        ShopInventory()
+            : base() { }
 
         public static ShopInventory Instance
         {
             get
             {
-                lock(instanceLock) {
-                    if (instance == null) {
+                lock (instanceLock)
+                {
+                    if (instance == null)
+                    {
                         instance = new ShopInventory();
                     }
                     return instance;
@@ -26,7 +29,7 @@ namespace Inventory
             }
         }
 
-        public event Action OnPurchase;
+        public event Action<ItemData, float> OnPurchase;
 
         public override void Add(ItemData itemData, int amount = 1)
         {
@@ -51,6 +54,7 @@ namespace Inventory
         public void PurchaseItem(ItemData item, int amount = 1)
         {
             this.Remove(item, amount);
+            OnPurchase?.Invoke(item, amount);
         }
     }
 }

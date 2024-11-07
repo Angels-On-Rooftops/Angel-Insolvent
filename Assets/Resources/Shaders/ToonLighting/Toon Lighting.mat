@@ -14,11 +14,12 @@ Material:
   m_ValidKeywords:
   - SHADOWS_SHADOWMASK
   - _ADDITIONAL_LIGHTS
+  - _ADDITIONAL_LIGHT_SHADOWS
+  - _FORWARD_PLUS
   - _LIGHTMAP_SHADOW_MIXING
   - _MAIN_LIGHT_SHADOWS_CASCADE
   m_InvalidKeywords:
   - LIGHTMAP_SHADOW_MIXING
-  - _ADDITIONAL_LIGHT_SHADOWS
   - _SHADOWSSHADOWMASK
   - _SHADOWS_SHADOWMASK
   - _SHADOWS_SOFT
@@ -117,6 +118,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _FORWARD_PLUS: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0

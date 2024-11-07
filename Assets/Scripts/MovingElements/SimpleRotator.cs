@@ -11,6 +11,9 @@ public class SimpleRotator : MonoBehaviour
     Vector3 RotationAxis = Vector3.right;
 
     [SerializeField]
+    Space AxisSpace = Space.Self;
+
+    [SerializeField]
     float BeatPeriod;
 
     [SerializeField]
@@ -48,11 +51,11 @@ public class SimpleRotator : MonoBehaviour
             return;
         }
 
-        Quaternion rotation = Quaternion.AngleAxis(
+        this.transform.Rotate(
+            RotationAxis,
             360 * TrackInfo.BeatPerSec * 1 / BeatPeriod * Time.deltaTime,
-            RotationAxis
+            AxisSpace
         );
-        this.transform.rotation *= rotation;
     }
 
     void ResetRotation()
