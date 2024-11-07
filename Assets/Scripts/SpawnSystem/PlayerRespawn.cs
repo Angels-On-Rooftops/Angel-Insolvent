@@ -65,13 +65,17 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     //spawn character in
     public void RespawnPlayer()
     {
-        Movement.Warp(CurrentSpawn.RespawnAt.position, CurrentSpawn.RespawnAt.rotation);
+        if(CurrentSpawn != null)
+        {
+            Movement.Warp(CurrentSpawn.RespawnAt.position, CurrentSpawn.RespawnAt.rotation);
+        }
     }
 
     public void SaveData()
     {
+        var id = CurrentSpawn?.id ?? "";
         DataPersistenceManager.SaveData(
-            new SerializablePlayerRespawn(CurrentSpawn.id, VisitedCheckpointIds.ToListPooled())
+            new SerializablePlayerRespawn(id, VisitedCheckpointIds.ToListPooled())
         );
     }
 
