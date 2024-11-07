@@ -2,29 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class CarLine
-{
-    public Transform lineParent; 
-    [HideInInspector]
-    public Transform[] cars; 
-    public void InitializeCars()
-    {
-        if (lineParent != null)
-        {
-            cars = new Transform[lineParent.childCount];
-            for (int i = 0; i < lineParent.childCount; i++)
-            {
-                cars[i] = lineParent.GetChild(i);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Line parent is not assigned!");
-        }
-    }
-}
-
 public class TrafficJam : MonoBehaviour
 {
     public CarLine leftCarLine;
@@ -56,17 +33,35 @@ public class TrafficJam : MonoBehaviour
 
     private void Update()
     {
-        ApplySineWaveMovement();
-    }
-
-    private void ApplySineWaveMovement()
-    {
         for (int i = 0; i < leftCarLine.cars.Length; i++)
         {
             float xOffset = Mathf.Sin((Time.time * waveSpeed) + (i * waveFrequency)) * waveAmplitude;
 
-            leftCarLine.cars[i].position = new Vector3(initialLeftPositions[i].x + xOffset, initialLeftPositions[i].y, initialLeftPositions[i].z);
-            rightCarLine.cars[i].position = new Vector3(initialRightPositions[i].x - xOffset, initialRightPositions[i].y, initialRightPositions[i].z);
+            leftCarLine.cars[i].position = initialLeftPositions[i] + leftCarLine.cars[i].right * xOffset;
+            rightCarLine.cars[i].position = initialRightPositions[i] - rightCarLine.cars[i].right * xOffset;
+        }
+    }
+}
+
+[System.Serializable]
+public class CarLine
+{
+    public Transform lineParent;
+    [HideInInspector]
+    public Transform[] cars;
+    public void InitializeCars()
+    {
+        if (lineParent != null)
+        {
+            cars = new Transform[lineParent.childCount];
+            for (int i = 0; i < lineParent.childCount; i++)
+            {
+                cars[i] = lineParent.GetChild(i);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Missing traffic car line");
         }
     }
 }
