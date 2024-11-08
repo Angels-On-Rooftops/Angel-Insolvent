@@ -38,6 +38,12 @@ public class TrafficJam : MonoBehaviour
             float xOffset = Mathf.Sin((Time.time * waveSpeed) + (i * waveFrequency)) * waveAmplitude;
 
             leftCarLine.cars[i].position = initialLeftPositions[i] + leftCarLine.cars[i].right * xOffset;
+        }
+
+        for (int i = 0; i < rightCarLine.cars.Length; i++)
+        {
+            float xOffset = Mathf.Sin((Time.time * waveSpeed) + (i * waveFrequency)) * waveAmplitude;
+
             rightCarLine.cars[i].position = initialRightPositions[i] - rightCarLine.cars[i].right * xOffset;
         }
     }
