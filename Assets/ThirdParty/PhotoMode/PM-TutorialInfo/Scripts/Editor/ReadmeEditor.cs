@@ -16,7 +16,7 @@ public class ReadmeEditor : Editor {
 	
 	static ReadmeEditor()
 	{
-		EditorApplication.delayCall += SelectReadmeAutomatically;
+		//EditorApplication.delayCall += SelectReadmeAutomatically;
 	}
 	
 	static void SelectReadmeAutomatically()
