@@ -10,6 +10,9 @@ public class CarCollision : MonoBehaviour {
     private void Start() {
         carSpeed = car.Speed;
         }
+    private void Update() {
+        carSpeed = car.Speed;
+        }
     private void OnTriggerEnter(Collider other) {
         if(other.gameObject.CompareTag("Person") || other.gameObject.CompareTag("Car")) {
             car.Speed = 0;

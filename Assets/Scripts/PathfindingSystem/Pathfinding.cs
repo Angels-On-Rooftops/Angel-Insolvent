@@ -33,7 +33,16 @@ public class Pathfinding : MonoBehaviour {
 
         return path;
         }
+    /*set order
+     * each node has one option
+     * 
+     */
+    public List<NodeMarker> travelPath(NodeMarker currentNode, NodeMarker lastNode) {
 
+
+
+        return path;
+        }
 
 
 

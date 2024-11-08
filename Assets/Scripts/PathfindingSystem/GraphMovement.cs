@@ -38,7 +38,7 @@ public class GraphMovement : MonoBehaviour {
         if (!handler.IsPlaying) {
             return;
             }
-        speed = Vector3.Distance(node1.transform.position, node2.transform.position) * handler.BeatPerSec * 1 / BeatPeriod * Time.deltaTime;
+        speed = handler.BeatPerSec * 1 / BeatPeriod * Time.deltaTime;
         moveCar();
         }
 
