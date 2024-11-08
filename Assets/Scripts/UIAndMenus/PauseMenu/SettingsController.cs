@@ -35,8 +35,7 @@ public class SettingsController : MonoBehaviour
 
     GameObject activeCategory;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/Settings/SettingCategoryButton");
         settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/VerticalPanelPrefab");
@@ -95,6 +94,7 @@ public class SettingsController : MonoBehaviour
             delegate
             {
                 doneBehavior.Invoke();
+                SaveSettings();
             }
         );
         var doneLabel = doneButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
@@ -110,6 +110,28 @@ public class SettingsController : MonoBehaviour
         activeCategory.SetActive(false);
         categoryButtonsDictionary[categoryButton].SetActive(true);
         activeCategory = categoryButtonsDictionary[categoryButton];
+    }
+
+    private void SaveSettings()
+    {
+        for(int i = 0; i < settingsCategories.Length; i++) //For each category
+        {
+            for(int j = 0; j < settingsCategories[i].settings.Length; j++) //For each setting in category
+            {
+                settingsCategories[i].settings[j].SaveSetting();
+            }
+        }
+    }
+
+    public void LoadSettings()
+    {
+        for (int i = 0; i < settingsCategories.Length; i++) //For each category
+        {
+            for (int j = 0; j < settingsCategories[i].settings.Length; j++) //For each setting in category
+            {
+                settingsCategories[i].settings[j].LoadSetting();
+            }
+        }
     }
 
     public void SetupResolutionDropdown(MonoBehaviour resolutionUIElement)
@@ -208,7 +230,7 @@ public class SettingsController : MonoBehaviour
         public GameObject prefab;
 
         [NonSerialized]
-        public object value;
+        public GameObject settingUiElement;
 
         public void CreateUIElement(GameObject parent, int listIndex)
         {
@@ -242,6 +264,8 @@ public class SettingsController : MonoBehaviour
                 Vector2 newPosition = newRectTransform.anchoredPosition;
                 newPosition.y -= 50 * listIndex;
                 newRectTransform.anchoredPosition = newPosition;
+
+                settingUiElement = uiElement;
             }
         }
 
@@ -283,6 +307,41 @@ public class SettingsController : MonoBehaviour
             else
             {
                 Debug.Log("Toggle prefab is not of type Toggle on " + config.label);
+            }
+        }
+
+        public void SaveSetting()
+        {
+            if(settingUiElement != null)
+            {
+                switch (config.type)
+                {
+                    case UIElementType.Dropdown:
+                        PlayerPrefs.SetInt(config.label, settingUiElement.GetComponent<TMP_Dropdown>().value);
+                        break;
+                    case UIElementType.Slider:
+                        PlayerPrefs.SetFloat(config.label, settingUiElement.GetComponent<Slider>().value);
+                        break;
+                    case UIElementType.Toggle:
+                        PlayerPrefs.SetInt(config.label, settingUiElement.GetComponent<Toggle>().isOn ? 1 : 0);
+                        break;
+                }
+            }
+        }
+        
+        public void LoadSetting()
+        {
+            switch (config.type)
+            {
+                case UIElementType.Dropdown:
+                    settingUiElement.GetComponent<TMP_Dropdown>().value = PlayerPrefs.GetInt(config.label);
+                    break;
+                case UIElementType.Slider:
+                    settingUiElement.GetComponent<Slider>().value = PlayerPrefs.GetFloat(config.label);
+                    break;
+                case UIElementType.Toggle:
+                    settingUiElement.GetComponent<Toggle>().isOn = PlayerPrefs.GetInt(config.label) != 0;
+                    break;
             }
         }
     }
