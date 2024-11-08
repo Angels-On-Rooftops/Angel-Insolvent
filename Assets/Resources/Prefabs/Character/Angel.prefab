@@ -328,31 +328,31 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.0015898282
-      value: 0.9921384
-      inSlope: 0
-      outSlope: 0
+      time: 0
+      value: 0
+      inSlope: 0.07426414
+      outSlope: 0.07426414
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.091979876
+      outWeight: 0.2561193
     - serializedVersion: 3
-      time: 0.84137374
-      value: 0.80715823
-      inSlope: -0.72916204
-      outSlope: -0.72916204
+      time: 0.23894618
+      value: 0.5871298
+      inSlope: 1.7691668
+      outSlope: 1.7691668
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.05685344
-      outWeight: 0.33333334
+      inWeight: 0.2809129
+      outWeight: 0.073026836
     - serializedVersion: 3
       time: 1
-      value: 0
-      inSlope: -11.70309
-      outSlope: -11.70309
+      value: 1
+      inSlope: -0
+      outSlope: -0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.06013474
+      inWeight: 0.091979876
       outWeight: 0
     m_PreInfinity: 0
     m_PostInfinity: 2
@@ -1043,8 +1043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c047675c4895d344ead3822908ef448f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnPoint: {x: 0, y: 0, z: 0}
-  checkPoint: {fileID: 0}
+  CurrentSpawn: {fileID: 0}
   CanRevisitCheckpoints: 1
 --- !u!1 &1194584539806006755
 GameObject:
@@ -4345,6 +4344,14 @@ PrefabInstance:
     - target: {fileID: 8489503134044322401, guid: fa12a77dc6d0f4f11a008b347e2de79c, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.013556113
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489503134515872129, guid: fa12a77dc6d0f4f11a008b347e2de79c, type: 3}
+      propertyPath: m_TrackedDevicePositionAction
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8489503134515872129, guid: fa12a77dc6d0f4f11a008b347e2de79c, type: 3}
+      propertyPath: m_TrackedDeviceOrientationAction
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8489503134744208415, guid: fa12a77dc6d0f4f11a008b347e2de79c, type: 3}
       propertyPath: m_LocalPosition.x
