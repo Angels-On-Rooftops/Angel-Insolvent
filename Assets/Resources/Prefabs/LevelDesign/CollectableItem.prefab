@@ -28,6 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1045571035582100084}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -4.5, y: 1.5, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 4}
@@ -35,7 +36,6 @@ Transform:
   m_Children:
   - {fileID: 1181274179244276287}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6170100704222232218
 MeshFilter:
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 1181274179244276287}
   - component: {fileID: 1813096895428591316}
   - component: {fileID: 7627457048245317273}
-  - component: {fileID: 1505905696833146596}
+  - component: {fileID: 4471852667821014909}
   m_Layer: 0
   m_Name: Visual
   m_TagString: Untagged
@@ -163,13 +163,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4167737432568451886}
+  serializedVersion: 2
   m_LocalRotation: {x: -0.54105204, y: -0.123739585, z: -0.4552601, w: 0.69619644}
   m_LocalPosition: {x: -0.122, y: -0.33, z: -0.187}
   m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 5895107192311243948}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: -60, y: 39.843, z: -90}
 --- !u!33 &1813096895428591316
 MeshFilter:
@@ -221,7 +221,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1505905696833146596
+--- !u!114 &4471852667821014909
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -230,7 +230,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4167737432568451886}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 678b3a57a117a7c4f8109bbd2f6039dd, type: 3}
+  m_Script: {fileID: 11500000, guid: a1bc85cf873e9bf45acddc86dd596fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 100
+  TrackInfo: {fileID: 0}
+  RotationAxis: {x: 0, y: 1, z: 0}
+  AxisSpace: 0
+  BeatPeriod: 4
+  ResetOnStop: 1

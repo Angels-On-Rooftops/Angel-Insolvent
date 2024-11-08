@@ -100,6 +100,10 @@ public class CharacterMovement : MonoBehaviour
             + "for ground below the character before snapping it downward if SnapToGround is enabled."
     )]
     public float MaximumSnappingDistance = 0.2f;
+
+    [SerializeField]
+    [Tooltip("Moving with a platform will be ignored if the platform is on one of these layers")]
+    public LayerMask PlatformTrackingIgnore = ~ControlConstants.RAYCAST_MASK;
     #endregion
 
     #region Events
@@ -111,6 +115,7 @@ public class CharacterMovement : MonoBehaviour
     public event Action JumpRequested;
     public event Action Landed;
     public event Action Falling;
+    public event Action<Vector3> Warped;
 
     public event Action<Vector3> ImpulseApplied;
     public event Action JumpedFromImpulse;
@@ -119,9 +124,6 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Public Properties
-    CharacterController Controller => GetComponent<CharacterController>();
-    Vector3 ControllerWorldPosition => transform.position + Controller.center;
-
     public Vector3 TopSphereCenter =>
         ControllerWorldPosition + GravityUpDirection * (Controller.height / 2 - Controller.radius);
     public Vector3 BottomSphereCenter =>
@@ -145,13 +147,17 @@ public class CharacterMovement : MonoBehaviour
     }
     public bool GravityEnabled { get; set; } = true;
     public bool StateChangeEnabled { get; set; } = true;
+    public bool DoPlatformTracking { get; set; } = true;
     #endregion
 
     #region Private Properties
+    CharacterController Controller => GetComponent<CharacterController>();
+    Vector3 ControllerWorldPosition => transform.position + Controller.center;
     float CharacterGravity => Physics.gravity.magnitude * GravityMultiplier;
     float TimeSinceGrounded => IsOnStableGround() ? 0 : Time.time - LastTimeGrounded;
     bool IsHittingHead =>
         Mathf.Abs(Vector3.Dot(Controller.velocity, GravityUpDirection)) < dx && IsRising;
+    bool ShouldUpdate => Time.timeScale != 0;
     #endregion
 
     #region Constants
@@ -171,6 +177,8 @@ public class CharacterMovement : MonoBehaviour
 
     float LastTimeGrounded = 0;
 
+    public Func<float, float, float> WalkspeedMiddleware = (v, dt) => v;
+
     #region Processed Vectors
     public Vector3 RawMovementDirection = new();
     public Vector3 RawFacingDirection = new();
@@ -184,10 +192,17 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField]
     Vector3 StartingAdditionalImpulse = Vector3.zero;
     Vector3 CurrentAdditionalImpulse =>
-        Vector3.Lerp(StartingAdditionalImpulse, Vector3.zero, Math.Min(1, PercentImpulseTimeLeft));
+        Vector3.Lerp(
+            StartingAdditionalImpulse,
+            Vector3.zero,
+            PercentImpulseTimeLeft >= 1 ? 1 : ImpulseDecay.Evaluate(PercentImpulseTimeLeft)
+        );
 
     [SerializeField]
     AnimationCurve ImpulseDecay;
+
+    [NonSerialized]
+    public float ImpulseIntegral01;
 
     float ImpulseTime = 0;
     float TimeImpulseApplied = 0;
@@ -196,15 +211,7 @@ public class CharacterMovement : MonoBehaviour
     #endregion
 
     #region Platform Tracking
-    // the last platform the character landed on
-    GameObject LastPlatform;
-
-    // the position of the last platform on the previous frame
-    Vector3 LastPlatformLastPosition;
-
-    // the velocity of the last platform on the previous frame
-    Vector3 LastPlatformLastVelocity;
-    float LastPlatformLastTime;
+    Transform PlatformTrackingGhost;
     #endregion
 
     readonly Maid maid = new();
@@ -213,6 +220,7 @@ public class CharacterMovement : MonoBehaviour
     {
         MovementDirectionMiddleware = MovementMiddleware.RelativeToCamera(this);
         FacingDirectionMiddleware = FacingMiddleware.UpdateOnlyWhenMoving(this);
+        ImpulseIntegral01 = Integral.IntegrateCurve(ImpulseDecay, 0, 1, 100);
     }
 
     void OnEnable()
@@ -232,6 +240,8 @@ public class CharacterMovement : MonoBehaviour
 
         // instantly kills momentum when you touch the ground, using smoothdamp in Update() instead
         maid.GiveEvent(this, "Landed", () => StartingAdditionalImpulse.y = 0);
+
+        PlatformTrackingGhost = maid.GiveTask(new GameObject("TrackingGhost")).transform;
     }
 
     void OnDisable()
@@ -342,7 +352,7 @@ public class CharacterMovement : MonoBehaviour
             return Vector3.zero;
         }
 
-        return MovementDirection * WalkSpeed;
+        return MovementDirection * WalkspeedMiddleware(WalkSpeed, Time.deltaTime);
     }
 
     (bool didHit, RaycastHit hit) GroundInfo(float checkDistance)
@@ -440,7 +450,7 @@ public class CharacterMovement : MonoBehaviour
         AddToVerticalSpeed(-CharacterGravity * Time.deltaTime);
     }
 
-    void ApplyMovementVelocity(Vector3 additionalImpulse)
+    Vector3 ApplyMovementVelocity(Vector3 additionalImpulse)
     {
         Vector3 moveVelocity = MovementVelocity();
 
@@ -508,7 +518,7 @@ public class CharacterMovement : MonoBehaviour
         // bring it all together
         Vector3 combinedVelocity = verticalVelocity + moveVelocity + new Vector3(0, -dx, 0);
 
-        Controller.Move((combinedVelocity + additionalImpulse) * Time.deltaTime);
+        return (combinedVelocity + additionalImpulse) * Time.deltaTime;
     }
 
     void ApplyRotation()
@@ -601,6 +611,15 @@ public class CharacterMovement : MonoBehaviour
             QueryTriggerInteraction.Ignore
         );
 
+        bool didPointHit = Physics.Raycast(
+            ControllerWorldPosition,
+            -GravityUpDirection,
+            out RaycastHit pointHit,
+            MaximumSnappingDistance,
+            ControlConstants.RAYCAST_MASK,
+            QueryTriggerInteraction.Ignore
+        );
+
         bool isCapsuleOverGeometry = Physics.CheckCapsule(
             TopSphereCenter,
             BottomSphereCenter - GravityUpDirection * (Controller.skinWidth + dx),
@@ -609,16 +628,29 @@ public class CharacterMovement : MonoBehaviour
             QueryTriggerInteraction.Ignore
         );
 
-        if (didCapsuleHit & !isCapsuleOverGeometry)
+        if (didCapsuleHit && !isCapsuleOverGeometry)
         {
             transform.position += capsuleHit.distance * -GravityUpDirection;
         }
+
+        //if (didPointHit && !isCapsuleOverGeometry)
+        //{
+        //    transform.position =
+        //        pointHit.point
+        //        + (Controller.height / 2 + Controller.skinWidth) * GravityUpDirection;
+        //}
     }
 
     public void Warp(Vector3 position)
     {
+        Warp(position, transform.rotation);
+    }
+
+    public void Warp(Vector3 position, Quaternion rotation)
+    {
         Controller.enabled = false;
-        transform.position = position;
+        transform.SetPositionAndRotation(position, rotation);
+        Warped?.Invoke(position);
         Controller.enabled = true;
     }
 
@@ -647,9 +679,51 @@ public class CharacterMovement : MonoBehaviour
         RanIntoWall?.Invoke();
     }
 
+    public GameObject GetCurrentPlatform()
+    {
+        RaycastHit hit = GroundInfo(
+            Controller.height / 2 + Controller.skinWidth + dx + MaximumSnappingDistance
+        ).hit;
+
+        if (
+            hit.transform is null
+            || LayerUtil.IsEnabledInMask(PlatformTrackingIgnore, hit.transform.gameObject.layer)
+        )
+        {
+            return null;
+        }
+
+        return hit.transform.gameObject;
+    }
+
+    void UpdateTrackedPlatform()
+    {
+        GameObject currentPlatform = GetCurrentPlatform();
+        bool onPlatform = currentPlatform is not null;
+        PlatformTrackingGhost.SetParent(
+            onPlatform && DoPlatformTracking ? currentPlatform.transform : transform
+        );
+        PlatformTrackingGhost.SetPositionAndRotation(transform.position, transform.rotation);
+    }
+
     void Update()
     {
-        if (Time.timeScale == 0)
+        if (!ShouldUpdate)
+        {
+            return;
+        }
+
+        if (StateChangeEnabled)
+        {
+            UpdateState();
+        }
+
+        UpdateTrackedPlatform();
+    }
+
+    private void LateUpdate()
+    {
+        if (!ShouldUpdate)
         {
             return;
         }
@@ -661,7 +735,11 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        ApplyMovementVelocity(CurrentAdditionalImpulse);
+        Vector3 platformMovement = DoPlatformTracking
+            ? PlatformTrackingGhost.position - transform.position
+            : Vector3.zero;
+
+        Controller.Move(ApplyMovementVelocity(CurrentAdditionalImpulse) + platformMovement);
 
         if (RotationEnabled)
         {
