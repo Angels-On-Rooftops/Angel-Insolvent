@@ -46,18 +46,21 @@ public class FollowPositionOnSpring : MonoBehaviour
 
         bool didHit = Physics.Raycast(
             ToFollow.position,
-            newPos - ToFollow.position,
+            transform.position,
             out RaycastHit hit,
-            (newPos - ToFollow.position).magnitude,
+            (transform.position - ToFollow.position).magnitude,
             ControlConstants.RAYCAST_MASK,
             QueryTriggerInteraction.Ignore
         );
+        
+        Color color = new Color(1.0f, 1.0f, 1.0f);
+        Debug.DrawLine(ToFollow.position, transform.position, color);   
 
-        if(didHit) {
-            Debug.Log("didHit");
-            
-            //transform.position = ToFollow.position;
+        if(didHit) {                 
+            transform.position = hit.point - (hit.point - ToFollow.position) * 0.1f;
+        }else {
+            transform.position = newPos;
         }
-        transform.position = newPos;
+        
     }
 }

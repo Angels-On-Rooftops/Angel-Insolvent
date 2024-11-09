@@ -10122,6 +10122,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1091123979038374894, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -19.49825
+      objectReference: {fileID: 0}
+    - target: {fileID: 1091123979038374894, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 12.554762
+      objectReference: {fileID: 0}
+    - target: {fileID: 2093565514826992161, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: FocusOn
+      value: 
+      objectReference: {fileID: 1415069654}
     - target: {fileID: 2820108709583876204, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
       propertyPath: m_Name
       value: Angel
@@ -16036,12 +16048,12 @@ MonoBehaviour:
   m_margin: {x: -5.988638, y: 0, z: -5.6292105, w: -3.1755142}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  _SortingLayer: 0
-  _SortingLayerID: 0
-  _SortingOrder: 0
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 1068778396}
   m_maskType: 0
+  _SortingLayer: 0
+  _SortingLayerID: 0
+  _SortingOrder: 0
 --- !u!23 &1068778396
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19381,6 +19393,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9599eb0a377dc3d449601c48d02d6636, type: 3}
+--- !u!4 &1415069654 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 869256489426343399, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+  m_PrefabInstance: {fileID: 671825092}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1431165815
 GameObject:
   m_ObjectHideFlags: 0
