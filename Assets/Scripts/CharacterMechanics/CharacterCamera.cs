@@ -84,13 +84,13 @@ public class CharacterCamera : MonoBehaviour
     const float Y_LIMIT = 80;
 
     public Transform NextCameraTransform { get; private set; }
-    private Transform LastSnapPosition;
+    private Vector3 LastSnapVector;
     private Transform NextTargetTransform;
 
     Maid maid = new();
 
     Camera Camera => GetComponent<Camera>();
-
+    [SerializeField]
     float smoothTime = 0.1f;
     float xVelocity = 0;
     float yVelocity = 0;
@@ -114,9 +114,6 @@ public class CharacterCamera : MonoBehaviour
 
         NextCameraTransform = maid.GiveTask(new GameObject()).transform;
         NextCameraTransform.name = "NextCameraTranform";
-
-        LastSnapPosition = maid.GiveTask(new GameObject()).transform;
-        LastSnapPosition.name = "LastSnappedTransform";
 
         NextTargetTransform = maid.GiveTask(new GameObject()).transform;
         NextTargetTransform.name = "NextCameraTransformTarget";
@@ -205,19 +202,12 @@ public class CharacterCamera : MonoBehaviour
         {   
             setTimer();
             t.position = hit.point - (t.position - Focus()) * GetComponent<Camera>().nearClipPlane;
-            LastSnapPosition.position = t.position;
+            LastSnapVector = t.position - Focus();
+        } else if(timer > 0){
+            Vector3 target = t.position - Focus();
+            Vector3 result = Vector3.RotateTowards(LastSnapVector, target, Mathf.Infinity, 0);
+            t.position = result + Focus();
         }
-    }
-
-    bool didHit(Transform t) {
-        return Physics.Raycast(
-            Focus(),
-            t.position - Focus(),
-            out RaycastHit hit,
-            ZoomLevel,
-            ControlConstants.RAYCAST_MASK,
-            QueryTriggerInteraction.Ignore
-        );
     }
 
     public Vector3 Focus()
@@ -256,10 +246,10 @@ public class CharacterCamera : MonoBehaviour
 
         NextCameraTransform.position = new Vector3(newX, newY, newZ);
 
-        if ((MitigateClipping && didHit(NextCameraTransform)) || timer > 0)
+        if (MitigateClipping)
         {
             SnapForwardToAvoidClipping(NextCameraTransform);
-        }
+        }   
 
         NextCameraTransform.LookAt(Focus(), Vector3.up);
 
