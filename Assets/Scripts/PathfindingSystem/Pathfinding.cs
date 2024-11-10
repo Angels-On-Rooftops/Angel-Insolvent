@@ -19,14 +19,9 @@ public class Pathfinding : MonoBehaviour {
 
     public List<NodeMarker> findPath(NodeMarker currentNode, NodeMarker lastNode) {
         NodeMarker tempNode = currentNode.NextNode[Random.Range(0, currentNode.NextNode.Count)];
-
-        if (!path.Contains(tempNode)) {
-            path.Add(tempNode);
-            }
-        else if (tempNode == lastNode) {
-            path.Add(tempNode);
-            }
-
+        int replaceNode = 0; ;
+        path.Add(tempNode);
+   
         if (tempNode != lastNode) {
             findPath(tempNode, lastNode);
             } 
