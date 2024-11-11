@@ -25662,32 +25662,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!1 &1845608535 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 215358993153493656, guid: dc823213d795ca14eac25ae4c2cbe80f, type: 3}
-  m_PrefabInstance: {fileID: 4778664798974115383}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1845608542
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1845608535}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1849889228
 GameObject:
   m_ObjectHideFlags: 0
@@ -31063,10 +31037,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3596138524649462162, guid: 4ae6943890394d24e83187b85ab2a6f5, type: 3}
-      propertyPath: EntranceId
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -31427,7 +31397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2125763286867925736, guid: dc823213d795ca14eac25ae4c2cbe80f, type: 3}
       propertyPath: TransitionToPoint
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3878070631850282618, guid: dc823213d795ca14eac25ae4c2cbe80f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -31472,10 +31442,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 215358993153493656, guid: dc823213d795ca14eac25ae4c2cbe80f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1845608542}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc823213d795ca14eac25ae4c2cbe80f, type: 3}
 --- !u!1001 &6309516209009541466
 PrefabInstance:
