@@ -56,15 +56,15 @@ public class FollowPositionOnSpring : MonoBehaviour
         Color color = new Color(0.0f, 1.0f, 1.0f);
         Debug.DrawLine(ToFollow.position, transform.position, color);   
 
-        if(didHit) {     
-            Debug.Log("didHit");
-            color = new Color(1.0f, 1.0f, 1.0f);
-            transform.position = hit.point;
-            Debug.DrawLine(ToFollow.position, transform.position, color);
+        // if(didHit) {     
+        //     Debug.Log("didHit");
+        //     color = new Color(1.0f, 1.0f, 1.0f);
+        //     transform.position = hit.point;
+        //     Debug.DrawLine(ToFollow.position, transform.position, color);
             
-        }else {
-            transform.position = newPos;
-        }
-        
+        // }else {
+        //     transform.position = newPos;
+        // }
+        transform.position = newPos;
     }
 }
