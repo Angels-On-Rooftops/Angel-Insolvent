@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
 
         escMenu = Instantiate(Resources.Load("Prefabs/UI/EscMenuPrefab")) as GameObject;
         escMenu.gameObject.transform.SetParent(gameCanvas.transform);
+        escMenu.GetComponent<EscMenuController>().getSettingsMenuPanel().GetComponent<SettingsController>().LoadSettings();
 
         inventory = Instantiate(Resources.Load("Prefabs/UI/Inventory")) as GameObject;
         inventory.gameObject.transform.SetParent(gameCanvas.transform);
