@@ -22,6 +22,16 @@ namespace Inventory.Testing
             HandleDoorBasedOnInventoryState();
         }
 
+        private void OnCollisionExit(Collision collision)
+        {
+            this.GetComponent<Collider>().isTrigger = true;
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            this.GetComponent<Collider>().isTrigger = true;
+        }
+
         private void HandleDoorBasedOnInventoryState()
         {
             InventoryChecker checker = this.GetComponent<InventoryChecker>();

@@ -115,6 +115,7 @@ public class CharacterMovement : MonoBehaviour
     public event Action JumpRequested;
     public event Action Landed;
     public event Action Falling;
+    public event Action<Vector3> Warped;
 
     public event Action<Vector3> ImpulseApplied;
     public event Action JumpedFromImpulse;
@@ -146,6 +147,7 @@ public class CharacterMovement : MonoBehaviour
     }
     public bool GravityEnabled { get; set; } = true;
     public bool StateChangeEnabled { get; set; } = true;
+    public bool DoPlatformTracking { get; set; } = true;
     #endregion
 
     #region Private Properties
@@ -190,10 +192,17 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField]
     Vector3 StartingAdditionalImpulse = Vector3.zero;
     Vector3 CurrentAdditionalImpulse =>
-        Vector3.Lerp(StartingAdditionalImpulse, Vector3.zero, Math.Min(1, PercentImpulseTimeLeft));
+        Vector3.Lerp(
+            StartingAdditionalImpulse,
+            Vector3.zero,
+            PercentImpulseTimeLeft >= 1 ? 1 : ImpulseDecay.Evaluate(PercentImpulseTimeLeft)
+        );
 
     [SerializeField]
     AnimationCurve ImpulseDecay;
+
+    [NonSerialized]
+    public float ImpulseIntegral01;
 
     float ImpulseTime = 0;
     float TimeImpulseApplied = 0;
@@ -211,6 +220,7 @@ public class CharacterMovement : MonoBehaviour
     {
         MovementDirectionMiddleware = MovementMiddleware.RelativeToCamera(this);
         FacingDirectionMiddleware = FacingMiddleware.UpdateOnlyWhenMoving(this);
+        ImpulseIntegral01 = Integral.IntegrateCurve(ImpulseDecay, 0, 1, 100);
     }
 
     void OnEnable()
@@ -601,6 +611,15 @@ public class CharacterMovement : MonoBehaviour
             QueryTriggerInteraction.Ignore
         );
 
+        bool didPointHit = Physics.Raycast(
+            ControllerWorldPosition,
+            -GravityUpDirection,
+            out RaycastHit pointHit,
+            MaximumSnappingDistance,
+            ControlConstants.RAYCAST_MASK,
+            QueryTriggerInteraction.Ignore
+        );
+
         bool isCapsuleOverGeometry = Physics.CheckCapsule(
             TopSphereCenter,
             BottomSphereCenter - GravityUpDirection * (Controller.skinWidth + dx),
@@ -609,16 +628,29 @@ public class CharacterMovement : MonoBehaviour
             QueryTriggerInteraction.Ignore
         );
 
-        if (didCapsuleHit & !isCapsuleOverGeometry)
+        if (didCapsuleHit && !isCapsuleOverGeometry)
         {
             transform.position += capsuleHit.distance * -GravityUpDirection;
         }
+
+        //if (didPointHit && !isCapsuleOverGeometry)
+        //{
+        //    transform.position =
+        //        pointHit.point
+        //        + (Controller.height / 2 + Controller.skinWidth) * GravityUpDirection;
+        //}
     }
 
     public void Warp(Vector3 position)
     {
+        Warp(position, transform.rotation);
+    }
+
+    public void Warp(Vector3 position, Quaternion rotation)
+    {
         Controller.enabled = false;
-        transform.position = position;
+        transform.SetPositionAndRotation(position, rotation);
+        Warped?.Invoke(position);
         Controller.enabled = true;
     }
 
@@ -668,17 +700,22 @@ public class CharacterMovement : MonoBehaviour
     {
         GameObject currentPlatform = GetCurrentPlatform();
         bool onPlatform = currentPlatform is not null;
-        PlatformTrackingGhost.SetParent(onPlatform ? currentPlatform.transform : transform);
+        PlatformTrackingGhost.SetParent(
+            onPlatform && DoPlatformTracking ? currentPlatform.transform : transform
+        );
         PlatformTrackingGhost.SetPositionAndRotation(transform.position, transform.rotation);
     }
-
-    Vector3 movementVel;
 
     void Update()
     {
         if (!ShouldUpdate)
         {
             return;
+        }
+
+        if (StateChangeEnabled)
+        {
+            UpdateState();
         }
 
         UpdateTrackedPlatform();
@@ -698,11 +735,11 @@ public class CharacterMovement : MonoBehaviour
             ApplyGravity();
         }
 
-        Controller.Move(
-            ApplyMovementVelocity(CurrentAdditionalImpulse)
-                + PlatformTrackingGhost.position
-                - transform.position
-        );
+        Vector3 platformMovement = DoPlatformTracking
+            ? PlatformTrackingGhost.position - transform.position
+            : Vector3.zero;
+
+        Controller.Move(ApplyMovementVelocity(CurrentAdditionalImpulse) + platformMovement);
 
         if (RotationEnabled)
         {
