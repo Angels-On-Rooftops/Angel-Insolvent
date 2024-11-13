@@ -1,6 +1,6 @@
-using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
+using GameStateManagement;
 using UnityEngine;
 
 namespace GameStateManagement
@@ -14,7 +14,7 @@ namespace GameStateManagement
             shopController = sControl;
         }
 
-        public void EnterState()
+        public void EnterState(IGameState previousState)
         {
             shopController.GetShopInventoryPanel().SetActive(true);
             Time.timeScale = 0f;

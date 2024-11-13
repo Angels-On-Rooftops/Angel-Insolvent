@@ -1,6 +1,7 @@
-using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.RoomSystem;
+using GameStateManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -9,8 +10,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static bool launchToMainMenu = false; //CHANGE THIS DEPENDING ON WHETHER YOU WANT
-                                                 //TO LAUNCH TO MAIN MENU OR TO YOUR CURRENT SCENE
+    public static GameObject CoreSystems;
+
     public static GameObject escMenu;
 
     public static GameObject gameCanvas;
@@ -22,26 +23,40 @@ public class GameManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     static void OnBeforeSceneLoad()
     {
-        GameObject gameObject = Instantiate(new GameObject("GameManager"));
-        DontDestroyOnLoad(gameObject);
-        gameObject.AddComponent<GameStateManager>();
+        Transform manager = Instantiate(new GameObject("GameManager")).GetComponent<Transform>();
+        DontDestroyOnLoad(manager);
+        manager.gameObject.AddComponent<GameStateManager>();
 
-        eventSystem = Instantiate(Resources.Load("Prefabs/UI/EventSystemPrefab")) as GameObject;
-        eventSystem.gameObject.transform.SetParent(gameObject.transform);
+        CoreSystems = Instantiate(
+            Resources.Load<GameObject>("Prefabs/CoreSystems/CoreSystems"),
+            manager
+        );
 
-        gameCanvas = Instantiate(Resources.Load("Prefabs/UI/GameCanvas")) as GameObject;
-        gameCanvas.gameObject.transform.SetParent(gameObject.transform);
+        eventSystem = Instantiate(
+            Resources.Load<GameObject>("Prefabs/UI/EventSystemPrefab"),
+            manager
+        );
+
+        gameCanvas = Instantiate(Resources.Load<GameObject>("Prefabs/UI/GameCanvas"), manager);
         gameCanvas.GetComponent<RectTransform>().offsetMax = Vector2.zero;
         gameCanvas.GetComponent<RectTransform>().offsetMin = Vector2.zero;
-        
-        gameObject.AddComponent<GameProgressTracker>();
 
-        escMenu = Instantiate(Resources.Load("Prefabs/UI/EscMenuPrefab")) as GameObject;
-        escMenu.gameObject.transform.SetParent(gameCanvas.transform);
-        escMenu.GetComponent<EscMenuController>().getSettingsMenuPanel().GetComponent<SettingsController>().LoadSettings();
+        manager.gameObject.AddComponent<GameProgressTracker>();
 
-        inventory = Instantiate(Resources.Load("Prefabs/UI/Inventory")) as GameObject;
-        inventory.gameObject.transform.SetParent(gameCanvas.transform);
+        escMenu = Instantiate(
+            Resources.Load<GameObject>("Prefabs/UI/EscMenuPrefab"),
+            gameCanvas.transform
+        );
+        escMenu
+            .GetComponent<EscMenuController>()
+            .getSettingsMenuPanel()
+            .GetComponent<SettingsController>()
+            .LoadSettings();
+
+        inventory = Instantiate(
+            Resources.Load<GameObject>("Prefabs/UI/Inventory"),
+            gameCanvas.transform
+        );
     }
 
     //TODO - Test this with multiple scenes when that is readily available

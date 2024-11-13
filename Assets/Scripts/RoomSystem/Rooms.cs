@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts.RoomSystem
 {
-    enum Room
+    [Serializable]
+    public enum Room
     {
         MainMenu,
+
+        Loading,
 
         Vault,
 
@@ -20,7 +24,8 @@ namespace Assets.Scripts.RoomSystem
         YCorp,
     }
 
-    enum InitialRoomPoint
+    [Serializable]
+    public enum InitialRoomPoint
     {
         [InspectorName("Inside/Vault Start")]
         VaultStart,

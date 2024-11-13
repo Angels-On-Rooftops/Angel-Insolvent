@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameStateManagement
 {
@@ -10,6 +11,9 @@ namespace GameStateManagement
 
         public IGameState CurrentState { get; private set; }
 
+        [SerializeField]
+        private string MainMenuSceneName = "MainMenu";
+
         private void Awake()
         {
             //Only one instance can exist
@@ -17,6 +21,7 @@ namespace GameStateManagement
             {
                 Debug.Log("Multiple instances of GameStateManager detected, destroying this one");
                 Destroy(gameObject);
+                return;
             }
             else
             {
@@ -24,28 +29,33 @@ namespace GameStateManagement
                 DontDestroyOnLoad(gameObject);
             }
 
-
-            if (GameManager.launchToMainMenu)
+            if (SceneManager.GetActiveScene().name == MainMenuSceneName)
             {
-                CurrentState = new MainMenuState();
-                CurrentState.EnterState();
-            } else
+                SetState(new MainMenuState());
+            }
+            else
             {
-                CurrentState = new PlayingState();
-                CurrentState.EnterState();
+                SetState(new PlayingState());
             }
         }
 
         public void SetState(IGameState newState)
         {
-            if(CurrentState == newState)
+            if (CurrentState == newState)
             {
                 return;
-            } else
+            }
+            else
             {
-                CurrentState.ExitState();
+                IGameState previousState = CurrentState;
                 CurrentState = newState;
-                newState.EnterState();
+
+                if (previousState != null)
+                {
+                    previousState.ExitState();
+                }
+
+                newState.EnterState(previousState);
             }
         }
     }
