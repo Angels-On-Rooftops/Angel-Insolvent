@@ -26,6 +26,8 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ADDITIONAL_LIGHTS
+  - _ADDITIONAL_LIGHT_SHADOWS
+  - _FORWARD_PLUS
   - _LIGHTMAP_SHADOW_MIXING
   m_InvalidKeywords:
   - _SHADOWS_SOFT
@@ -58,8 +60,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _ADDITIONAL_LIGHTS: 1
+    - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _Ambient_Occlusion: 0
     - _DiffuseSteps: 2
+    - _FORWARD_PLUS: 1
     - _IsToon: 1
     - _LIGHTMAP_SHADOW_MIXING: 1
     - _QueueControl: 0
