@@ -11,7 +11,7 @@ namespace Assets.Scripts.RoomSystem
     {
         private static RoomSystem Instance;
 
-        Room CurrentRoom = Room.MainMenu;
+        public Room CurrentRoom = Room.MainMenu;
         Room LastGameplayRoom = Room.Cantata;
 
         Maid DataPersistenceMaid = new();
@@ -37,13 +37,18 @@ namespace Assets.Scripts.RoomSystem
                 LoadData
             );
 
-            static void DisableInScene(Scene _, LoadSceneMode _2)
+            static void DisableInScene(Scene scene, LoadSceneMode scenemode)
             {
+                // scene mode 4 is when its loaded via the play button in the editor
+                if ((int)scenemode == 4)
+                {
+                    return;
+                }
+
                 Array.ForEach(
                     FindObjectsOfType<DisableInBuild>(),
                     (DisableInBuild obj) =>
                     {
-                        Debug.Log(obj);
                         obj.gameObject.SetActive(false);
                     }
                 );
@@ -113,6 +118,7 @@ namespace Assets.Scripts.RoomSystem
         public static void LoadRoom(Room toLoad, Func<Transform> getCharacterInitialTransform)
         {
             Instance.StartCoroutine(LoadScenes(RoomAsScenes(toLoad), getCharacterInitialTransform));
+            Instance.CurrentRoom = toLoad;
         }
 
         private static IEnumerator LoadScenes(
@@ -125,7 +131,7 @@ namespace Assets.Scripts.RoomSystem
             var asyncLoadLevel = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Single);
             while (!asyncLoadLevel.isDone)
             {
-                Debug.Log("Loading loading screen");
+                //Debug.Log("Loading loading screen");
                 yield return null;
             }
 
@@ -142,7 +148,7 @@ namespace Assets.Scripts.RoomSystem
             // wait until all scenes loaded
             while (!Array.TrueForAll(additiveScenesLoading, (asyncOp) => asyncOp.isDone))
             {
-                Debug.Log("On loading screen");
+                //Debug.Log("In loading screen");
                 yield return null;
             }
 

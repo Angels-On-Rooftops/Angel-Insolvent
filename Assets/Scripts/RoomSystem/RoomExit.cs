@@ -16,7 +16,7 @@ namespace Assets.Scripts.RoomSystem
             if (SpecialObjects.IsCharacter(other))
             {
                 Debug.Log($"Exiting Room! Going to {TransitionToPoint} in {TransitionToScene}");
-                // TODO make a call to load a scene and point
+                RoomSystem.LoadRoom(TransitionToScene, TransitionToPoint);
             }
         }
     }

@@ -9,6 +9,7 @@ public class DisableInBuild : MonoBehaviour
 #else
     private void Awake()
     {
+        Debug.Log("Huh?");
         gameObject.SetActive(false);
     }
 #endif
