@@ -9,13 +9,15 @@ namespace Assets.Scripts.RoomSystem
 {
     public class RoomSystem : MonoBehaviour
     {
-        private static RoomSystem Instance;
+        public static RoomSystem Instance { get; private set; }
 
         public Room CurrentRoom = Room.MainMenu;
         Room LastGameplayRoom = Room.Cantata;
 
         Maid DataPersistenceMaid = new();
         Maid SceneMaid = new();
+
+        public event Action<Room> RoomChanged;
 
         void Awake()
         {
@@ -117,15 +119,17 @@ namespace Assets.Scripts.RoomSystem
 
         public static void LoadRoom(Room toLoad, Func<Transform> getCharacterInitialTransform)
         {
-            Instance.StartCoroutine(LoadScenes(RoomAsScenes(toLoad), getCharacterInitialTransform));
+            Instance.StartCoroutine(LoadScenes(toLoad, getCharacterInitialTransform));
             Instance.CurrentRoom = toLoad;
         }
 
         private static IEnumerator LoadScenes(
-            string[] scenesToLoad,
+            Room toLoad,
             Func<Transform> getCharacterInitialTransform
         )
         {
+            string[] scenesToLoad = RoomAsScenes(toLoad);
+
             // TODO refactor this guy
             // load the loading scene
             var asyncLoadLevel = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Single);
@@ -153,6 +157,8 @@ namespace Assets.Scripts.RoomSystem
             }
 
             SceneManager.UnloadSceneAsync("Loading");
+
+            Instance.RoomChanged?.Invoke(toLoad);
 
             // TODO position character
         }
