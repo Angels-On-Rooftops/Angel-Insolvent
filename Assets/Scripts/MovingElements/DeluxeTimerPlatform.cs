@@ -23,7 +23,7 @@ public class DeluxeTimerPlatform : MonoBehaviour
     TimerTriangles[] Timers;
 
     [SerializeField]
-    float TransitionSpeed = 1;
+    float TransitionSpeedMult = 1;
 
     readonly Maid MusicalMaid = new();
 
@@ -88,11 +88,9 @@ public class DeluxeTimerPlatform : MonoBehaviour
 
     public void DecrementCounter()
     {
-        Debug.Log(countdown);
-
         SetAllCountdowns(countdown - 1);
         //move position if necessary
-        if (countdown <= 0 && TransformLoop.Length > 0)
+        if (countdown == 0 && TransformLoop.Length > 0)
         {
             transformIndex = (transformIndex + 1) % TransformLoop.Length;
             StartCoroutine(MoveToTransformOnBeat(TransformLoop[transformIndex]));
@@ -102,7 +100,7 @@ public class DeluxeTimerPlatform : MonoBehaviour
     IEnumerator MoveToTransformOnBeat(Transform target)
     {
         float timer = 0;
-        float moveDuration = EventSys.SecPerBeat / TransitionSpeed;
+        float moveDuration = EventSys.SecPerBeat / TransitionSpeedMult;
         Vector3 startPos = this.transform.position;
         Quaternion startRot = this.transform.rotation;
         Vector3 startScale = this.transform.localScale;
