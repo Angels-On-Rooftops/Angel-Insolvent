@@ -2369,7 +2369,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8070212094547036531}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -3892,9 +3892,17 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -3085104973458933733, guid: 98ae313787f0e594590e41d5290636b8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c53c13c1f7b9b1b4cb9436ec03111223, type: 2}
     - target: {fileID: 919132149155446097, guid: 98ae313787f0e594590e41d5290636b8, type: 3}
       propertyPath: m_Name
       value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: 98ae313787f0e594590e41d5290636b8, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1630794972795428178, guid: 98ae313787f0e594590e41d5290636b8, type: 3}
       propertyPath: m_Materials.Array.data[0]

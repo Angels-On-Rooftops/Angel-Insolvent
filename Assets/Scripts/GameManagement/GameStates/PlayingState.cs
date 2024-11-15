@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.RoomSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,31 +8,15 @@ namespace GameStateManagement
 {
     public class PlayingState : IGameState
     {
-        private string sceneName;
-        private bool newScene;
-
-        public PlayingState()
+        public void EnterState(IGameState previousState)
         {
-            this.sceneName = SceneManager.GetActiveScene().name;
-            newScene = false;
-        }
-        public PlayingState(string sceneName)
-        {
-            this.sceneName = sceneName;
-            newScene = true;
-        }
-
-        public void EnterState()
-        {
-            if (newScene)
+            if (previousState is MainMenuState)
             {
-                SceneManager.LoadScene(sceneName);
+                Debug.Log("Playing!");
+                RoomSystem.LoadLastGameplayRoom();
             }
         }
 
-        public void ExitState()
-        {
-
-        }
+        public void ExitState() { }
     }
 }
