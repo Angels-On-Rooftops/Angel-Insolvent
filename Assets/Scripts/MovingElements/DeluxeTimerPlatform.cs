@@ -22,6 +22,9 @@ public class DeluxeTimerPlatform : MonoBehaviour
     [SerializeField]
     TimerTriangles[] Timers;
 
+    [SerializeField]
+    float TransitionSpeedMult = 1;
+
     readonly Maid MusicalMaid = new();
 
     int countdown;
@@ -97,7 +100,7 @@ public class DeluxeTimerPlatform : MonoBehaviour
     IEnumerator MoveToTransformOnBeat(Transform target)
     {
         float timer = 0;
-        float moveDuration = EventSys.SecPerBeat;
+        float moveDuration = EventSys.SecPerBeat / TransitionSpeedMult;
         Vector3 startPos = this.transform.position;
         Quaternion startRot = this.transform.rotation;
         Vector3 startScale = this.transform.localScale;

@@ -65,7 +65,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
     //spawn character in
     public void RespawnPlayer()
     {
-        if(CurrentSpawn != null)
+        if (CurrentSpawn != null)
         {
             Movement.Warp(CurrentSpawn.RespawnAt.position, CurrentSpawn.RespawnAt.rotation);
         }
@@ -90,7 +90,7 @@ public class PlayerRespawn : MonoBehaviour, IPersistableData
             c => c.id == deserializedRespawn.checkpointID
         );
         VisitedCheckpointIds = deserializedRespawn.visitedCheckpointIds.ToHashSet();
-        RespawnPlayer();
+        //RespawnPlayer();
     }
 }
 
