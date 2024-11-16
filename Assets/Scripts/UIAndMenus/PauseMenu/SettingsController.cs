@@ -20,6 +20,7 @@ public class SettingsController : MonoBehaviour
 
     [SerializeField]
     AudioSource audioSource;
+    AudioMixer audioMixer;
 
     [SerializeField]
     UnityEvent doneBehavior;
@@ -37,9 +38,9 @@ public class SettingsController : MonoBehaviour
 
     void Awake()
     {
-        categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/Settings/SettingCategoryButton");
-        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/VerticalPanelPrefab");
-        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SingleSettingPrefab");
+        categoryButtonPrefab = Resources.Load<Button>("Prefabs/CoreSystems/CoreUI/Settings/SettingCategoryButton");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/CoreSystems/CoreUI/Settings/VerticalPanelPrefab");
+        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/CoreSystems/CoreUI/Settings/SingleSettingPrefab");
 
         categoriesPanel = this.gameObject.transform
             .GetChild(1)
