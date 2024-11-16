@@ -42,5 +42,8 @@ public class FollowPositionOnSpring : MonoBehaviour
                 PositionSmoothing.z * Time.deltaTime
             )
         );
+
+        Color color = new Color(0.0f, 1.0f, 1.0f);
+        Debug.DrawLine(ToFollow.position, transform.position, color);
     }
 }
