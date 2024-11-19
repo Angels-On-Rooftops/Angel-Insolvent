@@ -7,9 +7,10 @@ namespace GameStateManagement
 {
     public class MainMenuState : IGameState
     {
-        public void EnterState()
+        public void EnterState(IGameState previousState)
         {
-            if(SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Main Menu"))
+            // TODO change to using room manager
+            if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Main Menu"))
             {
                 SceneManager.LoadScene("MainMenu");
             }

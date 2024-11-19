@@ -1,21 +1,25 @@
-using GameStateManagement;
 using System.Collections;
 using System.Collections.Generic;
+using GameStateManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] GameObject mainMenuPanel;
-    [SerializeField] GameObject settingsPanel;
+    [SerializeField]
+    GameObject mainMenuPanel;
+
+    [SerializeField]
+    GameObject settingsPanel;
 
     private void Awake()
     {
         settingsPanel.SetActive(false);
     }
+
     public void OnPlayButton()
     {
-        GameStateManager.Instance.SetState(new PlayingState("UI_testing"));
+        GameStateManager.Instance.SetState(new PlayingState());
     }
 
     public void OnSettingsButton()
@@ -29,8 +33,10 @@ public class MainMenu : MonoBehaviour
         mainMenuPanel.SetActive(true);
         settingsPanel.SetActive(false);
     }
+
     public void OnQuitButton()
     {
-        if (!Application.isEditor) System.Diagnostics.Process.GetCurrentProcess().Kill();
+        if (!Application.isEditor)
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
     }
 }

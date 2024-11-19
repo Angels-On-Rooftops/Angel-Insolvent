@@ -1,15 +1,12 @@
-using GameStateManagement;
-using Inventory;
 using System.Collections;
 using System.Collections.Generic;
+using GameStateManagement;
+using Inventory;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ChangeTrackOnCollide : MonoBehaviour
 {
-    [SerializeField]
-    AudioSystem sys;
-
     [SerializeField]
     int SongIndex;
 
@@ -17,10 +14,10 @@ public class ChangeTrackOnCollide : MonoBehaviour
     {
         if (
             other.TryGetComponent(out CharacterController controller)
-            && sys.CurrentIndex != SongIndex
+            && AudioSystem.CurrentIndex != SongIndex
         )
         {
-            sys.SwitchToSong(SongIndex);
+            AudioSystem.SwitchToSong(SongIndex);
         }
     }
 }

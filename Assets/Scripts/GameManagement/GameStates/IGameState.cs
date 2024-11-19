@@ -6,7 +6,7 @@ namespace GameStateManagement
 {
     public interface IGameState
     {
-        void EnterState();
+        void EnterState(IGameState previousState);
         void ExitState();
     }
 }
