@@ -16,10 +16,10 @@ public class SettingsController : MonoBehaviour
 {
     [SerializeField]
     public SettingsCategory[] settingsCategories;
-    Resolution[] resolutions;
 
     [SerializeField]
     AudioSource audioSource;
+    AudioMixer audioMixer;
 
     [SerializeField]
     UnityEvent doneBehavior;
@@ -37,9 +37,9 @@ public class SettingsController : MonoBehaviour
 
     void Awake()
     {
-        categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/Settings/SettingCategoryButton");
-        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/VerticalPanelPrefab");
-        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SingleSettingPrefab");
+        categoryButtonPrefab = Resources.Load<Button>("Prefabs/CoreSystems/CoreUI/Settings/SettingCategoryButton");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/CoreSystems/CoreUI/Settings/VerticalPanelPrefab");
+        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/CoreSystems/CoreUI/Settings/SingleSettingPrefab");
 
         categoriesPanel = this.gameObject.transform
             .GetChild(1)
@@ -132,79 +132,6 @@ public class SettingsController : MonoBehaviour
                 settingsCategories[i].settings[j].LoadSetting();
             }
         }
-    }
-
-    public void SetupResolutionDropdown(MonoBehaviour resolutionUIElement)
-    {
-        var resolutionDropdown = resolutionUIElement as TMPro.TMP_Dropdown;
-        resolutionDropdown.ClearOptions();
-        List<string> resolutionOptions = new List<string>();
-        resolutions = Screen.resolutions;
-        int currentResolutionIndex = 0;
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            string resolutionOption =
-                resolutions.ElementAt(i).width
-                + " x "
-                + resolutions.ElementAt(i).height
-                + " @ "
-                + resolutions.ElementAt(i).refreshRateRatio;
-            resolutionOptions.Add(resolutionOption);
-            if (
-                resolutions[i].width == Screen.currentResolution.width
-                && resolutions[i].height == Screen.currentResolution.height
-            )
-            {
-                currentResolutionIndex = i;
-            }
-        }
-        resolutionDropdown.AddOptions(resolutionOptions);
-        resolutionDropdown.RefreshShownValue();
-
-        resolutionDropdown.onValueChanged.AddListener(
-            delegate
-            {
-                SetResolution(resolutionDropdown.value);
-            }
-        );
-    }
-
-    public void SetupVolumeSlider(MonoBehaviour volumeUIElement)
-    {
-        var volumeSlider = volumeUIElement as Slider;
-        volumeSlider.onValueChanged.AddListener(
-            delegate
-            {
-                SetVolume(volumeSlider.value);
-            }
-        );
-    }
-
-    public void SetupFullscreenToggle(MonoBehaviour fullscreenUIElement)
-    {
-        var fullscreenToggle = fullscreenUIElement as Toggle;
-        fullscreenToggle.onValueChanged.AddListener(
-            delegate
-            {
-                SetFullscreen(fullscreenToggle.isOn);
-            }
-        );
-    }
-
-    public void SetFullscreen(bool isFullscreen)
-    {
-        Screen.fullScreen = isFullscreen;
-    }
-
-    public void SetVolume(float vol)
-    {
-        AudioListener.volume = vol;
-    }
-
-    public void SetResolution(int index)
-    {
-        Resolution resolution = resolutions[index];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 
     [System.Serializable]
