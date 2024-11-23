@@ -141,7 +141,8 @@ public class SettingsController : MonoBehaviour
         {
             Dropdown,
             Slider,
-            Toggle
+            Toggle,
+            InputBind
         };
 
         [System.Serializable]
@@ -182,6 +183,9 @@ public class SettingsController : MonoBehaviour
                     break;
                 case UIElementType.Toggle:
                     SetupToggle(uiElement.GetComponent<Toggle>());
+                    break;
+                case UIElementType.InputBind:
+                    SetupInputBindButton(uiElement.GetComponent<Button>());
                     break;
             }
 
@@ -234,6 +238,21 @@ public class SettingsController : MonoBehaviour
             else
             {
                 Debug.Log("Toggle prefab is not of type Toggle on " + config.label);
+            }
+        }
+
+        private void SetupInputBindButton(Button bindingButton)
+        {
+            if (bindingButton.GetType() == typeof(Button))
+            {
+                var bindingLabel = bindingButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+                bindingLabel.text = InputBindsHandler.Instance.FindBind("Walk").bindings[0].ToString();
+                Debug.Log(bindingLabel.text);
+                config.customSetup?.Invoke(bindingButton);
+            }
+            else
+            {
+                Debug.Log("InputBindingButton prefab is not of type Button on " + config.label);
             }
         }
 

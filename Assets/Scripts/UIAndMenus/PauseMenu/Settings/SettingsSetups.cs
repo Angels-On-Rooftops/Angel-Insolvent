@@ -82,6 +82,17 @@ public class SettingsSetup : MonoBehaviour
         );
     }
 
+    public void SetupInputBindButton(MonoBehaviour inputBindButtonUIElement)
+    {
+        var inputBindButton = inputBindButtonUIElement as Button;
+        inputBindButton.onClick.AddListener(
+            delegate
+            {
+                Debug.Log("inputbind button pressed");
+            }    
+        );
+    }
+
     //Settings Behaviors
     private void SetFullscreen(bool isFullscreen)
     {

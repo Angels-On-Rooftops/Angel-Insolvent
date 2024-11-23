@@ -12,7 +12,6 @@ namespace Items.Interactables
     /// </summary>
     public class PlayerInteractor : MonoBehaviour
     {
-        [SerializeField]
         [Tooltip("The keybinds that control character interaction with NPCs and objects in the environment.")]
         InputAction InteractAction;
 
@@ -27,6 +26,8 @@ namespace Items.Interactables
 
         private void OnEnable()
         {
+            InteractAction = InputBindsHandler.Instance.FindBind("InteractAction");
+
             InteractAction.performed += Interact;
             InteractAction.Enable();
         }
