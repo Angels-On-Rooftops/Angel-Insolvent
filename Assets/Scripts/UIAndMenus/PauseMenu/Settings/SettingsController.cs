@@ -9,6 +9,7 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 using static UnityEngine.InputManagerEntry;
@@ -181,7 +182,7 @@ public class SettingsController : MonoBehaviour
                     SetupToggle(uiElement.GetComponent<Toggle>());
                     break;
                 case UIElementType.InputBind:
-                    SetupInputBindButton(uiElement.GetComponent<Button>(), config.label);
+                    SetupInputBindButton(uiElement.GetComponent<Button>(), config.label, parent);
                     break;
             }
 
@@ -251,20 +252,36 @@ public class SettingsController : MonoBehaviour
             }
         }
 
-        private void SetupInputBindButton(Button bindingButton, string name)
+        private void SetupInputBindButton(Button bindingButton, string name, GameObject parent)
         {
             if (bindingButton.GetType() == typeof(Button))
             {
                 var bind = InputBindsHandler.Instance.FindBind(name);
-                var bindingLabel = bindingButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                string bindPath = InputBindsHandler.Instance.FindBind(bind.name).bindings[0].ToString();
-                bindingLabel.text = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
-                config.customSetup?.Invoke(bindingButton);
+                if (!bind.bindings[0].isComposite)
+                {
+                    SetInputButtonLabel(bindingButton.gameObject, bind, 0);
+                } else
+                {
+                    SetInputButtonLabel(bindingButton.gameObject, bind, 1);
+                    for(int i = 2; i < 5; i++)
+                    {
+                        var composite = Instantiate(prefab, parent.gameObject.transform);
+                        SetInputButtonLabel(composite, bind, i);
+                    }
+                }
             }
             else
             {
                 Debug.Log("InputBindingButton prefab is not of type Button on " + config.label);
             }
+        }
+
+        private void SetInputButtonLabel(GameObject button, InputAction bind, int index)
+        {
+            var bindingLabel = button.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            string bindPath = InputBindsHandler.Instance.FindBind(bind.name).bindings[index].ToString();
+            bindingLabel.text = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
+            config.customSetup?.Invoke(button.GetComponent<Button>());
         }
 
         public void SaveSetting()
