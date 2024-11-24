@@ -54,7 +54,7 @@ public class AdvancedMovement : MonoBehaviour
 
     void OnEnable()
     {
-        ActionKeybind = InputBindsHandler.Instance.FindBind("ActionKeybind");
+        ActionKeybind = InputBindsHandler.Instance.FindBind("Movement Action");
 
         StateMaid.GiveEvent(
             ActionKeybind,

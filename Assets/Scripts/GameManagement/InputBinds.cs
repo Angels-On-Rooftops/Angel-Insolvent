@@ -55,6 +55,15 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Navigate Inventory"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""807d0e6e-4b3e-4a82-9bef-19fa7a5568ef"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""6d66c8f0-8a49-4cfe-8050-5924b4c80782"",
@@ -64,7 +73,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ActionKeybind"",
+                    ""name"": ""Movement Action"",
                     ""type"": ""Button"",
                     ""id"": ""74a7b25c-c169-4b69-90da-27a336688907"",
                     ""expectedControlType"": ""Button"",
@@ -73,16 +82,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""InteractAction"",
-                    ""type"": ""Button"",
-                    ""id"": ""af539761-e1f8-4db2-ac83-268a7f8ab60b"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""InventoryAction"",
+                    ""name"": ""Open Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""4ee4eab2-7805-441d-8773-a646f77e6d90"",
                     ""expectedControlType"": ""Button"",
@@ -91,19 +91,10 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""SelectItem"",
+                    ""name"": ""Select and Interact"",
                     ""type"": ""Button"",
                     ""id"": ""90c92240-0536-46fc-ae1d-e8b4275711b5"",
                     ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""NavigateInventory"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""9ee4f851-fdf3-40dd-b5a6-dcb19312cb76"",
-                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -227,7 +218,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActionKeybind"",
+                    ""action"": ""Movement Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -238,7 +229,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActionKeybind"",
+                    ""action"": ""Movement Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -249,29 +240,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ActionKeybind"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d23f03ab-5e13-4b4d-aa9c-3af7ce2e70b0"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""InteractAction"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c3673df7-70b8-47da-8ed8-98aa440efaa6"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""InteractAction"",
+                    ""action"": ""Movement Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -282,7 +251,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""InventoryAction"",
+                    ""action"": ""Open Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -293,7 +262,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""InventoryAction"",
+                    ""action"": ""Open Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -304,7 +273,7 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectItem"",
+                    ""action"": ""Select and Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -315,119 +284,75 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SelectItem"",
+                    ""action"": ""Select and Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""WASD"",
-                    ""id"": ""c0b8c573-0fd1-4293-b69d-cbd89f2929b3"",
+                    ""id"": ""b61a3eb9-add3-486c-bf44-3d5377db1f6f"",
                     ""path"": ""2DVector"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""NavigateInventory"",
+                    ""action"": ""Navigate Inventory"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": ""up"",
-                    ""id"": ""f8bd77da-8ac8-4e56-aa11-d524a5dc1da8"",
+                    ""id"": ""3d27054e-6d4b-4aef-95bd-b18bfec877d0"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""NavigateInventory"",
+                    ""action"": ""Navigate Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""down"",
-                    ""id"": ""d686b726-d7ee-45e0-bc7f-921f31a52869"",
+                    ""id"": ""f019f869-7316-44fe-8ecb-9f89163ede67"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""NavigateInventory"",
+                    ""action"": ""Navigate Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""left"",
-                    ""id"": ""a232745a-0a6c-4670-8133-c8c19fcf8842"",
+                    ""id"": ""747e7867-1f0b-41f2-8831-17284f643585"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""NavigateInventory"",
+                    ""action"": ""Navigate Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""right"",
-                    ""id"": ""1ec676d5-272a-4b35-8071-b3185bf1c8f3"",
+                    ""id"": ""e2844d9f-69fa-41bc-bfbe-b215acf98ce5"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""NavigateInventory"",
+                    ""action"": ""Navigate Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""LeftStick"",
-                    ""id"": ""9e05830e-db47-40bb-b342-b67e49eae1e3"",
-                    ""path"": ""2DVector"",
+                    ""name"": """",
+                    ""id"": ""a6c8da60-6406-47ec-b4a3-731c4ee048b0"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""NavigateInventory"",
-                    ""isComposite"": true,
+                    ""action"": ""Navigate Inventory"",
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""87d3a703-24fe-468d-a8c3-fce745bbb2bb"",
-                    ""path"": ""<Gamepad>/leftStick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""NavigateInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""9bc63707-1e26-4b60-b688-77624aebb8cd"",
-                    ""path"": ""<Gamepad>/leftStick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""NavigateInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""26d58ff4-37f6-4290-a041-58696e935491"",
-                    ""path"": ""<Gamepad>/leftStick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""NavigateInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""2224ba8b-26ed-44c1-bffb-ee931a263cc2"",
-                    ""path"": ""<Gamepad>/leftStick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""NavigateInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -847,12 +772,11 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
         m_DefaultBinds_SaveGame = m_DefaultBinds.FindAction("SaveGame", throwIfNotFound: true);
         m_DefaultBinds_LoadGame = m_DefaultBinds.FindAction("LoadGame", throwIfNotFound: true);
         m_DefaultBinds_Walk = m_DefaultBinds.FindAction("Walk", throwIfNotFound: true);
+        m_DefaultBinds_NavigateInventory = m_DefaultBinds.FindAction("Navigate Inventory", throwIfNotFound: true);
         m_DefaultBinds_Jump = m_DefaultBinds.FindAction("Jump", throwIfNotFound: true);
-        m_DefaultBinds_ActionKeybind = m_DefaultBinds.FindAction("ActionKeybind", throwIfNotFound: true);
-        m_DefaultBinds_InteractAction = m_DefaultBinds.FindAction("InteractAction", throwIfNotFound: true);
-        m_DefaultBinds_InventoryAction = m_DefaultBinds.FindAction("InventoryAction", throwIfNotFound: true);
-        m_DefaultBinds_SelectItem = m_DefaultBinds.FindAction("SelectItem", throwIfNotFound: true);
-        m_DefaultBinds_NavigateInventory = m_DefaultBinds.FindAction("NavigateInventory", throwIfNotFound: true);
+        m_DefaultBinds_MovementAction = m_DefaultBinds.FindAction("Movement Action", throwIfNotFound: true);
+        m_DefaultBinds_OpenInventory = m_DefaultBinds.FindAction("Open Inventory", throwIfNotFound: true);
+        m_DefaultBinds_SelectandInteract = m_DefaultBinds.FindAction("Select and Interact", throwIfNotFound: true);
         // CurrentBinds
         m_CurrentBinds = asset.FindActionMap("CurrentBinds", throwIfNotFound: true);
         m_CurrentBinds_SaveGame = m_CurrentBinds.FindAction("SaveGame", throwIfNotFound: true);
@@ -928,12 +852,11 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
     private readonly InputAction m_DefaultBinds_SaveGame;
     private readonly InputAction m_DefaultBinds_LoadGame;
     private readonly InputAction m_DefaultBinds_Walk;
-    private readonly InputAction m_DefaultBinds_Jump;
-    private readonly InputAction m_DefaultBinds_ActionKeybind;
-    private readonly InputAction m_DefaultBinds_InteractAction;
-    private readonly InputAction m_DefaultBinds_InventoryAction;
-    private readonly InputAction m_DefaultBinds_SelectItem;
     private readonly InputAction m_DefaultBinds_NavigateInventory;
+    private readonly InputAction m_DefaultBinds_Jump;
+    private readonly InputAction m_DefaultBinds_MovementAction;
+    private readonly InputAction m_DefaultBinds_OpenInventory;
+    private readonly InputAction m_DefaultBinds_SelectandInteract;
     public struct DefaultBindsActions
     {
         private @InputBinds m_Wrapper;
@@ -941,12 +864,11 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
         public InputAction @SaveGame => m_Wrapper.m_DefaultBinds_SaveGame;
         public InputAction @LoadGame => m_Wrapper.m_DefaultBinds_LoadGame;
         public InputAction @Walk => m_Wrapper.m_DefaultBinds_Walk;
-        public InputAction @Jump => m_Wrapper.m_DefaultBinds_Jump;
-        public InputAction @ActionKeybind => m_Wrapper.m_DefaultBinds_ActionKeybind;
-        public InputAction @InteractAction => m_Wrapper.m_DefaultBinds_InteractAction;
-        public InputAction @InventoryAction => m_Wrapper.m_DefaultBinds_InventoryAction;
-        public InputAction @SelectItem => m_Wrapper.m_DefaultBinds_SelectItem;
         public InputAction @NavigateInventory => m_Wrapper.m_DefaultBinds_NavigateInventory;
+        public InputAction @Jump => m_Wrapper.m_DefaultBinds_Jump;
+        public InputAction @MovementAction => m_Wrapper.m_DefaultBinds_MovementAction;
+        public InputAction @OpenInventory => m_Wrapper.m_DefaultBinds_OpenInventory;
+        public InputAction @SelectandInteract => m_Wrapper.m_DefaultBinds_SelectandInteract;
         public InputActionMap Get() { return m_Wrapper.m_DefaultBinds; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -965,24 +887,21 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
             @Walk.started += instance.OnWalk;
             @Walk.performed += instance.OnWalk;
             @Walk.canceled += instance.OnWalk;
-            @Jump.started += instance.OnJump;
-            @Jump.performed += instance.OnJump;
-            @Jump.canceled += instance.OnJump;
-            @ActionKeybind.started += instance.OnActionKeybind;
-            @ActionKeybind.performed += instance.OnActionKeybind;
-            @ActionKeybind.canceled += instance.OnActionKeybind;
-            @InteractAction.started += instance.OnInteractAction;
-            @InteractAction.performed += instance.OnInteractAction;
-            @InteractAction.canceled += instance.OnInteractAction;
-            @InventoryAction.started += instance.OnInventoryAction;
-            @InventoryAction.performed += instance.OnInventoryAction;
-            @InventoryAction.canceled += instance.OnInventoryAction;
-            @SelectItem.started += instance.OnSelectItem;
-            @SelectItem.performed += instance.OnSelectItem;
-            @SelectItem.canceled += instance.OnSelectItem;
             @NavigateInventory.started += instance.OnNavigateInventory;
             @NavigateInventory.performed += instance.OnNavigateInventory;
             @NavigateInventory.canceled += instance.OnNavigateInventory;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @MovementAction.started += instance.OnMovementAction;
+            @MovementAction.performed += instance.OnMovementAction;
+            @MovementAction.canceled += instance.OnMovementAction;
+            @OpenInventory.started += instance.OnOpenInventory;
+            @OpenInventory.performed += instance.OnOpenInventory;
+            @OpenInventory.canceled += instance.OnOpenInventory;
+            @SelectandInteract.started += instance.OnSelectandInteract;
+            @SelectandInteract.performed += instance.OnSelectandInteract;
+            @SelectandInteract.canceled += instance.OnSelectandInteract;
         }
 
         private void UnregisterCallbacks(IDefaultBindsActions instance)
@@ -996,24 +915,21 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
             @Walk.started -= instance.OnWalk;
             @Walk.performed -= instance.OnWalk;
             @Walk.canceled -= instance.OnWalk;
-            @Jump.started -= instance.OnJump;
-            @Jump.performed -= instance.OnJump;
-            @Jump.canceled -= instance.OnJump;
-            @ActionKeybind.started -= instance.OnActionKeybind;
-            @ActionKeybind.performed -= instance.OnActionKeybind;
-            @ActionKeybind.canceled -= instance.OnActionKeybind;
-            @InteractAction.started -= instance.OnInteractAction;
-            @InteractAction.performed -= instance.OnInteractAction;
-            @InteractAction.canceled -= instance.OnInteractAction;
-            @InventoryAction.started -= instance.OnInventoryAction;
-            @InventoryAction.performed -= instance.OnInventoryAction;
-            @InventoryAction.canceled -= instance.OnInventoryAction;
-            @SelectItem.started -= instance.OnSelectItem;
-            @SelectItem.performed -= instance.OnSelectItem;
-            @SelectItem.canceled -= instance.OnSelectItem;
             @NavigateInventory.started -= instance.OnNavigateInventory;
             @NavigateInventory.performed -= instance.OnNavigateInventory;
             @NavigateInventory.canceled -= instance.OnNavigateInventory;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @MovementAction.started -= instance.OnMovementAction;
+            @MovementAction.performed -= instance.OnMovementAction;
+            @MovementAction.canceled -= instance.OnMovementAction;
+            @OpenInventory.started -= instance.OnOpenInventory;
+            @OpenInventory.performed -= instance.OnOpenInventory;
+            @OpenInventory.canceled -= instance.OnOpenInventory;
+            @SelectandInteract.started -= instance.OnSelectandInteract;
+            @SelectandInteract.performed -= instance.OnSelectandInteract;
+            @SelectandInteract.canceled -= instance.OnSelectandInteract;
         }
 
         public void RemoveCallbacks(IDefaultBindsActions instance)
@@ -1146,12 +1062,11 @@ public partial class @InputBinds: IInputActionCollection2, IDisposable
         void OnSaveGame(InputAction.CallbackContext context);
         void OnLoadGame(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
-        void OnJump(InputAction.CallbackContext context);
-        void OnActionKeybind(InputAction.CallbackContext context);
-        void OnInteractAction(InputAction.CallbackContext context);
-        void OnInventoryAction(InputAction.CallbackContext context);
-        void OnSelectItem(InputAction.CallbackContext context);
         void OnNavigateInventory(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
+        void OnMovementAction(InputAction.CallbackContext context);
+        void OnOpenInventory(InputAction.CallbackContext context);
+        void OnSelectandInteract(InputAction.CallbackContext context);
     }
     public interface ICurrentBindsActions
     {

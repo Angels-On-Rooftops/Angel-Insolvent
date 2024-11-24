@@ -26,7 +26,7 @@ namespace Items.Interactables
 
         private void OnEnable()
         {
-            InteractAction = InputBindsHandler.Instance.FindBind("InteractAction");
+            InteractAction = InputBindsHandler.Instance.FindBind("Select and Interact");
 
             InteractAction.performed += Interact;
             InteractAction.Enable();

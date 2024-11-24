@@ -11,6 +11,7 @@ using UnityEngine.Audio;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static UnityEngine.InputManagerEntry;
 
 public class SettingsController : MonoBehaviour
 {
@@ -162,12 +163,7 @@ public class SettingsController : MonoBehaviour
 
         public void CreateUIElement(GameObject parent, int listIndex)
         {
-            //Create setting label
-            GameObject settingLabel = new GameObject("Label");
-            settingLabel.transform.SetParent(parent.gameObject.transform, false);
-            settingLabel.AddComponent<RectTransform>();
-            var labelText = settingLabel.AddComponent<TextMeshProUGUI>();
-            labelText.text = config.label;
+            SetupLabel(parent, config.label);
 
             //Create setting UI element
             GameObject uiElement = null;
@@ -185,10 +181,24 @@ public class SettingsController : MonoBehaviour
                     SetupToggle(uiElement.GetComponent<Toggle>());
                     break;
                 case UIElementType.InputBind:
-                    SetupInputBindButton(uiElement.GetComponent<Button>());
+                    SetupInputBindButton(uiElement.GetComponent<Button>(), config.label);
                     break;
             }
 
+            SetupElementSpacing(uiElement, listIndex);
+        }
+
+        private void SetupLabel(GameObject parent, string text)
+        {
+            GameObject settingLabel = new GameObject("Label");
+            settingLabel.transform.SetParent(parent.gameObject.transform, false);
+            settingLabel.AddComponent<RectTransform>();
+            var labelText = settingLabel.AddComponent<TextMeshProUGUI>();
+            labelText.text = text;
+        }
+
+        private void SetupElementSpacing(GameObject uiElement, int listIndex)
+        {
             if (uiElement != null)
             {
                 RectTransform newRectTransform = uiElement.GetComponent<RectTransform>();
@@ -241,13 +251,14 @@ public class SettingsController : MonoBehaviour
             }
         }
 
-        private void SetupInputBindButton(Button bindingButton)
+        private void SetupInputBindButton(Button bindingButton, string name)
         {
             if (bindingButton.GetType() == typeof(Button))
             {
+                var bind = InputBindsHandler.Instance.FindBind(name);
                 var bindingLabel = bindingButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
-                bindingLabel.text = InputBindsHandler.Instance.FindBind("Walk").bindings[0].ToString();
-                Debug.Log(bindingLabel.text);
+                string bindPath = InputBindsHandler.Instance.FindBind(bind.name).bindings[0].ToString();
+                bindingLabel.text = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
                 config.customSetup?.Invoke(bindingButton);
             }
             else

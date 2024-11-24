@@ -30,6 +30,11 @@ public class InputBindsHandler
         }
     }
 
+    public InputBinds GetInputBinds()
+    {
+        return inputBinds;
+    }
+
     public InputAction FindBind(string bindName)
     {
         return inputBinds.FindAction(bindName);
