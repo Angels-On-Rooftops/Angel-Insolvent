@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
 public class InputBindsHandler
 {
@@ -9,6 +10,7 @@ public class InputBindsHandler
     private static readonly object instanceLock = new object(); //thread-safe for co-routines
 
     private InputBinds inputBinds;
+    private RebindingOperation rebindingOperation;
 
     InputBindsHandler()
     {
@@ -38,5 +40,35 @@ public class InputBindsHandler
     public InputAction FindBind(string bindName)
     {
         return inputBinds.FindAction(bindName);
+    }
+
+    public void OnRebindButtonClicked(InputAction action, int bindingIndex)
+    {
+        Debug.Log($"Listening for input to rebind {action.name} - {action.bindings[bindingIndex].name}");
+
+        StartListeningForInput(action, bindingIndex);
+    }
+
+    private void StartListeningForInput(InputAction action, int bindingIndex)
+    {
+        if (rebindingOperation != null)
+            rebindingOperation.Cancel();
+
+        action.Disable();
+
+        rebindingOperation = action.PerformInteractiveRebinding(bindingIndex)
+            .OnMatchWaitForAnother(0.1f) // Prevent accidental double-input capture
+            .OnComplete(operation => FinishListeningForInput(action, bindingIndex))
+            .Start();
+    }
+
+    private void FinishListeningForInput(InputAction action, int bindingIndex)
+    {
+        rebindingOperation.Dispose();
+        rebindingOperation = null;
+
+        action.Enable();
+
+        Debug.Log($"Keybind updated: {action.name} - {action.bindings[bindingIndex].effectivePath}");
     }
 }

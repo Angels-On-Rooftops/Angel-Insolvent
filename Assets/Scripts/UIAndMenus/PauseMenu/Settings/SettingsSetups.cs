@@ -82,13 +82,16 @@ public class SettingsSetup : MonoBehaviour
         );
     }
 
-    public void SetupInputBindButton(MonoBehaviour inputBindButtonUIElement)
+    public void SetupInputBindButton(MonoBehaviour inputBindButtonData)
     {
-        var inputBindButton = inputBindButtonUIElement as Button;
+        var inputBindData = inputBindButtonData as BindingButtonData;
+        var inputBindButton = inputBindData.uiButtonElement;
+        var inputBindAction = inputBindData.action;
+
         inputBindButton.onClick.AddListener(
             delegate
             {
-                Debug.Log("inputbind button pressed");
+                InputBindsHandler.Instance.OnRebindButtonClicked(inputBindAction, 0);
             }    
         );
     }

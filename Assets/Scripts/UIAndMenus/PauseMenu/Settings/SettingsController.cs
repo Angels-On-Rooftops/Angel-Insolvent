@@ -278,10 +278,14 @@ public class SettingsController : MonoBehaviour
 
         private void SetInputButtonLabel(GameObject button, InputAction bind, int index)
         {
+            var buttonData = button.GetComponent<BindingButtonData>();
+            buttonData.uiButtonElement = button.GetComponent<Button>();
+            buttonData.action = bind;
+
             var bindingLabel = button.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             string bindPath = InputBindsHandler.Instance.FindBind(bind.name).bindings[index].ToString();
             bindingLabel.text = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
-            config.customSetup?.Invoke(button.GetComponent<Button>());
+            config.customSetup?.Invoke(buttonData);
         }
 
         public void SaveSetting()
