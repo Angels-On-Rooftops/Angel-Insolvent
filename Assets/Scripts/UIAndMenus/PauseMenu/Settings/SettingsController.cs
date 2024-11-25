@@ -152,6 +152,7 @@ public class SettingsController : MonoBehaviour
         {
             public UIElementType type;
             public string label;
+            public bool isKeyboardBinds;
 
             public UnityEvent<MonoBehaviour> customSetup;
         }
@@ -281,6 +282,7 @@ public class SettingsController : MonoBehaviour
             var buttonData = button.GetComponent<BindingButtonData>();
             buttonData.uiButtonElement = button.GetComponent<Button>();
             buttonData.action = bind;
+            buttonData.isKeyboardBind = config.isKeyboardBinds;
 
             var bindingLabel = button.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             string bindPath = InputBindsHandler.Instance.FindBind(bind.name).bindings[index].ToString();

@@ -11,15 +11,11 @@ public class InputBindsHandler
     private static readonly object instanceLock = new object(); //thread-safe for co-routines
 
     private InputBinds inputBinds;
-    private InputActionMap defaultBinds;
-    private InputActionMap currentBinds;
     private RebindingOperation rebindingOperation;
 
     InputBindsHandler()
     {
         inputBinds = new InputBinds();
-        defaultBinds = inputBinds.asset.FindActionMap("DefaultBinds");
-        currentBinds = inputBinds.asset.FindActionMap("CurrentBinds");
     }
 
     public static InputBindsHandler Instance

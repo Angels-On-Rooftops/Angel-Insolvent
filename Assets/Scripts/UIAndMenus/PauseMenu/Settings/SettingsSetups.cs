@@ -87,11 +87,12 @@ public class SettingsSetup : MonoBehaviour
         var inputBindData = inputBindButtonData as BindingButtonData;
         var inputBindButton = inputBindData.uiButtonElement;
         var inputBindAction = inputBindData.action;
+        int actionIndex = inputBindData.isKeyboardBind ? 0 : 1;
 
         inputBindButton.onClick.AddListener(
             delegate
             {
-                InputBindsHandler.Instance.OnRebindButtonClicked(inputBindAction, 0);
+                InputBindsHandler.Instance.OnRebindButtonClicked(inputBindAction, actionIndex);
             }    
         );
     }

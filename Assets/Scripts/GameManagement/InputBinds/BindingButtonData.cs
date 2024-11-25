@@ -10,4 +10,6 @@ public class BindingButtonData : MonoBehaviour
     public UnityEngine.UI.Button uiButtonElement;
     [NonSerialized]
     public InputAction action;
+    [NonSerialized]
+    public bool isKeyboardBind;
 }
