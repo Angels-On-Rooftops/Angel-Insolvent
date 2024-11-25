@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,15 @@ public class InputBindsHandler
     private static readonly object instanceLock = new object(); //thread-safe for co-routines
 
     private InputBinds inputBinds;
+    private InputActionMap defaultBinds;
+    private InputActionMap currentBinds;
     private RebindingOperation rebindingOperation;
 
     InputBindsHandler()
     {
         inputBinds = new InputBinds();
+        defaultBinds = inputBinds.asset.FindActionMap("DefaultBinds");
+        currentBinds = inputBinds.asset.FindActionMap("CurrentBinds");
     }
 
     public static InputBindsHandler Instance
@@ -44,8 +49,6 @@ public class InputBindsHandler
 
     public void OnRebindButtonClicked(InputAction action, int bindingIndex)
     {
-        Debug.Log($"Listening for input to rebind {action.name} - {action.bindings[bindingIndex].name}");
-
         StartListeningForInput(action, bindingIndex);
     }
 
@@ -66,9 +69,25 @@ public class InputBindsHandler
     {
         rebindingOperation.Dispose();
         rebindingOperation = null;
-
         action.Enable();
+    }
 
-        Debug.Log($"Keybind updated: {action.name} - {action.bindings[bindingIndex].effectivePath}");
+    public void SaveBind(string bindName)
+    {
+        var bind = FindBind(bindName);
+        PlayerPrefs.SetString(bindName, bind.SaveBindingOverridesAsJson());
+    }
+
+    public void LoadBind(string bindName)
+    {
+        if(PlayerPrefs.HasKey(bindName))
+        {
+            string bindJson = PlayerPrefs.GetString(bindName);
+            var bind = FindBind(bindName);
+            bind.LoadBindingOverridesFromJson(bindJson);
+        } else
+        {
+            Debug.Log($"No binding found for {bindName}");
+        }
     }
 }

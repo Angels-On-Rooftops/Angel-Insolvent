@@ -303,6 +303,9 @@ public class SettingsController : MonoBehaviour
                     case UIElementType.Toggle:
                         PlayerPrefs.SetInt(config.label, settingUiElement.GetComponent<Toggle>().isOn ? 1 : 0);
                         break;
+                    case UIElementType.InputBind:
+                        InputBindsHandler.Instance.SaveBind(config.label);
+                        break;
                 }
             }
         }
@@ -319,6 +322,9 @@ public class SettingsController : MonoBehaviour
                     break;
                 case UIElementType.Toggle:
                     settingUiElement.GetComponent<Toggle>().isOn = PlayerPrefs.GetInt(config.label) != 0;
+                    break;
+                case UIElementType.InputBind:
+                    InputBindsHandler.Instance.LoadBind(config.label);
                     break;
             }
         }

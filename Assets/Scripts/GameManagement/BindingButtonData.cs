@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class BindingButtonData : MonoBehaviour
 {
     [NonSerialized]
-    public Button uiButtonElement;
+    public UnityEngine.UI.Button uiButtonElement;
     [NonSerialized]
     public InputAction action;
 }
