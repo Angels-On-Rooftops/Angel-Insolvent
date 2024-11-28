@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static UnityEngine.InputManagerEntry;
 using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
 public class InputBindsHandler
@@ -67,16 +69,17 @@ public class InputBindsHandler
         rebindingOperation.Dispose();
         rebindingOperation = null;
         action.Enable();
+
+        GameObject bindButton = EventSystem.current.currentSelectedGameObject;
+        var bindingLabel = bindButton.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        string bindPath = action.bindings[bindingIndex].ToString();
+        bindingLabel.text = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
     }
 
     public void SaveBind(string bindName)
     {
         var bind = FindBind(bindName);
         PlayerPrefs.SetString(bindName, bind.SaveBindingOverridesAsJson());
-
-        string bindPath = FindBind(bind.name).bindings[0].ToString();
-        string bindText = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
-        currentNamesToBinds[bindName] = bindText;
     }
 
     public void LoadBind(string bindName)
@@ -86,10 +89,6 @@ public class InputBindsHandler
             string bindJson = PlayerPrefs.GetString(bindName);
             var bind = FindBind(bindName);
             bind.LoadBindingOverridesFromJson(bindJson);
-
-            string bindPath = FindBind(bind.name).bindings[0].ToString();
-            string bindText = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
-            currentNamesToBinds.Add(bindName, bindText);
         } else
         {
             Debug.Log($"No binding found for {bindName}");
