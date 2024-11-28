@@ -152,13 +152,18 @@ public class SettingsController : MonoBehaviour
         {
             public UIElementType type;
             public string label;
-            public bool isKeyboardBinds;
 
             public UnityEvent<MonoBehaviour> customSetup;
+
+            [SerializeField]
+            [Tooltip("Ignore this if this setting is not an input binding changer")]
+            private InputAction inputAction;
         }
 
         public UIElementConfig config;
         public GameObject prefab;
+        
+        public bool isKeyboardBind;
 
         [NonSerialized]
         public GameObject settingUiElement;
@@ -183,7 +188,7 @@ public class SettingsController : MonoBehaviour
                     SetupToggle(uiElement.GetComponent<Toggle>());
                     break;
                 case UIElementType.InputBind:
-                    SetupInputBindButton(uiElement.GetComponent<Button>(), config.label, parent);
+                    SetupInputBindButton(uiElement, config.label, parent);
                     break;
             }
 
@@ -253,16 +258,27 @@ public class SettingsController : MonoBehaviour
             }
         }
 
-        private void SetupInputBindButton(Button bindingButton, string name, GameObject parent)
+        private void SetupInputBindButton(GameObject uiElement, string name, GameObject parent)
         {
+            var bind = InputBindsHandler.Instance.FindBind(name);
+
+            var bindingButton = uiElement.GetComponent<Button>();
+            var bindingData = uiElement.GetComponent<BindingButtonData>();
+            bindingData.uiButtonElement = uiElement.GetComponent<Button>();
+            bindingData.action = bind;
+            bindingData.isKeyboardBind = isKeyboardBind;
+
+            int index = isKeyboardBind ? 0 : 1;
+
             if (bindingButton.GetType() == typeof(Button))
             {
-                var bind = InputBindsHandler.Instance.FindBind(name);
-                if (!bind.bindings[0].isComposite)
+                if (!bind.bindings[index].isComposite)
                 {
-                    SetInputButtonLabel(bindingButton.gameObject, bind, 0);
+                    SetInputButtonLabel(bindingButton.gameObject, bind, index);
                 } else
                 {
+                    int startIndex = isKeyboardBind ? 1 : 0;
+
                     SetInputButtonLabel(bindingButton.gameObject, bind, 1);
                     for(int i = 2; i < 5; i++)
                     {
@@ -279,15 +295,15 @@ public class SettingsController : MonoBehaviour
 
         private void SetInputButtonLabel(GameObject button, InputAction bind, int index)
         {
-            var buttonData = button.GetComponent<BindingButtonData>();
-            buttonData.uiButtonElement = button.GetComponent<Button>();
-            buttonData.action = bind;
-            buttonData.isKeyboardBind = config.isKeyboardBinds;
+            var bindingData = button.GetComponent<BindingButtonData>();
+            bindingData.uiButtonElement = button.GetComponent<Button>();
+            bindingData.action = bind;
+            bindingData.isKeyboardBind = isKeyboardBind;
 
             var bindingLabel = button.GetComponentInChildren<TMPro.TextMeshProUGUI>();
             string bindPath = InputBindsHandler.Instance.FindBind(bind.name).bindings[index].ToString();
             bindingLabel.text = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
-            config.customSetup?.Invoke(buttonData);
+            config.customSetup?.Invoke(bindingData);
         }
 
         public void SaveSetting()

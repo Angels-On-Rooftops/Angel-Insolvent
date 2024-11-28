@@ -448,6 +448,10 @@ PrefabInstance:
       propertyPath: maxSensitivity
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 653446284728320407, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 654847165526788117, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -474,6 +478,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2316518807791289760, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2316518807791289760, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3858309600369471352, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
@@ -532,6 +540,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7057460743347501851, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: m_ChildAlignment
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8445253590415747610, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -555,6 +567,10 @@ PrefabInstance:
     - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: settingsCategories.Array.data[3].name
       value: Gamepad Controls
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].isKeyboardBinds
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: settingsCategories.Array.data[2].settings.Array.size
@@ -694,7 +710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: settingsCategories.Array.data[2].settings.Array.data[6].config.label
-      value: Open Inventory
+      value: Navigate Inventory
       objectReference: {fileID: 0}
     - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: settingsCategories.Array.data[2].settings.Array.data[7].config.label
@@ -725,8 +741,124 @@ PrefabInstance:
       value: Sensitivity
       objectReference: {fileID: 0}
     - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[1].isKeyboardBind
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[2].isKeyboardBind
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[3].isKeyboardBind
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[4].isKeyboardBind
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[5].isKeyboardBind
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: settingsCategories.Array.data[2].settings.Array.data[0].config.isKeyboardBinds
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[1].config.inputAction.m_Id
+      value: 91d84d90-b2cc-413f-939a-ae23c8090293
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[2].config.inputAction.m_Id
+      value: b0d7a6b7-eda2-4e1c-ae75-c49d282cadb1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[3].config.inputAction.m_Id
+      value: 01940118-aae3-474d-93e4-31bd16ed9f06
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[4].config.inputAction.m_Id
+      value: 6996e7db-6c81-4cb6-bf77-f38270611ee4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[5].config.inputAction.m_Id
+      value: a76fd3b3-9b4b-4ac9-b050-ebf16e842c1b
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[6].config.inputAction.m_Id
+      value: a76fd3b3-9b4b-4ac9-b050-ebf16e842c1b
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[0].config.inputAction.m_Id
+      value: 768f56fd-006c-4303-b06e-842026ee13c1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[1].config.inputAction.m_Id
+      value: 1ae65834-66fc-4433-965a-a393cf7c6397
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[2].config.inputAction.m_Id
+      value: 9eaf8cca-19a4-43be-9f37-e3bcfa4a2317
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[3].config.inputAction.m_Id
+      value: 8f9caf54-ad2a-48cc-8d12-025a1225b160
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[4].config.inputAction.m_Id
+      value: 57e99ee7-cf8c-41dd-84c8-e7588040e2a9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[1].settings.Array.data[0].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[0].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[1].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[2].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[3].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[4].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[5].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[2].settings.Array.data[6].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[0].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[1].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[2].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[3].config.inputAction.m_Name
+      value: Input
+      objectReference: {fileID: 0}
+    - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
+      propertyPath: settingsCategories.Array.data[3].settings.Array.data[4].config.inputAction.m_Name
+      value: Input
       objectReference: {fileID: 0}
     - target: {fileID: 8644967991163619783, guid: 2e11d248b36ae2346ae732ca5d8bee27, type: 3}
       propertyPath: settingsCategories.Array.data[2].settings.Array.data[1].config.customSetup.m_PersistentCalls.m_Calls.Array.size

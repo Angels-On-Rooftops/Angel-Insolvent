@@ -12,6 +12,7 @@ public class InputBindsHandler
 
     private InputBinds inputBinds;
     private RebindingOperation rebindingOperation;
+    private Dictionary<string, string> currentNamesToBinds = new Dictionary<string, string>();
 
     InputBindsHandler()
     {
@@ -72,6 +73,10 @@ public class InputBindsHandler
     {
         var bind = FindBind(bindName);
         PlayerPrefs.SetString(bindName, bind.SaveBindingOverridesAsJson());
+
+        string bindPath = FindBind(bind.name).bindings[0].ToString();
+        string bindText = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
+        currentNamesToBinds[bindName] = bindText;
     }
 
     public void LoadBind(string bindName)
@@ -81,6 +86,10 @@ public class InputBindsHandler
             string bindJson = PlayerPrefs.GetString(bindName);
             var bind = FindBind(bindName);
             bind.LoadBindingOverridesFromJson(bindJson);
+
+            string bindPath = FindBind(bind.name).bindings[0].ToString();
+            string bindText = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
+            currentNamesToBinds.Add(bindName, bindText);
         } else
         {
             Debug.Log($"No binding found for {bindName}");
