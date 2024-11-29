@@ -107,6 +107,12 @@ public class CharacterCamera : MonoBehaviour
         timer = Mathf.Max(0, timer);
     }
 
+    public void SetRotationSensitivity(float sensitivity)
+    {
+        MouseRotationSensitivity = sensitivity;
+        GamepadRotationSensitivity = sensitivity;
+    }
+
     // Start is called before the first frame update
     void OnEnable()
     {

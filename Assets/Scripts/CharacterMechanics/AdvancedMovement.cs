@@ -8,7 +8,6 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterMovement))]
 public class AdvancedMovement : MonoBehaviour
 {
-    [SerializeField]
     InputAction ActionKeybind;
 
     public event Action ActionRequested;
@@ -55,6 +54,8 @@ public class AdvancedMovement : MonoBehaviour
 
     void OnEnable()
     {
+        ActionKeybind = InputBindsHandler.Instance.FindBind("Movement Action");
+
         StateMaid.GiveEvent(
             ActionKeybind,
             "performed",

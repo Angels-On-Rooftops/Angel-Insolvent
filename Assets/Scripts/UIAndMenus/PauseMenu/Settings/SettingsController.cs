@@ -9,17 +9,19 @@ using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static UnityEngine.InputManagerEntry;
 
 public class SettingsController : MonoBehaviour
 {
     [SerializeField]
     public SettingsCategory[] settingsCategories;
-    Resolution[] resolutions;
 
     [SerializeField]
     AudioSource audioSource;
+    AudioMixer audioMixer;
 
     [SerializeField]
     UnityEvent doneBehavior;
@@ -37,9 +39,9 @@ public class SettingsController : MonoBehaviour
 
     void Awake()
     {
-        categoryButtonPrefab = Resources.Load<Button>("Prefabs/UI/Settings/SettingCategoryButton");
-        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/VerticalPanelPrefab");
-        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/UI/Settings/SingleSettingPrefab");
+        categoryButtonPrefab = Resources.Load<Button>("Prefabs/CoreSystems/CoreUI/Settings/SettingCategoryButton");
+        settingsPanelPrefab = Resources.Load<GameObject>("Prefabs/CoreSystems/CoreUI/Settings/VerticalPanelPrefab");
+        singleSettingPrefab = Resources.Load<GameObject>("Prefabs/CoreSystems/CoreUI/Settings/SingleSettingPrefab");
 
         categoriesPanel = this.gameObject.transform
             .GetChild(1)
@@ -134,79 +136,6 @@ public class SettingsController : MonoBehaviour
         }
     }
 
-    public void SetupResolutionDropdown(MonoBehaviour resolutionUIElement)
-    {
-        var resolutionDropdown = resolutionUIElement as TMPro.TMP_Dropdown;
-        resolutionDropdown.ClearOptions();
-        List<string> resolutionOptions = new List<string>();
-        resolutions = Screen.resolutions;
-        int currentResolutionIndex = 0;
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            string resolutionOption =
-                resolutions.ElementAt(i).width
-                + " x "
-                + resolutions.ElementAt(i).height
-                + " @ "
-                + resolutions.ElementAt(i).refreshRateRatio;
-            resolutionOptions.Add(resolutionOption);
-            if (
-                resolutions[i].width == Screen.currentResolution.width
-                && resolutions[i].height == Screen.currentResolution.height
-            )
-            {
-                currentResolutionIndex = i;
-            }
-        }
-        resolutionDropdown.AddOptions(resolutionOptions);
-        resolutionDropdown.RefreshShownValue();
-
-        resolutionDropdown.onValueChanged.AddListener(
-            delegate
-            {
-                SetResolution(resolutionDropdown.value);
-            }
-        );
-    }
-
-    public void SetupVolumeSlider(MonoBehaviour volumeUIElement)
-    {
-        var volumeSlider = volumeUIElement as Slider;
-        volumeSlider.onValueChanged.AddListener(
-            delegate
-            {
-                SetVolume(volumeSlider.value);
-            }
-        );
-    }
-
-    public void SetupFullscreenToggle(MonoBehaviour fullscreenUIElement)
-    {
-        var fullscreenToggle = fullscreenUIElement as Toggle;
-        fullscreenToggle.onValueChanged.AddListener(
-            delegate
-            {
-                SetFullscreen(fullscreenToggle.isOn);
-            }
-        );
-    }
-
-    public void SetFullscreen(bool isFullscreen)
-    {
-        Screen.fullScreen = isFullscreen;
-    }
-
-    public void SetVolume(float vol)
-    {
-        AudioListener.volume = vol;
-    }
-
-    public void SetResolution(int index)
-    {
-        Resolution resolution = resolutions[index];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
-    }
-
     [System.Serializable]
     public class SettingsObject
     {
@@ -214,7 +143,8 @@ public class SettingsController : MonoBehaviour
         {
             Dropdown,
             Slider,
-            Toggle
+            Toggle,
+            InputBind
         };
 
         [System.Serializable]
@@ -224,22 +154,23 @@ public class SettingsController : MonoBehaviour
             public string label;
 
             public UnityEvent<MonoBehaviour> customSetup;
+
+            [SerializeField]
+            [Tooltip("Ignore this if this setting is not an input binding changer")]
+            private InputAction inputAction;
         }
 
         public UIElementConfig config;
         public GameObject prefab;
+        
+        public bool isKeyboardBind;
 
         [NonSerialized]
         public GameObject settingUiElement;
 
         public void CreateUIElement(GameObject parent, int listIndex)
         {
-            //Create setting label
-            GameObject settingLabel = new GameObject("Label");
-            settingLabel.transform.SetParent(parent.gameObject.transform, false);
-            settingLabel.AddComponent<RectTransform>();
-            var labelText = settingLabel.AddComponent<TextMeshProUGUI>();
-            labelText.text = config.label;
+            SetupLabel(parent, config.label);
 
             //Create setting UI element
             GameObject uiElement = null;
@@ -256,8 +187,25 @@ public class SettingsController : MonoBehaviour
                 case UIElementType.Toggle:
                     SetupToggle(uiElement.GetComponent<Toggle>());
                     break;
+                case UIElementType.InputBind:
+                    SetupInputBindButton(uiElement, config.label, parent);
+                    break;
             }
 
+            SetupElementSpacing(uiElement, listIndex);
+        }
+
+        private void SetupLabel(GameObject parent, string text)
+        {
+            GameObject settingLabel = new GameObject("Label");
+            settingLabel.transform.SetParent(parent.gameObject.transform, false);
+            settingLabel.AddComponent<RectTransform>();
+            var labelText = settingLabel.AddComponent<TextMeshProUGUI>();
+            labelText.text = text;
+        }
+
+        private void SetupElementSpacing(GameObject uiElement, int listIndex)
+        {
             if (uiElement != null)
             {
                 RectTransform newRectTransform = uiElement.GetComponent<RectTransform>();
@@ -310,6 +258,54 @@ public class SettingsController : MonoBehaviour
             }
         }
 
+        private void SetupInputBindButton(GameObject uiElement, string name, GameObject parent)
+        {
+            var bind = InputBindsHandler.Instance.FindBind(name);
+
+            var bindingButton = uiElement.GetComponent<Button>();
+            var bindingData = uiElement.GetComponent<BindingButtonData>();
+            bindingData.uiButtonElement = uiElement.GetComponent<Button>();
+            bindingData.action = bind;
+            bindingData.isKeyboardBind = isKeyboardBind;
+
+            int index = isKeyboardBind ? 0 : 1;
+
+            if (bindingButton.GetType() == typeof(Button))
+            {
+                if (!bind.bindings[index].isComposite)
+                {
+                    SetInputButtonLabel(bindingButton.gameObject, bind, index);
+                } else
+                {
+                    int startIndex = isKeyboardBind ? 1 : 0;
+
+                    SetInputButtonLabel(bindingButton.gameObject, bind, 1);
+                    for(int i = 2; i < 5; i++)
+                    {
+                        var composite = Instantiate(prefab, parent.gameObject.transform);
+                        SetInputButtonLabel(composite, bind, i);
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("InputBindingButton prefab is not of type Button on " + config.label);
+            }
+        }
+
+        private void SetInputButtonLabel(GameObject button, InputAction bind, int index)
+        {
+            var bindingData = button.GetComponent<BindingButtonData>();
+            bindingData.uiButtonElement = button.GetComponent<Button>();
+            bindingData.action = bind;
+            bindingData.isKeyboardBind = isKeyboardBind;
+
+            var bindingLabel = button.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            string bindPath = InputBindsHandler.Instance.FindBind(bind.name).bindings[index].ToString();
+            bindingLabel.text = bindPath.Substring(bindPath.LastIndexOf('/') + 1);
+            config.customSetup?.Invoke(bindingData);
+        }
+
         public void SaveSetting()
         {
             if(settingUiElement != null)
@@ -324,6 +320,9 @@ public class SettingsController : MonoBehaviour
                         break;
                     case UIElementType.Toggle:
                         PlayerPrefs.SetInt(config.label, settingUiElement.GetComponent<Toggle>().isOn ? 1 : 0);
+                        break;
+                    case UIElementType.InputBind:
+                        InputBindsHandler.Instance.SaveBind(config.label);
                         break;
                 }
             }
@@ -341,6 +340,9 @@ public class SettingsController : MonoBehaviour
                     break;
                 case UIElementType.Toggle:
                     settingUiElement.GetComponent<Toggle>().isOn = PlayerPrefs.GetInt(config.label) != 0;
+                    break;
+                case UIElementType.InputBind:
+                    InputBindsHandler.Instance.LoadBind(config.label);
                     break;
             }
         }
