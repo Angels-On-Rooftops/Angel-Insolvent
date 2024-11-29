@@ -22,7 +22,7 @@ public class CharacterMovement : MonoBehaviour
     public Camera Camera;
 
     [Space(20)]
-    [SerializeField]
+    [NonSerialized]
     [Tooltip(
         "The keybinds that control lateral character movement. To restrict character movement to a single axis, unbind the directions you don't want accessible."
     )]
@@ -42,7 +42,7 @@ public class CharacterMovement : MonoBehaviour
     public float GravityMultiplier = 8;
 
     [Space(10)]
-    [SerializeField]
+    [NonSerialized]
     [Tooltip("The keybinds that make the character jump.")]
     public InputAction Jump;
 
@@ -225,6 +225,9 @@ public class CharacterMovement : MonoBehaviour
 
     void OnEnable()
     {
+        Walk = InputBindsHandler.Instance.FindBind("Walk");
+        Jump = InputBindsHandler.Instance.FindBind("Jump");
+
         if (Walk is not null)
         {
             maid.GiveEvent(Walk, "performed", (CallbackContext c) => DoWalk(c));

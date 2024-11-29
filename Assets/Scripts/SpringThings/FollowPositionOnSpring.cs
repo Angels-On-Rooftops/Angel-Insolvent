@@ -27,20 +27,22 @@ public class FollowPositionOnSpring : MonoBehaviour
                 transform.position.x,
                 ToFollow.position.x,
                 ref xVelocity,
-                PositionSmoothing.x * Time.deltaTime
+                PositionSmoothing.x
             ),
             Mathf.SmoothDamp(
                 transform.position.y,
                 ToFollow.position.y,
                 ref yVelocity,
-                PositionSmoothing.y * Time.deltaTime
+                PositionSmoothing.y
             ),
             Mathf.SmoothDamp(
                 transform.position.z,
                 ToFollow.position.z,
                 ref zVelocity,
-                PositionSmoothing.z * Time.deltaTime
+                PositionSmoothing.z
             )
         );
+
+        Debug.DrawLine(ToFollow.position, transform.position);
     }
 }
