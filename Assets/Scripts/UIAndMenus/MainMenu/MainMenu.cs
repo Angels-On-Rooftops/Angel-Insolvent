@@ -9,11 +9,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     GameObject mainMenuPanel;
 
-    private void Awake()
-    {
-
-    }
-
     public void OnPlayButton()
     {
         GameStateManager.Instance.SetState(new PlayingState());
@@ -23,13 +18,6 @@ public class MainMenu : MonoBehaviour
     {
         mainMenuPanel.SetActive(false);
         GameManager.escMenu.OpenSettings();
-    }
-
-    public void OnSettingsDoneButton()
-    {
-        mainMenuPanel.SetActive(true);
-        //GameManager.escMenu.CloseSettings();
-        GameManager.escMenu.PauseToggle(new UnityEngine.InputSystem.InputAction.CallbackContext());
     }
 
     public void OnQuitButton()
