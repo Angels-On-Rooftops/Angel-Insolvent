@@ -12,7 +12,6 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-using static UnityEngine.InputManagerEntry;
 
 public class SettingsController : MonoBehaviour
 {
