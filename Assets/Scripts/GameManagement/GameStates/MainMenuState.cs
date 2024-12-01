@@ -13,7 +13,7 @@ namespace GameStateManagement
             if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Main Menu"))
             {
                 var characterCamera = GameObject
-                    .FindGameObjectWithTag("MainCamera")
+                    .FindGameObjectWithTag("MainCamera")?
                     .GetComponent<CharacterCamera>();
                 if (characterCamera != null)
                     characterCamera.CanOrbit = false;

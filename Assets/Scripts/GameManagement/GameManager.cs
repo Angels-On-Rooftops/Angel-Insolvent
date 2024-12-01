@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameObject CoreSystems;
 
-    public static GameObject escMenu;
+    public static EscMenuController escMenu;
 
     public static GameObject gameCanvas;
 
@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
             Resources.Load<GameObject>("Prefabs/CoreSystems/CoreSystems"),
             manager
         );
+
+        escMenu = CoreSystems.GetComponentInChildren<EscMenuController>();
 
         gameCanvas = GameObject.FindGameObjectWithTag("GameCanvas");
         gameCanvas.GetComponent<RectTransform>().offsetMax = Vector2.zero;

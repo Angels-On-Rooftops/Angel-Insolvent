@@ -9,12 +9,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     GameObject mainMenuPanel;
 
-    [SerializeField]
-    GameObject settingsPanel;
-
     private void Awake()
     {
-        settingsPanel.SetActive(false);
+
     }
 
     public void OnPlayButton()
@@ -25,13 +22,14 @@ public class MainMenu : MonoBehaviour
     public void OnSettingsButton()
     {
         mainMenuPanel.SetActive(false);
-        settingsPanel.SetActive(true);
+        GameManager.escMenu.OpenSettings();
     }
 
     public void OnSettingsDoneButton()
     {
         mainMenuPanel.SetActive(true);
-        settingsPanel.SetActive(false);
+        //GameManager.escMenu.CloseSettings();
+        GameManager.escMenu.PauseToggle(new UnityEngine.InputSystem.InputAction.CallbackContext());
     }
 
     public void OnQuitButton()
