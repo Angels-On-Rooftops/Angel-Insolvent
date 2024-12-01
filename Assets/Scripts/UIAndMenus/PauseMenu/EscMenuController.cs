@@ -65,7 +65,12 @@ public class EscMenuController : MonoBehaviour
         }
         else if (GameStateManager.Instance.CurrentState is not MainMenuState)
         {
+            settingsMenuPanel.GetComponentInChildren<SettingsController>().SaveSettings();
             GameStateManager.Instance.SetState(new PlayingState());
+        } else if(GameStateManager.Instance.CurrentState is MainMenuState)
+        {
+            settingsMenuPanel.GetComponentInChildren<SettingsController>().SaveSettings();
+            GameStateManager.Instance.SetState(new MainMenuState());
         }
     }
 
