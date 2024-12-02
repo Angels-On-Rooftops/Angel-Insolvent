@@ -12,6 +12,11 @@ namespace GameStateManagement
             // TODO change to using room manager
             if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Main Menu"))
             {
+                var characterCamera = GameObject
+                    .FindGameObjectWithTag("MainCamera")?
+                    .GetComponent<CharacterCamera>();
+                if (characterCamera != null)
+                    characterCamera.CanOrbit = false;
                 SceneManager.LoadScene("MainMenu");
             }
             Debug.Log("entered main menu state");

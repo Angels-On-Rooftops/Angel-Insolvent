@@ -31,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7207576884319438525}
-  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -172,7 +171,6 @@ RectTransform:
   - {fileID: 6092563202081611223}
   - {fileID: 723174533793532422}
   m_Father: {fileID: 0}
-  m_RootOrder: -2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -264,8 +262,8 @@ MonoBehaviour:
         customSetup:
           m_PersistentCalls:
             m_Calls:
-            - m_Target: {fileID: 3054079781889612805}
-              m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
               m_MethodName: SetupResolutionDropdown
               m_Mode: 0
               m_Arguments:
@@ -276,15 +274,25 @@ MonoBehaviour:
                 m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
+        inputAction:
+          m_Name: 
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 1f36bf1f-411c-4617-a4e9-d1e11126df98
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
       prefab: {fileID: 4717680233200485397, guid: 5b8b835033839fe448ae80353eabb04b, type: 3}
+      isKeyboardBind: 0
     - config:
         type: 2
         label: Fullscreen
         customSetup:
           m_PersistentCalls:
             m_Calls:
-            - m_Target: {fileID: 3054079781889612805}
-              m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
               m_MethodName: SetupFullscreenToggle
               m_Mode: 0
               m_Arguments:
@@ -295,7 +303,17 @@ MonoBehaviour:
                 m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
+        inputAction:
+          m_Name: 
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 553d8077-7f93-496f-8fd3-b1198c62f626
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
       prefab: {fileID: 7957674355045272187, guid: 0794277df0a849c4e97900fe58ed0932, type: 3}
+      isKeyboardBind: 0
   - name: Volume
     settings:
     - config:
@@ -304,8 +322,8 @@ MonoBehaviour:
         customSetup:
           m_PersistentCalls:
             m_Calls:
-            - m_Target: {fileID: 3054079781889612805}
-              m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
               m_MethodName: SetupVolumeSlider
               m_Mode: 0
               m_Arguments:
@@ -316,8 +334,356 @@ MonoBehaviour:
                 m_StringArgument: 
                 m_BoolArgument: 0
               m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 42b4575c-02dc-4070-acea-d776ec18612f
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
       prefab: {fileID: 7467130130709595849, guid: 6945fc1f50a89514b9f11ba1e2fd07d7, type: 3}
+      isKeyboardBind: 0
+  - name: Keyboard Controls
+    settings:
+    - config:
+        type: 1
+        label: Sensitivity
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupLookSensitivitySlider
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 80c231eb-d7d9-4a55-afe0-8e35369be9eb
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 7467130130709595849, guid: 6945fc1f50a89514b9f11ba1e2fd07d7, type: 3}
+      isKeyboardBind: 0
+    - config:
+        type: 3
+        label: Walk
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 91d84d90-b2cc-413f-939a-ae23c8090293
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 1
+    - config:
+        type: 3
+        label: Jump
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: b0d7a6b7-eda2-4e1c-ae75-c49d282cadb1
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 1
+    - config:
+        type: 3
+        label: Movement Action
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 01940118-aae3-474d-93e4-31bd16ed9f06
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 1
+    - config:
+        type: 3
+        label: Select and Interact
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 6996e7db-6c81-4cb6-bf77-f38270611ee4
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 1
+    - config:
+        type: 3
+        label: Navigate Inventory
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: a76fd3b3-9b4b-4ac9-b050-ebf16e842c1b
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 1
+  - name: Gamepad Controls
+    settings:
+    - config:
+        type: 3
+        label: Walk
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 768f56fd-006c-4303-b06e-842026ee13c1
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 0
+    - config:
+        type: 3
+        label: Jump
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 1ae65834-66fc-4433-965a-a393cf7c6397
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 0
+    - config:
+        type: 3
+        label: Movement Action
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 9eaf8cca-19a4-43be-9f37-e3bcfa4a2317
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 0
+    - config:
+        type: 3
+        label: Select and Interact
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 8f9caf54-ad2a-48cc-8d12-025a1225b160
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 0
+    - config:
+        type: 3
+        label: Navigate Inventory
+        customSetup:
+          m_PersistentCalls:
+            m_Calls:
+            - m_Target: {fileID: 0}
+              m_TargetAssemblyTypeName: SettingsSetup, Assembly-CSharp
+              m_MethodName: SetupInputBindButton
+              m_Mode: 0
+              m_Arguments:
+                m_ObjectArgument: {fileID: 0}
+                m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+                m_IntArgument: 0
+                m_FloatArgument: 0
+                m_StringArgument: 
+                m_BoolArgument: 0
+              m_CallState: 2
+        inputAction:
+          m_Name: Input
+          m_Type: 0
+          m_ExpectedControlType: 
+          m_Id: 57e99ee7-cf8c-41dd-84c8-e7588040e2a9
+          m_Processors: 
+          m_Interactions: 
+          m_SingletonActionBindings: []
+          m_Flags: 0
+      prefab: {fileID: 2528688632610980741, guid: f77ab5d1dc8271e4684dd6df571bc2b5, type: 3}
+      isKeyboardBind: 0
   audioSource: {fileID: 0}
+  doneBehavior:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6091923457947358293}
+        m_TargetAssemblyTypeName: EscMenuController, Assembly-CSharp
+        m_MethodName: CloseSettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6278552188992721077
 GameObject:
   m_ObjectHideFlags: 0
@@ -350,7 +716,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 723174533793532422}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -455,7 +820,6 @@ RectTransform:
   - {fileID: 9060873434484756578}
   - {fileID: 2929816483330998232}
   m_Father: {fileID: 7207576884319438525}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -558,7 +922,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 723174533793532422}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
