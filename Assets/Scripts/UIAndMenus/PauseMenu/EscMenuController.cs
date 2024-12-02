@@ -65,7 +65,12 @@ public class EscMenuController : MonoBehaviour
         }
         else if (GameStateManager.Instance.CurrentState is not MainMenuState)
         {
+            settingsMenuPanel.GetComponentInChildren<SettingsController>().SaveSettings();
             GameStateManager.Instance.SetState(new PlayingState());
+        } else if(GameStateManager.Instance.CurrentState is MainMenuState)
+        {
+            settingsMenuPanel.GetComponentInChildren<SettingsController>().SaveSettings();
+            GameStateManager.Instance.SetState(new MainMenuState());
         }
     }
 
@@ -85,9 +90,16 @@ public class EscMenuController : MonoBehaviour
 
     public void CloseSettings()
     {
-        settingsMenuPanel.SetActive(false);
-        pauseMenuPanel.SetActive(true);
-        pauseMenuPanel.GetComponentsInChildren<Button>().First().Select();
+        if(GameStateManager.Instance.CurrentState is not MainMenuState)
+        {
+            settingsMenuPanel.SetActive(false);
+            pauseMenuPanel.SetActive(true);
+            pauseMenuPanel.GetComponentsInChildren<Button>().First().Select();
+        } else
+        {
+            settingsMenuPanel.SetActive(false);
+            PauseToggle(new CallbackContext());
+        }
     }
 
     public void CloseSavePrompt()

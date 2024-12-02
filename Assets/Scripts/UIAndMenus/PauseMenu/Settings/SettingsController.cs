@@ -113,7 +113,7 @@ public class SettingsController : MonoBehaviour
         activeCategory = categoryButtonsDictionary[categoryButton];
     }
 
-    private void SaveSettings()
+    public void SaveSettings()
     {
         for(int i = 0; i < settingsCategories.Length; i++) //For each category
         {
