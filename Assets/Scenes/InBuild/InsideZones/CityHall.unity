@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.5849056, g: 0.51423305, b: 0.48282304, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -25886,13 +25886,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7574247122045920490, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
+      propertyPath: m_RenderPostProcessing
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7222838806520152837, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1546663401}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
 --- !u!1001 &582727519
 PrefabInstance:
@@ -76696,28 +76697,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7905573328979293211, guid: be87425a1bc28b644a8ed601c080f0fb, type: 3}
   m_PrefabInstance: {fileID: 1357662402}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1546663396 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7222838806520152837, guid: 9efc12c954439a842baafe4525490ecf, type: 3}
-  m_PrefabInstance: {fileID: 581934529}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1546663401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1546663396}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 0.674
-  sharedProfile: {fileID: 11400000, guid: 78365564f2c11734e9e16613a35e017b, type: 2}
 --- !u!1001 &1551078884
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -79831,7 +79810,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1677430190
 MonoBehaviour:
   m_ObjectHideFlags: 0
