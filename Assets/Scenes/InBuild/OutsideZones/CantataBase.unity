@@ -17,15 +17,15 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.98823535, g: 0.5647059, b: 0.30980393, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.005
+  m_FogDensity: 0.001
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.63674295, g: 0.71170706, b: 0.8616352, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 3
-  m_SubtractiveShadowColor: {r: 0.5741861, g: 0.6822394, b: 0.9559748, a: 1}
+  m_AmbientMode: 0
+  m_SubtractiveShadowColor: {r: 0.41960785, g: 0.47843137, b: 0.627451, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 89f768b5f79360d4cb01278e8dfc171b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: c31d91582203771428f52b951da28c54, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: fc5156f2ec453e94493bd099245fa8b9, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -3960,6 +3960,10 @@ PrefabInstance:
     - target: {fileID: 8861772646134501589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
       propertyPath: m_Name
       value: OutdoorLighting
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861772646134501589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
