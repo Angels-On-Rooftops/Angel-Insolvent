@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Assets.Scripts.DialogueSystem.DialogueLayouts;
+using Assets.Scripts.Libs;
 using Inventory;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -57,9 +58,7 @@ namespace Assets.Scripts.DialogueSystem
 
         public static IEnumerator PlayDialogue(DialogueFile file)
         {
-            CharacterCamera camera = GameObject
-                .FindWithTag("PlayerCamera")
-                .GetComponent<CharacterCamera>();
+            CharacterCamera camera = CameraUtil.GetPlayerCamera().GetComponent<CharacterCamera>();
 
             if (file.CameraPosition != null)
             {
