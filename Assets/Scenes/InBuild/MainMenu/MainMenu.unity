@@ -25,8 +25,8 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 0
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubtractiveShadowColor: {r: 0.41960785, g: 0.47843137, b: 0.627451, a: 1}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 89f768b5f79360d4cb01278e8dfc171b, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1193,6 +1193,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1730517436}
   m_CullTransparentMesh: 1
+--- !u!1001 &1823026392
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8754261
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.40821788
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.23456968
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.10938163
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5069255481835473589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861772646134501589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_Name
+      value: OutdoorLighting
+      objectReference: {fileID: 0}
+    - target: {fileID: 8861772646134501589, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e0a055ac14d81164f851ad7446a829c1, type: 3}
 --- !u!1 &1922947547
 GameObject:
   m_ObjectHideFlags: 0
@@ -1347,7 +1408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1963834069
 Light:
   m_ObjectHideFlags: 0
@@ -1455,3 +1516,4 @@ SceneRoots:
   - {fileID: 1922947550}
   - {fileID: 1963834070}
   - {fileID: 321754922}
+  - {fileID: 1823026392}

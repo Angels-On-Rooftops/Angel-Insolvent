@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using static UnityEngine.InputManagerEntry;
 using static UnityEngine.InputSystem.InputActionRebindingExtensions;
 
 public class InputBindsHandler

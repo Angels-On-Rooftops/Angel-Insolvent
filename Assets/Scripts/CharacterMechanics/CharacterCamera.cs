@@ -58,7 +58,7 @@ public class CharacterCamera : MonoBehaviour
 
     [SerializeField]
     [Tooltip("The camera's zooming sensitivity from the scroll wheel on a mouse.")]
-    float ZoomSensitivity = 0.1f;    
+    float ZoomSensitivity = 0.1f;
 
     [Space(20)]
     [SerializeField]
@@ -90,22 +90,6 @@ public class CharacterCamera : MonoBehaviour
     Maid maid = new();
 
     Camera Camera => GetComponent<Camera>();
-
-    float smoothTime = 0.1f;
-    float xVelocity = 0;
-    float yVelocity = 0;
-    float zVelocity = 0; 
-
-    float timer = 0;
-    
-    void setTimer() {
-        timer = 1;
-    }
-
-    void tickTimer() {
-        timer -= Time.deltaTime;
-        timer = Mathf.Max(0, timer);
-    }
 
     public void SetRotationSensitivity(float sensitivity)
     {
@@ -208,14 +192,15 @@ public class CharacterCamera : MonoBehaviour
         );
 
         if (didHit)
-        {   
-            setTimer();
+        {
+            //setTimer();
             t.position = hit.point - (t.position - Focus()) * GetComponent<Camera>().nearClipPlane;
             LastSnapPosition.position = t.position;
         }
     }
 
-    bool didHit(Transform t) {
+    bool didHit(Transform t)
+    {
         return Physics.Raycast(
             Focus(),
             t.position - Focus(),
@@ -233,36 +218,10 @@ public class CharacterCamera : MonoBehaviour
 
     public Transform GetNextCameraTransform()
     {
-        NextTargetTransform.transform.position =
+        NextCameraTransform.position =
             Focus() + Quaternion.Euler(CurrentOrbitRotation) * DirectionFromFocus * ZoomLevel;
 
-        float newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.transform.position.x, ref xVelocity, smoothTime);
-        float newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.transform.position.y, ref yVelocity, smoothTime);
-        float newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.transform.position.z, ref zVelocity, smoothTime);
-
-        /****** TEMPORARY FIX TO MAKE MOTION SICKNESS LESS ***************/
-        float longSmoothTime = 60;
-        float minDistanceForRegularSmooth = 1f;
-
-        if (Mathf.Abs(newX - NextTargetTransform.transform.position.x) < minDistanceForRegularSmooth)
-        {
-            newX = Mathf.SmoothDamp(transform.position.x, NextTargetTransform.transform.position.x, ref xVelocity, longSmoothTime);
-        }
-
-        if (Mathf.Abs(newY - NextTargetTransform.transform.position.y) < minDistanceForRegularSmooth)
-        {
-            newY = Mathf.SmoothDamp(transform.position.y, NextTargetTransform.transform.position.y, ref yVelocity, longSmoothTime);
-        }
-
-        if (Mathf.Abs(newX - NextTargetTransform.transform.position.z) < minDistanceForRegularSmooth)
-        {
-            newZ = Mathf.SmoothDamp(transform.position.z, NextTargetTransform.transform.position.z, ref zVelocity, longSmoothTime);
-        }
-        /*********** TODO REPLACE THIS WITH SOMETHING BETTER, IT HELPS BUT IS NOT ENOUGH ***************/
-
-        NextCameraTransform.position = new Vector3(newX, newY, newZ);
-
-        if ((MitigateClipping && didHit(NextCameraTransform)) || timer > 0)
+        if (MitigateClipping && didHit(NextCameraTransform))
         {
             SnapForwardToAvoidClipping(NextCameraTransform);
         }
@@ -272,21 +231,15 @@ public class CharacterCamera : MonoBehaviour
         return NextCameraTransform;
     }
 
-    void UpdateLockState()
-    {
-        Cursor.lockState = CanOrbit ? CursorLockMode.Locked : CursorLockMode.None;
-    }
-
     // Update is called once per frame
     void LateUpdate()
     {
-        UpdateLockState();
         AddRotationDelta(GetRotationDeltaForFrame() * 360);
-        tickTimer();
         GetNextCameraTransform();
 
-        Vector3 nextPosition = NextCameraTransform.position;
-
-        transform.SetPositionAndRotation(nextPosition, NextCameraTransform.rotation);
+        transform.SetPositionAndRotation(
+            NextCameraTransform.position,
+            NextCameraTransform.rotation
+        );
     }
 }

@@ -17,7 +17,7 @@ namespace GameStateManagement
         public void EnterState(IGameState previousState)
         {
             var characterCamera = GameObject
-                .FindGameObjectWithTag("MainCamera")
+                .FindGameObjectWithTag("PlayerCamera")
                 .GetComponent<CharacterCamera>();
             if (characterCamera != null)
                 characterCamera.CanOrbit = false;
@@ -30,7 +30,7 @@ namespace GameStateManagement
         public void ExitState()
         {
             var characterCamera = GameObject
-                .FindGameObjectWithTag("MainCamera")
+                .FindGameObjectWithTag("PlayerCamera")
                 .GetComponent<CharacterCamera>();
             characterCamera.CanOrbit = true;
 

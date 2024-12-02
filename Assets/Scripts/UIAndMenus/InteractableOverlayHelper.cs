@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Libs;
 using TMPro;
 using UnityEngine;
 
@@ -14,10 +13,16 @@ public class InteractableOverlayHelper : MonoBehaviour
 
     void Start()
     {
-        canvas.worldCamera = Camera.main;
-        TextMeshProUGUI action = canvas.transform.Find("ActionPopup").GetComponentInChildren<TextMeshProUGUI>();
-        TextMeshProUGUI objectName = canvas.transform.Find("ObjectPopup").GetComponentInChildren<TextMeshProUGUI>();
-        TextMeshProUGUI button = canvas.transform.Find("ButtonPopup").GetComponentInChildren<TextMeshProUGUI>();
+        canvas.worldCamera = CameraUtil.GetPlayerCamera();
+        TextMeshProUGUI action = canvas
+            .transform.Find("ActionPopup")
+            .GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI objectName = canvas
+            .transform.Find("ObjectPopup")
+            .GetComponentInChildren<TextMeshProUGUI>();
+        TextMeshProUGUI button = canvas
+            .transform.Find("ButtonPopup")
+            .GetComponentInChildren<TextMeshProUGUI>();
         action.text = actionText;
         objectName.text = objectNameText;
         button.text = buttonText;

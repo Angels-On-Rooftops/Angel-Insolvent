@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class SettingsSetup : MonoBehaviour
 {
     [SerializeField]
-    float minSensitivity, maxSensitivity;
+    float minSensitivity,
+        maxSensitivity;
 
     Resolution[] resolutions;
 
@@ -93,7 +94,7 @@ public class SettingsSetup : MonoBehaviour
             delegate
             {
                 InputBindsHandler.Instance.OnRebindButtonClicked(inputBindAction, actionIndex);
-            }    
+            }
         );
     }
 
@@ -112,10 +113,21 @@ public class SettingsSetup : MonoBehaviour
     {
         Resolution resolution = resolutions[index];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        GameObject renTex = GameObject.FindWithTag("PlayerRenderTexture");
+        if (renTex is not null)
+        {
+            renTex.GetComponent<RectTransform>().sizeDelta = new Vector2(
+                resolution.width,
+                resolution.height
+            );
+        }
     }
 
     private void SetLookSensitivity(float lookSensitivity)
     {
-        GameObject.FindGameObjectWithTag("MainCamera")?.GetComponent<CharacterCamera>()?.SetRotationSensitivity(lookSensitivity);
+        GameObject
+            .FindGameObjectWithTag("PlayerCamera")
+            ?.GetComponent<CharacterCamera>()
+            ?.SetRotationSensitivity(lookSensitivity);
     }
 }

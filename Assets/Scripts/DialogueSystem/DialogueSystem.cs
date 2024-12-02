@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Assets.Scripts.DialogueSystem.DialogueLayouts;
+using Assets.Scripts.Libs;
 using Inventory;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -57,14 +58,17 @@ namespace Assets.Scripts.DialogueSystem
 
         public static IEnumerator PlayDialogue(DialogueFile file)
         {
-            CharacterCamera camera = Camera.main.GetComponent<CharacterCamera>();
+            CharacterCamera camera = CameraUtil.GetPlayerCamera().GetComponent<CharacterCamera>();
 
             if (file.CameraPosition != null)
             {
                 camera.enabled = false;
                 dialogueMaid.GiveTask(() => camera.enabled = true);
 
-                camera.transform.SetPositionAndRotation(file.CameraPosition.position, file.CameraPosition.rotation);
+                camera.transform.SetPositionAndRotation(
+                    file.CameraPosition.position,
+                    file.CameraPosition.rotation
+                );
             }
 
             IDialogueLayout layout = file.LayoutType switch
@@ -120,7 +124,7 @@ namespace Assets.Scripts.DialogueSystem
                 Instance.DialogueAudio.clip = audioClip;
 
                 Instance.DialogueAudio.Play();
-            }    
+            }
         }
 
         private static IEnumerator PlayFrame(DialogueFrame frame, IDialogueLayout layout)
@@ -175,7 +179,7 @@ namespace Assets.Scripts.DialogueSystem
         static IEnumerator WaitForContinueButton(Maid continueMaid)
         {
             yield return new WaitForSeconds(inputWaitTime); // wait to prevent previous input from counting as a button press
-            
+
             bool continueButtonHit = false;
             continueMaid.GiveEvent(
                 Instance.InteractAction,
@@ -201,7 +205,7 @@ namespace Assets.Scripts.DialogueSystem
         )
         {
             yield return new WaitForSeconds(inputWaitTime); // wait to prevent previous input from counting as a button press
-            
+
             yield return WaitForChoiceSelection(
                 layout.SetChoiceButtons(choice, continueMaid),
                 continueMaid,
@@ -245,7 +249,8 @@ namespace Assets.Scripts.DialogueSystem
         {
             Action<string> callMethod = (string eventName) =>
             {
-                if (eventName == desiredEvent) method();
+                if (eventName == desiredEvent)
+                    method();
             };
 
             EventFired += callMethod;

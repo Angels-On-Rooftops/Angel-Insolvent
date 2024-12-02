@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using Assets.Scripts.Libs;
 using UnityEngine;
 
 public class FaceCamera : MonoBehaviour
 {
-    Transform CameraTransform => Camera.main.transform;
+    Transform CameraTransform => CameraUtil.GetPlayerCamera().transform;
 
     // Update is called once per frame
     void Update()
