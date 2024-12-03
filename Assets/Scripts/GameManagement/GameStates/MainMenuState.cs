@@ -13,10 +13,13 @@ namespace GameStateManagement
             if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Main Menu"))
             {
                 var characterCamera = GameObject
-                    .FindGameObjectWithTag("MainCamera")?
-                    .GetComponent<CharacterCamera>();
+                .FindGameObjectWithTag("PlayerCamera")?
+                .GetComponent<CharacterCamera>();
                 if (characterCamera != null)
+                {
                     characterCamera.CanOrbit = false;
+                    Cursor.lockState = CursorLockMode.None;
+                }
                 SceneManager.LoadScene("MainMenu");
             }
             Debug.Log("entered main menu state");
