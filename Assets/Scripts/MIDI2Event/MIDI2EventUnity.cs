@@ -27,6 +27,9 @@ public class MIDI2EventUnity : MonoBehaviour
     [SerializeField]
     string mixerVolumeName;
 
+    [SerializeField]
+    public SongEnum songID = SongEnum.Lofi;
+
     List<Midi2Event> eventPlayers;
     float beforeSamples = 0;
     float lastTime = 0;

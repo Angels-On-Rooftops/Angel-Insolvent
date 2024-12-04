@@ -12,12 +12,12 @@ public class ChangeTrackOnCollide : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (
-            other.TryGetComponent(out CharacterController controller)
-            && AudioSystem.CurrentIndex != SongIndex
-        )
-        {
-            AudioSystem.SwitchToSong(SongIndex);
-        }
+        //if (
+        //    other.TryGetComponent(out CharacterController controller)
+        //    && AudioSystem.CurrentIndex != SongIndex
+        //)
+        //{
+        //    AudioSystem.SwitchToSong(SongIndex);
+        //}
     }
 }

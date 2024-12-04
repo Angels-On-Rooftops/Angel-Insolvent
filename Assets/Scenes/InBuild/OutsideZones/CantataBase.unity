@@ -12589,7 +12589,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
   m_LocalPosition: {x: -7, y: -3.16, z: 0.5}
-  m_LocalScale: {x: 8.701834, y: 8.701834, z: 8.701834}
+  m_LocalScale: {x: 7.98, y: 8.701834, z: 8.701834}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3146301021412968119}
@@ -12603,7 +12603,7 @@ Transform:
   m_GameObject: {fileID: 4744208715528714841}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -7, y: 0.33, z: 0.5}
+  m_LocalPosition: {x: -8.48, y: 0.33, z: 0.78}
   m_LocalScale: {x: 8.701834, y: 8.701834, z: 8.701834}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12695,7 +12695,8 @@ GameObject:
   - component: {fileID: 2544206195055825581}
   - component: {fileID: 4190669071393095493}
   - component: {fileID: 4190669071393095494}
-  m_Layer: 0
+  - component: {fileID: 4190669071393095495}
+  m_Layer: 7
   m_Name: CentralMusicPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12733,7 +12734,8 @@ GameObject:
   - component: {fileID: 7599433272899678148}
   - component: {fileID: 6312344940908993041}
   - component: {fileID: 7599433272899678149}
-  m_Layer: 0
+  - component: {fileID: 7599433272899678150}
+  m_Layer: 7
   m_Name: ElectricMusicPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12804,6 +12806,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -3546128785652574584, guid: 5e0868bf683e092489e456f7d27c153d, type: 3}
+--- !u!114 &4190669071393095495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2931264996187757056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d57b51a164ea445bece22125d0e6e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
 --- !u!1 &4744208715528714841
 GameObject:
   m_ObjectHideFlags: 0
@@ -12816,7 +12831,8 @@ GameObject:
   - component: {fileID: 610516789493550075}
   - component: {fileID: 238641664862213689}
   - component: {fileID: 4744208715528714842}
-  m_Layer: 0
+  - component: {fileID: 4744208715528714843}
+  m_Layer: 7
   m_Name: MediaMusicPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12845,6 +12861,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2118075153343656369, guid: 5e0868bf683e092489e456f7d27c153d, type: 3}
+--- !u!114 &4744208715528714843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4744208715528714841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d57b51a164ea445bece22125d0e6e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 1
 --- !u!1 &4779401401225754643
 GameObject:
   m_ObjectHideFlags: 0
@@ -12857,7 +12886,8 @@ GameObject:
   - component: {fileID: 2475404337412099617}
   - component: {fileID: 2787430262351786982}
   - component: {fileID: 4779401401225754644}
-  m_Layer: 0
+  - component: {fileID: 4779401401225754645}
+  m_Layer: 7
   m_Name: UptownMusicPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12886,6 +12916,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8626230412842075466, guid: 5e0868bf683e092489e456f7d27c153d, type: 3}
+--- !u!114 &4779401401225754645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779401401225754643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d57b51a164ea445bece22125d0e6e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 3
 --- !u!4 &6083519671506433285
 Transform:
   m_ObjectHideFlags: 0
@@ -12895,7 +12938,7 @@ Transform:
   m_GameObject: {fileID: 4119668084012337207}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -7, y: 4.37, z: 0.5}
+  m_LocalPosition: {x: -7.5, y: 4.37, z: -1.11}
   m_LocalScale: {x: 8.701834, y: 8.701834, z: 8.701834}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12973,6 +13016,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2101394314366436360, guid: 5e0868bf683e092489e456f7d27c153d, type: 3}
+--- !u!114 &7599433272899678150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4119668084012337207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78d57b51a164ea445bece22125d0e6e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 2
 --- !u!1001 &8739188889949211355
 PrefabInstance:
   m_ObjectHideFlags: 0

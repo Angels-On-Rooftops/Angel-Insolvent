@@ -15,7 +15,7 @@ public class AudioSystem : MonoBehaviour
     AudioMixer Mixer;
 
     [SerializeField]
-    List<MIDI2EventUnity> Songs;
+    Dictionary<SongEnum, MIDI2EventUnity> Songs;
 
     [SerializeField]
     MIDI2EventUnity StartingSong;
@@ -26,7 +26,7 @@ public class AudioSystem : MonoBehaviour
     [SerializeField]
     float fadedDB = -40;
 
-    static MIDI2EventUnity current;
+    static (SongEnum, MIDI2EventUnity) current;
     public static AudioSystem Instance { get; private set; }
 
     Maid SongPlayingMaid = new();
@@ -36,12 +36,12 @@ public class AudioSystem : MonoBehaviour
 
     public MIDI2EventUnity CurrentSystem
     {
-        get => current;
+        get => current.Item2;
     }
 
-    public static int CurrentIndex
+    public static SongEnum CurrentIndex
     {
-        get => Instance.Songs.IndexOf(current);
+        get => current.Item1;
     }
 
     private void Awake()
@@ -49,13 +49,15 @@ public class AudioSystem : MonoBehaviour
         Debug.Assert(Instance is null, "Can only have one instance of AudioSystem!");
 
         Instance = this;
+
+        Songs = new();
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        current = StartingSong;
-    }
+    //void Start()
+    //{
+    //   current = StartingSong;
+    //}
 
     private void OnEnable()
     {
@@ -70,7 +72,7 @@ public class AudioSystem : MonoBehaviour
                     FindObjectsOfType<MIDI2EventUnity>(),
                     (MIDI2EventUnity midi2event) =>
                     {
-                        Songs.Add(midi2event);
+                        Songs.TryAdd(midi2event.songID, midi2event);
                     }
                 );
                 // TODO cache midi tracks and add them to the song list, then change the current song
@@ -78,27 +80,27 @@ public class AudioSystem : MonoBehaviour
                 Debug.Log(string.Join(",", Songs));
 
                 // HERE FOR TIMEBOX 6, REMOVE THIS LATER
-                if (newRoom == Room.Cantata)
-                {
-                    SwitchToSong(
-                        Songs.FindIndex(
-                            0,
-                            Songs.Count,
-                            (MIDI2EventUnity m2e) => m2e.gameObject.name == "LofiMIDI2Event"
-                        )
-                    );
-                }
+                //if (newRoom == Room.Cantata)
+                //{
+                //    SwitchToSong(
+                //        Songs.FindIndex(
+                //            0,
+                //            Songs.Count,
+                //            (MIDI2EventUnity m2e) => m2e.gameObject.name == "LofiMIDI2Event"
+                //        )
+                //    );
+                //}
             }
         );
 
-        SongPlayingMaid.GiveEvent(
-            CycleSong,
-            "performed",
-            (CallbackContext _) =>
-            {
-                SwitchToSong((CurrentIndex + 1) % Songs.Count);
-            }
-        );
+        //SongPlayingMaid.GiveEvent(
+        //   CycleSong,
+        //    "performed",
+        //    (CallbackContext _) =>
+        //    {
+        //       SwitchToSong((CurrentIndex + 1) % Songs.Count);
+        //    }
+        //);
 
         CycleSong.Enable();
     }
@@ -108,21 +110,22 @@ public class AudioSystem : MonoBehaviour
         SongPlayingMaid.Cleanup();
     }
 
-    public static void SwitchToSong(int index)
+    public static void SwitchToSong(SongEnum id)
     {
-        if (index >= 0 && index < Instance.Songs.Count)
+        if (Instance.Songs.ContainsKey(id))
         {
-            Instance.StartCoroutine(Instance.FadeToNext(current, Instance.Songs[index]));
+            Instance.StartCoroutine(Instance.FadeToNext(current.Item2, Instance.Songs[id]));
+            Debug.Log("here");
         }
         else
         {
-            Debug.Log("Song index out of bounds!");
+            Debug.Log("No song with given ID!");
         }
     }
 
     public static void FadeOut()
     {
-        Instance.FadeToNext(current, null);
+        Instance.FadeToNext(current.Item2, null);
     }
 
     IEnumerator FadeToNext(MIDI2EventUnity previous, MIDI2EventUnity next)
@@ -154,6 +157,6 @@ public class AudioSystem : MonoBehaviour
         {
             toStart.Restart();
         }
-        current = toStart;
+        current = (toStart.songID, toStart);
     }
 }
