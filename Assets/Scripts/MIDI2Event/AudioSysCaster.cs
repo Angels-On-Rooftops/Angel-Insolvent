@@ -6,7 +6,7 @@ public class AudioSysCaster : MonoBehaviour
 {
     LayerMask mask;
 
-    SongEnum last;
+    SongEnum last = SongEnum.None;
 
     private void Start()
     {
@@ -17,10 +17,11 @@ public class AudioSysCaster : MonoBehaviour
     void Update()
     {
         RaycastHit hit;
+        Debug.DrawLine(transform.position, transform.position + Vector3.up * 2000);
         if (Physics.Raycast(transform.position, Vector3.up, out hit, Mathf.Infinity, mask))
         {
             SongIDHolder s = hit.collider.gameObject.GetComponent<SongIDHolder>();
-            if (s is not null && s.ID != last)
+            if (s != null && s.ID != last && AudioSystem.Instance.HasSong(s.ID))
             {
                 Debug.Log(s.ID);
                 Debug.Log(hit.collider.gameObject.name);

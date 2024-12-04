@@ -4,10 +4,11 @@ using UnityEngine;
 
 public enum SongEnum
 {
+    None,
     Lofi,
     Media,
     Electric,
     Uptown,
     Tutorial,
-    YCorp
+    YCorp,
 }

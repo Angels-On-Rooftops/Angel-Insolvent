@@ -44,6 +44,11 @@ public class AudioSystem : MonoBehaviour
         get => current.Item1;
     }
 
+    public bool HasSong(SongEnum ID)
+    {
+        return Songs.ContainsKey(ID);
+    }
+
     private void Awake()
     {
         Debug.Assert(Instance is null, "Can only have one instance of AudioSystem!");
