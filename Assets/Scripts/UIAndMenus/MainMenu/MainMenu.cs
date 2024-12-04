@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using GameStateManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField]
     GameObject mainMenuPanel;
+
+    private void Awake()
+    {
+        GameObject.FindGameObjectWithTag("MainMenuPanel")?.GetComponentInChildren<Button>().Select();
+    }
 
     public void OnPlayButton()
     {
