@@ -15,7 +15,7 @@ public class AudioSystem : MonoBehaviour
     AudioMixer Mixer;
 
     [SerializeField]
-    Dictionary<SongEnum, MIDI2EventUnity> Songs;
+    public Dictionary<SongEnum, MIDI2EventUnity> Songs;
 
     [SerializeField]
     MIDI2EventUnity StartingSong;
@@ -152,8 +152,8 @@ public class AudioSystem : MonoBehaviour
             yield return null;
         }
         previous.Stop();
-        StartNextIfRelevant(next);
         Mixer.SetFloat(previous.VolumeSliderName, startingVol);
+        StartNextIfRelevant(next);
     }
 
     void StartNextIfRelevant(MIDI2EventUnity toStart)

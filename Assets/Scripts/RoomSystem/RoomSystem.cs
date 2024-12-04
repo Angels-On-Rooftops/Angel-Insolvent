@@ -73,14 +73,15 @@ namespace Assets.Scripts.RoomSystem
                 Room.MainMenu => new string[] { "MainMenu" },
                 Room.Vault => new string[] { "Vault" }, // TODO
                 Room.CityHall => new string[] { "CityHall" },
-                Room.Cantata => new string[]
-                {
-                    "CantataBase",
-                    "Central",
-                    "MediaDistrict",
-                    "ElectricDistrict",
-                    "Uptown",
-                },
+                Room.Cantata
+                    => new string[]
+                    {
+                        "CantataBase",
+                        "Central",
+                        "MediaDistrict",
+                        "ElectricDistrict",
+                        "Uptown",
+                    },
                 Room.AmPower => new string[] { "AmPower" },
                 Room.Channel440 => new string[] { "Channel440" },
                 Room.YCorp => new string[] { "YCorp" }, // TODO
@@ -128,6 +129,8 @@ namespace Assets.Scripts.RoomSystem
             Func<Transform> getCharacterInitialTransform
         )
         {
+            //TODO KILL THIS GUY
+            AudioSystem.Instance.Songs.Clear();
             string[] scenesToLoad = RoomAsScenes(toLoad);
 
             // TODO refactor this guy
