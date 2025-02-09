@@ -114,13 +114,9 @@ float3 CalculateLighting(ToonLightingParams params)
         float3 smoothedSpecularDot = pow(specularDotProduct, GetShininessPower(params.smoothness));
         float3 specular = smoothedSpecularDot * diffuse;
 
-        [branch]
-        if (params.isToon)
-        {
             //posterize lighting contributions
             diffuse = Posterize(diffuse, params.diffuseSteps + (params.stepOffset/ params.diffuseSteps));
             specular = Posterize(specular, params.diffuseSteps + (params.stepOffset/ params.diffuseSteps));
-        }
     
         return params.albedo * (diffuse+specular);
 
