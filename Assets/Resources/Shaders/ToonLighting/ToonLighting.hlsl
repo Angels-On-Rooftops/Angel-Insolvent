@@ -22,7 +22,6 @@ struct ToonLightingParams
     float4 shadowCoordinate;
     
     //toon info
-    bool isToon;
     float diffuseSteps;
     float specularSteps;
     float stepOffset;
