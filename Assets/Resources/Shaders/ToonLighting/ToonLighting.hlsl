@@ -211,7 +211,6 @@ void ToonLighting_float(
     float AmbientOcclusion,
     float3 LightmapUV,
     float3 SphericalHarmonics,
-    bool IsToon,
     float DiffuseSteps,
     float SpecularSteps,
     float StepOffset,
@@ -230,7 +229,6 @@ void ToonLighting_float(
     params.shadowCoordinate = GetShadowCoordinate(WorldPos);
     params.bakedLighting = GetBakedLighting(Normal, LightmapUV, SphericalHarmonics);
     params.shadowMask = GetShadowMask(LightmapUV);
-    params.isToon = IsToon;
     params.diffuseSteps = DiffuseSteps;
     params.specularSteps = SpecularSteps;
     params.stepOffset = StepOffset;
