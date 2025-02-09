@@ -86,24 +86,14 @@ float3 CalculateOneLight(ToonLightingParams params, Light light, float attenuati
     float smoothedSpecularDot = pow(abs(specularDotProduct), GetShininessPower(params.shininess));
     float specular = saturate(smoothedSpecularDot) * diffuse * params.smoothness;
     
-    [branch]
-    if (params.isToon)
-    {
-        //posterize lighting contributions
-        diffuse = Posterize(diffuse + (params.stepOffset / params.diffuseSteps), params.diffuseSteps);
-        specular = Posterize(specular + (params.stepOffset / params.specularSteps), params.specularSteps);
-    }
+    //posterize lighting contributions
+    diffuse = Posterize(diffuse + (params.stepOffset / params.diffuseSteps), params.diffuseSteps);
+    specular = Posterize(specular + (params.stepOffset / params.specularSteps), params.specularSteps);
 
     //calc light total
     float combinedContributions = (diffuse + specular);
     
-    [branch]
-    if (light.distanceAttenuation <= 0)
-    {
-        return 0;
-    }
-    //return float3(1.0, 0.5, 0.0) * light.distanceAttenuation;
-    return saturate(params.albedo * light.color * light.shadowAttenuation * combinedContributions);
+    return saturate(params.albedo * light.color * light.shadowAttenuation * combinedContributions) * step(0, light.distanceAttenuation);
 }
 
 float3 CalculateGlobalIllumination(ToonLightingParams params)
@@ -148,7 +138,7 @@ float3 CalculateLighting(ToonLightingParams params)
     
         uint pixelLightsCount = GetAdditionalLightsCount();
     
-        //calculate info for additional lights if allowed
+        //calculate info for additional directional lights if allowed
         #if USE_FORWARD_PLUS
             for (uint lightIndex = 0; lightIndex < min(URP_FP_DIRECTIONAL_LIGHTS_COUNT, MAX_VISIBLE_LIGHTS); lightIndex++) 
             {
