@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ public class SettingsSetup : MonoBehaviour
                 + resolutions.ElementAt(i).height
                 + " @ "
                 //+ resolutions.ElementAt(i).refreshRateRatio.value.ToString("#.000") //refresh rate to 3 decimal places
-                + (int) resolutions.ElementAt(i).refreshRateRatio.value //refresh rate with no decimal places
+                + Math.Round(resolutions.ElementAt(i).refreshRateRatio.value) //refresh rate with no decimal places
                 + " Hz";
             resolutionOptions.Add(resolutionOption);
             if (
