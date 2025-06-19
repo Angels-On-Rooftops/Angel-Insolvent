@@ -105,12 +105,14 @@ public class EscMenuController : MonoBehaviour
     public void CloseSavePrompt()
     {
         savePromptPanel.SetActive(false);
+        pauseMenuPanel.SetActive(true);
         pauseMenuPanel.GetComponentsInChildren<Button>().First().Select();
     }
 
     public void QuitToMainMenu()
     {
         savePromptPanel.SetActive(true);
+        pauseMenuPanel.SetActive(false);
         savePromptPanel.GetComponentsInChildren<Button>().Last().Select();
     }
 }
