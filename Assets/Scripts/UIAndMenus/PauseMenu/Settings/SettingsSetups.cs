@@ -27,7 +27,9 @@ public class SettingsSetup : MonoBehaviour
                 + " x "
                 + resolutions.ElementAt(i).height
                 + " @ "
-                + resolutions.ElementAt(i).refreshRateRatio;
+                //+ resolutions.ElementAt(i).refreshRateRatio.value.ToString("#.000") //refresh rate to 3 decimal places
+                + (int) resolutions.ElementAt(i).refreshRateRatio.value //refresh rate with no decimal places
+                + " Hz";
             resolutionOptions.Add(resolutionOption);
             if (
                 resolutions[i].width == Screen.currentResolution.width
@@ -37,6 +39,7 @@ public class SettingsSetup : MonoBehaviour
                 currentResolutionIndex = i;
             }
         }
+
         resolutionDropdown.AddOptions(resolutionOptions);
         resolutionDropdown.RefreshShownValue();
 
